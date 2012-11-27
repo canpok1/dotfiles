@@ -1,17 +1,35 @@
 "=======================================================
+"初期設定
+"=======================================================
+"vi互換オフ
+set nocompatible
+"ファイルタイプを一時的にオフ
+filetype off
+
+"vundle初期化"
+if has("win32") || has("win64")
+    set rtp+=~/vimfiles/vundle.git/
+    call vundle#rc('~/vimfiles/bundle/')
+else
+    set rtp+=~/.vim/vundle.git/
+    call vundle#rc()
+endif
+
+"ファイルタイプをオン
+filetype plugin indent on
+
+
+"=======================================================
 "基本設定設定
 "=======================================================
-"vi互換設定
-set nocompatible
-
 "スワップファイルの出力先設定
-set directory=~/vimfiles/tmp
+set directory=~/dotfiles/tmp
 
 "チルダファイルの出力先設定
 set nobackup
 
 "viminfoの出力先設定
-set viminfo+=n~/vimfiles/tmp/viminfo.txt
+set viminfo+=n~/dotfiles/tmp/viminfo.txt
 
 "行表示
 set number
