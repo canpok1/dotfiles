@@ -1,5 +1,5 @@
 "=======================================================
-"初期設定
+"プラグイン設定
 "=======================================================
 "vi互換オフ
 set nocompatible
@@ -12,6 +12,7 @@ if has("win32") || has("win64")
     call vundle#rc('~/vimfiles/bundle/')
 else
     set rtp+=~/.vim/vundle.git/
+	let g:vundle_default_git_proto='git'
     call vundle#rc()
 endif
 
@@ -56,26 +57,37 @@ set wildmode=list:longest
 "ファイルブラウザのデフォルトディレクトリ
 set browsedir=buffer
 
+"バッファ切り替え時、切り替え元バッファをhidden
+set hidden
+
+"インクリメンタルサーチ
+set incsearch
+
+"vimの内部文字エンコーディング
+:set encoding=utf-8
+"文字エンコーディング
+:set fileencodings=ucs-bom,iso-2022-jp-3,iso-2022-jp,eucjp-ms,euc-jisx0213,euc-jp,sjis,cp932,utf-8
+
 "=======================================================
 "見た目
 "=======================================================
-"シンタックスハイライトをオン
-syntax on
-
 "256色対応
 set t_Co=256
 
+"シンタックスハイライトをオン
+syntax on
+
 "カラースキーマ
-colorscheme desert
+colorscheme jellybeans
 
 "シンタックスハイライト
 "au BufNewFile,BufRead *.log setf mpacs_log
 
 "入力モード時、ステータスラインのカラーを変更
 "augroup InsertHook
-"	autocmd!
-"	autocmd InsertEnter * highlight StatusLine guifg=#FFFFFF guibg=#000000
-"	autocmd InsertLeave * highlight StatusLine guifg=#000000 guibg=#FFFFFF
+"autocmd!
+"	autocmd InsertEnter * highlight StatusLine ctermfg=#FFFFFF ctermbg=#000000 guifg=#FFFFFF guibg=#000000
+"	autocmd InsertLeave * highlight StatusLine ctermfg=#000000 ctermbg=#FFFFFF guifg=#000000 guibg=#FFFFFF
 "augroup END
 
 "全角スペースを可視化
@@ -96,7 +108,7 @@ set showmatch
 let loaded_matchparen=1
 
 "文字コードと改行コードを表示
-set statusline=statusline=%F%m%r%h%w\ [%{&ff}]\ [%Y]\ [POS=%04l,%04v][%p%%]\ [LEN=%L]
+set statusline=%F%m%r%h%w\ [%Y][%{&fenc}][%{&ff}][%04l,%04v][%p%%][LEN=%L]
 
 "エディタウインドウの末尾から2行目にステータスラインを常時表示
 set laststatus=2
@@ -140,10 +152,11 @@ set cindent
 "nmap <Space>eg :<C-u>tabnew $MYGVIMRC<CR>
 
 "ESC押したときIMEオフ
-nmap <ESC> <ESC>:set iminsert=0<CR>
+"nmap <ESC> <ESC>:set iminsert=0<CR>
 
 "ESCを連続で押したとき検索のハイライトを消す
 nmap <ESC><ESC> :nohlsearch<CR><ESC>
+
 
 "--------------------------
 "  ビジュアルモード(vmap)
@@ -160,7 +173,7 @@ nmap <ESC><ESC> :nohlsearch<CR><ESC>
 "--------------------------
 "
 "ESC押したときIMEオフ
-imap <ESC> <ESC>:set iminsert=0<CR>
+"imap <ESC> <ESC>:set iminsert=0<CR>
 
 "括弧やクオートなどを入力した際に左に自動で移動
 "imap {<Space>} {}<Left>
@@ -180,23 +193,23 @@ imap <ESC> <ESC>:set iminsert=0<CR>
 "unite設定
 "--------------------------
 "unite prefix key.
-"nnoremap [unite] <Nop>
-"nmap <Space>f [unite]
+nnoremap [unite] <Nop>
+nmap <Space>u [unite]
 
 "unite general settings
 "インサートモードで開始
-"let g:unite_enable_start_insert=1
+let g:unite_enable_start_insert=1
 "最近聞いたファイル履歴の保存数
-"let g:unite_source_file_mru_limit=50
+let g:unite_source_file_mru_limit=50
 
 "file_mruの表示フォーマットを指定。空にすると表示スピードが高速化
 "let g:unite_source_file_mru_filename_format=''
 
 "現在開いているファイルのディレクトリ下のファイル一覧。
 "開いていない場合はカレントディレクトリ
-"nnoremap <silent> [unite]f :<C-u>UniteWithBufferDir -buffer-name=files fi
+nnoremap <silent> [unite]f :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
 "バッファ一覧
-"nnoremap <silent> [unite]b :<C-u>Unite buffer<CR>
+nnoremap <silent> [unite]b :<C-u>Unite buffer<CR>
 "レジスタ一覧
 "nnoremap <silent> [unite]r :<C-u>-buffer-name=register register<CR>
 "最近使用したファイル一覧
@@ -206,21 +219,21 @@ imap <ESC> <ESC>:set iminsert=0<CR>
 "ブックマークに追加
 "nnoremap <silent> [unite]a :<C-u>UniteBookmarkAdd<CR>
 "uniteを開いている間のキーマッピング
-"autocmd FileType unite call s:unite_my_settings()
-"function! s:unite_my_settings()"{{{
-	"ESCでuniteを終了
-	"nmap <buffer> <ESC> <Plug>(unite_exit)
+autocmd FileType unite call s:unite_my_settings()
+function! s:unite_my_settings()"{{{
+	"ESC二回でuniteを終了
+	nmap <buffer> <ESC><ESC> <Plug>(unite_exit)
 	"入力モードのときjjでノーマルモードに移動
-	"imap <buffer> jj <Plug>(unite_insert_leave)
+	imap <buffer> jj <Plug>(unite_insert_leave)
 	"入力モードのときctrl+wでバックスラッシュも削除
-	"imap <buffer> <C-w> <Plug>(unite_delete_backward_path)
+	imap <buffer> <C-w> <Plug>(unite_delete_backward_path)
 	"ctrl+jで縦に分割して開く
-	"nnoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
-	"inoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
+	nnoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
+	inoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
 	"ctrl+lで横に分割して開く
-	"nnoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
-	"inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
+	nnoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
+	inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
 	"ctrl+oでその場所に開く
-	"nnoremap <silent> <buffer> <expr> <C-o> unite#do_action('open')
-	"inoremap <silent> <buffer> <expr> <C-o> unite#do_action('open')
-"endfunction"}}}
+	nnoremap <silent> <buffer> <expr> <C-o> unite#do_action('open')
+	inoremap <silent> <buffer> <expr> <C-o> unite#do_action('open')
+endfunction"}}}
