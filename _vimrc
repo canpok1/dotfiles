@@ -65,8 +65,12 @@ set incsearch
 
 "vimの内部文字エンコーディング
 :set encoding=utf-8
+
 "文字エンコーディング
 :set fileencodings=ucs-bom,iso-2022-jp-3,iso-2022-jp,eucjp-ms,euc-jisx0213,euc-jp,sjis,cp932,utf-8
+
+"縦分割の新規ウィンドウは右に開く
+set splitright
 
 "=======================================================
 "見た目
@@ -91,7 +95,7 @@ colorscheme jellybeans
 "augroup END
 
 "全角スペースを可視化
-highlight JpSpace ctermbg=Blue guibg=Blue
+highlight JpSpace ctermbg=Blue
 autocmd BufRead,BufNew * match JpSpace /　/
 
 "カーソルのある行をハイライト
@@ -139,6 +143,31 @@ set noautoindent
 
 "Cプログラム用自動インデント
 set cindent
+
+"タブを使用しない
+set expandtab
+
+"=======================================================
+"フォーマット
+"=======================================================
+"改行後の自動コメント挿入を解除
+"r 挿入モードで<Enter>を打ち込んだ後にコメント開始文字列を自動挿入
+"o ノーマルモードで'o','O'を打ち込んだ後にコメント開始文字列を自動挿入
+"B マルチバイト文字と非マルチバイト文字の連結で間に空白を自動挿入
+set formatoptions=qB
+autocmd FileType * set formatoptions-=ro
+
+"バイナリの編集モード
+augroup Binary
+    au!
+    au BufReadPre   *.bin let &bin=1
+    au BufReadPost  *.bin if &bin | %!xxd -g 1
+    au BufReadPost  *.bin set ft=xxd | endif
+    au BufWritePre  *.bin if &bin | %!xxd -r
+    au BufWritePre  *.bin endif
+    au BufWritePost *.bin if &bin | silent %!xxd -g 1
+    au BufWritePost *.bin set nomod | endif
+augroup END
 
 "=======================================================
 "キーマッピング
