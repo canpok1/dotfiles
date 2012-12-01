@@ -30,14 +30,20 @@ filetype plugin indent on
 "=======================================================
 "基本設定設定
 "=======================================================
-"スワップファイルの出力先設定
-set directory=~/dotfiles/tmp
+if has("win32") || has("win64")
+    "スワップファイルの出力先設定
+    set directory=~/vimfiles/tmp
+    "viminfoの出力先設定
+    set viminfo+=n~/vimfiles/tmp/viminfo.txt
+else
+    "スワップファイルの出力先設定
+    set directory=~/.vim/tmp
+    "viminfoの出力先設定
+    set viminfo+=n~/.vim/tmp/viminfo.txt
+endif
 
 "チルダファイルの出力先設定
 set nobackup
-
-"viminfoの出力先設定
-set viminfo+=n~/dotfiles/tmp/viminfo.txt
 
 "行表示
 set number
