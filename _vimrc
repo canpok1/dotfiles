@@ -12,7 +12,7 @@ if has("win32") || has("win64")
     call vundle#rc('~/vimfiles/bundle/')
 else
     set rtp+=~/.vim/vundle.git/
-	let g:vundle_default_git_proto='git'
+    let g:vundle_default_git_proto='git'
     call vundle#rc()
 endif
 
@@ -30,14 +30,21 @@ filetype plugin indent on
 "=======================================================
 "基本設定設定
 "=======================================================
-"スワップファイルの出力先設定
-set directory=~/dotfiles/tmp
+if has("win32") || has("win64")
+    "スワップファイルの出力先設定
+    set directory=~/vimfiles/tmp
+    "viminfoの出力先設定
+    set viminfo+=n~/vimfiles/tmp/viminfo.txt
+else
+    "スワップファイルの出力先設定
+    set directory=~/.vim/tmp
+    "viminfoの出力先設定
+    set viminfo+=n~/.vim/tmp/viminfo.txt
+endif
 
 "チルダファイルの出力先設定
 set nobackup
 
-"viminfoの出力先設定
-set viminfo+=n~/dotfiles/tmp/viminfo.txt
 
 "行表示
 set number
@@ -86,8 +93,8 @@ colorscheme jellybeans
 "入力モード時、ステータスラインのカラーを変更
 "augroup InsertHook
 "autocmd!
-"	autocmd InsertEnter * highlight StatusLine ctermfg=#FFFFFF ctermbg=#000000 guifg=#FFFFFF guibg=#000000
-"	autocmd InsertLeave * highlight StatusLine ctermfg=#000000 ctermbg=#FFFFFF guifg=#000000 guibg=#FFFFFF
+"    autocmd InsertEnter * highlight StatusLine ctermfg=#FFFFFF ctermbg=#000000 guifg=#FFFFFF guibg=#000000
+"    autocmd InsertLeave * highlight StatusLine ctermfg=#000000 ctermbg=#FFFFFF guifg=#000000 guibg=#FFFFFF
 "augroup END
 
 "全角スペースを可視化
@@ -221,19 +228,19 @@ nnoremap <silent> [unite]b :<C-u>Unite buffer<CR>
 "uniteを開いている間のキーマッピング
 autocmd FileType unite call s:unite_my_settings()
 function! s:unite_my_settings()"{{{
-	"ESC二回でuniteを終了
-	nmap <buffer> <ESC><ESC> <Plug>(unite_exit)
-	"入力モードのときjjでノーマルモードに移動
-	imap <buffer> jj <Plug>(unite_insert_leave)
-	"入力モードのときctrl+wでバックスラッシュも削除
-	imap <buffer> <C-w> <Plug>(unite_delete_backward_path)
-	"ctrl+jで縦に分割して開く
-	nnoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
-	inoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
-	"ctrl+lで横に分割して開く
-	nnoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
-	inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
-	"ctrl+oでその場所に開く
-	nnoremap <silent> <buffer> <expr> <C-o> unite#do_action('open')
-	inoremap <silent> <buffer> <expr> <C-o> unite#do_action('open')
+    "ESC二回でuniteを終了
+    nmap <buffer> <ESC><ESC> <Plug>(unite_exit)
+    "入力モードのときjjでノーマルモードに移動
+    imap <buffer> jj <Plug>(unite_insert_leave)
+    "入力モードのときctrl+wでバックスラッシュも削除
+    imap <buffer> <C-w> <Plug>(unite_delete_backward_path)
+    "ctrl+jで縦に分割して開く
+    nnoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
+    inoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
+    "ctrl+lで横に分割して開く
+    nnoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
+    inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
+    "ctrl+oでその場所に開く
+    nnoremap <silent> <buffer> <expr> <C-o> unite#do_action('open')
+    inoremap <silent> <buffer> <expr> <C-o> unite#do_action('open')
 endfunction"}}}
