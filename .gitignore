@@ -1,2 +1,3 @@
-/vimfiles/bundle/
-/tmp/
+vimfiles/bundle/
+vimfiles/tmp/
+!vimfiles/tmp/readme.txt
