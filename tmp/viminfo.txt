@@ -1,0 +1,435 @@
+# この viminfo ファイルは Vim 7.3 によって生成されました.
+# 変更する際には十分注意してください!
+
+# このファイルが書かれた時の 'encoding' の値
+*encoding=utf-8
+
+
+# hlsearch on (H) or off (h):
+~h
+# 最後の 検索パターン:
+~Msle0~/')
+
+# コマンドライン 項目の履歴 (新しいものから古いものへ):
+:wq
+:q
+:colorscheme jellybeans
+:e ++enc=utf-8
+:Unite file
+:UniteWithBufferDir -buffer-name=files fi
+:Unite file -buffer-name=files
+:BundleInstall
+:w
+:q!
+:wq!
+
+# 検索文字列 項目の履歴 (新しいものから古いものへ):
+? ')
+?/Jp
+? ')
+? ')
+? ')
+? ')
+? ')
+? ')
+? ')
+? ')
+? ')
+? ')
+? ')
+? ')
+? ')
+? ')
+? ')
+? ')
+? ')
+? ')
+
+# 式 項目の履歴 (新しいものから古いものへ):
+
+# 入力行 項目の履歴 (新しいものから古いものへ):
+
+# 入力行 項目の履歴 (新しいものから古いものへ):
+
+# レジスタ:
+""0	LINE	0
+	"=======================================================
+	"フォーマット
+	"=======================================================
+	"改行後の自動コメント挿入を解除
+	"r 挿入モードで<Enter>を打ち込んだ後にコメント開始文字列を自動挿入
+	"o ノーマルモードで'o','O'を打ち込んだ後にコメント開始文字列を自動挿入
+	"B マルチバイト文字と非マルチバイト文字の連結で間に空白を自動挿入
+	set formatoptions=qB
+	autocmd FileType * set formatoptions-=ro
+	
+	"バイナリの編集モード
+	augroup Binary
+	    au!
+	    au BufReadPre   *.bin let &bin=1
+	    au BufReadPost  *.bin if &bin | %!xxd -g 1
+	    au BufReadPost  *.bin set ft=xxd | endif
+	    au BufWritePre  *.bin if &bin | %!xxd -r
+	    au BufWritePre  *.bin endif
+	    au BufWritePost *.bin if &bin | silent %!xxd -g 1
+	    au BufWritePost *.bin set nomod | endif
+	augroup END
+	
+"1	CHAR	0
+	"
+"2	LINE	0
+	au WinEnter * let w:m3 = matchadd("JpSpace", '　')
+"3	CHAR	0
+	　')
+"4	CHAR	0
+	　')
+	au WinEnter * let w:m3 = matchadd("JpSpace", '　
+"5	CHAR	0
+	'
+"6	CHAR	0
+	 
+"7	CHAR	0
+	,
+"8	CHAR	0
+	"
+"9	CHAR	0
+	"
+"a@	CHAR	0
+	f;a
+
+# ファイルマーク:
+'0  1  27  ~\dotfiles\.git\COMMIT_EDITMSG
+'1  2  0  ~\.gitconfig
+'2  1  0  ~\bkup_vimfiles\.netrwhist
+'3  8  0  ~\bkup_vimfiles\tmp\viminfo.txt
+'4  11  0  ~\dotfiles\_gvimrc
+'5  172  0  ~\dotfiles\_vimrc
+'6  156  0  ~\vimrc_list\office\_vimrc
+'7  98  29  ~\dotfiles\_vimrc
+'8  1  0  ~\dotfiles\_gvimrc
+'9  8  0  ~\dotfiles\_vimrc
+
+# ジャンプリスト (新しいものが先):
+-'  1  27  ~\dotfiles\.git\COMMIT_EDITMSG
+-'  2  0  ~\.gitconfig
+-'  1  0  ~\bkup_vimfiles\.netrwhist
+-'  8  0  ~\bkup_vimfiles\tmp\viminfo.txt
+-'  1  0  ~\bkup_vimfiles\tmp\viminfo.txt
+-'  11  0  ~\dotfiles\_gvimrc
+-'  1  1  ~\新しいフォルダー\_gvimrc
+-'  192  0  ~\dotfiles\_vimrc
+-'  73  0  ~\dotfiles\_vimrc
+-'  172  0  ~\dotfiles\_vimrc
+-'  1  0  ~\新しいフォルダー\_vimrc
+-'  264  0  ~\dotfiles\_vimrc
+-'  23  0  ~\vimrc_list\home\_vimrc
+-'  1  0  ~\vimrc_list\home\_vimrc
+-'  156  0  ~\vimrc_list\office\_vimrc
+-'  99  0  ~\vimrc_list\office\_vimrc
+-'  25  0  ~\vimrc_list\office\_vimrc
+-'  265  0  ~\dotfiles\_vimrc
+-'  1  0  ~\dotfiles\_vimrc
+-'  98  29  ~\dotfiles\_vimrc
+-'  9  0  ~\dotfiles\_gvimrc
+-'  1  0  ~\dotfiles\_gvimrc
+-'  60  0  ~\dotfiles\_vimrc
+-'  8  0  ~\dotfiles\_vimrc
+-'  261  0  ~\dotfiles\_vimrc
+-'  203  0  ~\dotfiles\_vimrc
+-'  204  0  ~\dotfiles\_vimrc
+-'  46  0  ~\vimrc_list\office\_vimrc
+-'  1  0  ~\vimrc_list\office\_vimrc
+-'  1  0  ~\.gitconfig
+-'  22  0  ~\______vimrc
+-'  172  0  ~\______vimrc
+-'  180  0  ~\______vimrc
+-'  1  0  ~\______vimrc
+-'  207  0  ~\_vimrc
+-'  166  0  ~\_vimrc
+-'  1  0  ~\_gvimrc
+-'  168  0  ~\_vimrc
+-'  197  64  ~\_vimrc
+-'  19  0  ~\_vimrc
+-'  226  0  ~\_vimrc
+-'  21  20  ~\dotfiles\_vimrc
+-'  39  24  ~\dotfiles\_vimrc
+-'  4  0  ~\_viminfo
+-'  1  0  ~\_viminfo
+-'  183  46  c:\Program Files (x86)\Git\etc\profile
+-'  1  0  c:\Program Files (x86)\Git\etc\profile
+-'  1  0  ~\.minttyrc
+-'  185  46  c:\Program Files (x86)\Git\etc\profile
+-'  2  0  c:\Program Files (x86)\Git\etc\profile
+-'  187  46  c:\Program Files (x86)\Git\etc\profile
+-'  189  46  c:\Program Files (x86)\Git\etc\profile
+-'  1  0  ~\dotfiles\.gitmodules
+-'  2  3  ~\dotfiles\.gitignore
+-'  1  0  ~\dotfiles\.gitignore
+-'  3  3  ~\dotfiles\.gitignore
+-'  2  3  ~\dotfiles\.gitignore
+-'  1  0  ~\dotfiles\.gitignore
+-'  3  3  ~\dotfiles\.gitignore
+-'  2  3  ~\dotfiles\.gitignore
+-'  1  0  ~\dotfiles\.gitignore
+-'  3  3  ~\dotfiles\.gitignore
+-'  2  3  ~\dotfiles\.gitignore
+-'  1  0  ~\dotfiles\.gitignore
+-'  3  3  ~\dotfiles\.gitignore
+-'  2  3  ~\dotfiles\.gitignore
+-'  1  0  ~\dotfiles\.gitignore
+-'  3  3  ~\dotfiles\.gitignore
+-'  2  3  ~\dotfiles\.gitignore
+-'  1  0  ~\dotfiles\.gitignore
+-'  3  3  ~\dotfiles\.gitignore
+-'  2  3  ~\dotfiles\.gitignore
+-'  1  0  ~\dotfiles\.gitignore
+-'  3  3  ~\dotfiles\.gitignore
+-'  2  3  ~\dotfiles\.gitignore
+-'  1  0  ~\dotfiles\.gitignore
+-'  3  3  ~\dotfiles\.gitignore
+-'  4  0  ~\_viminfo
+-'  1  0  ~\_viminfo
+-'  183  46  c:\Program Files (x86)\Git\etc\profile
+-'  1  0  c:\Program Files (x86)\Git\etc\profile
+-'  1  0  ~\.minttyrc
+-'  185  46  c:\Program Files (x86)\Git\etc\profile
+-'  2  0  c:\Program Files (x86)\Git\etc\profile
+-'  187  46  c:\Program Files (x86)\Git\etc\profile
+-'  189  46  c:\Program Files (x86)\Git\etc\profile
+-'  1  0  ~\dotfiles\.gitmodules
+-'  2  3  ~\dotfiles\.gitignore
+-'  1  0  ~\dotfiles\.gitignore
+-'  3  3  ~\dotfiles\.gitignore
+-'  2  3  ~\dotfiles\.gitignore
+-'  1  0  ~\dotfiles\.gitignore
+-'  3  3  ~\dotfiles\.gitignore
+
+# ファイル内マークの履歴 (新しいものから古いもの):
+
+> ~\dotfiles\.git\COMMIT_EDITMSG
+	"	1	27
+	^	1	30
+	.	1	30
+	+	1	30
+
+> ~\.gitconfig
+	"	2	0
+
+> ~\bkup_vimfiles\.netrwhist
+	"	1	0
+
+> ~\bkup_vimfiles\tmp\viminfo.txt
+	"	8	0
+
+> ~\新しいフォルダー\_vimrc
+	"	136	0
+
+> ~\新しいフォルダー\[unite] - files
+	"	2	0
+	^	2	10
+	.	3	0
+	+	1	0
+	+	1	0
+	+	1	0
+	+	1	0
+	+	1	0
+	+	1	0
+	+	1	0
+	+	4	0
+	+	4	0
+	+	3	0
+
+> ~\dotfiles\_vimrc
+	"	192	0
+	^	148	13
+	.	150	0
+	+	25	45
+	+	25	0
+	+	23	23
+	+	19	0
+	+	21	0
+	+	24	0
+	+	21	23
+	+	143	0
+	+	144	0
+	+	198	0
+	+	196	0
+	+	208	0
+	+	207	0
+	+	208	0
+	+	207	0
+	+	98	29
+	+	68	0
+	+	73	13
+	+	74	0
+	+	148	12
+	+	150	0
+
+> ~\dotfiles\_gvimrc
+	"	11	0
+	.	11	0
+	+	9	0
+	+	10	0
+	+	10	45
+	+	10	45
+	+	10	44
+	+	11	0
+
+> ~\新しいフォルダー\_gvimrc
+	"	1	1
+
+> ~\新しいフォルダー\[unite] - default
+	"	2	1
+	^	2	2
+	.	3	0
+	+	3	0
+
+> ~\vimrc_list\home\_vimrc
+	"	136	0
+
+> ~\vimrc_list\home\[unite] - files
+	"	2	20
+	^	2	21
+	.	3	0
+	+	4	0
+	+	4	0
+	+	3	0
+
+> ~\dotfiles\[unite] - files
+	"	2	28
+	^	2	29
+	.	3	0
+	+	10	0
+	+	5	0
+	+	4	0
+	+	4	0
+	+	4	0
+	+	3	0
+	+	3	0
+
+> ~\vimrc_list\office\_vimrc
+	"	156	0
+
+> ~\dotfiles\[unite] - default
+	"	2	1
+	^	2	2
+	.	3	0
+	+	1	0
+	+	1	0
+	+	3	0
+
+> ~\vimrc_list\office\_gvimrc
+	"	1	0
+
+> ~\______vimrc
+	"	22	0
+
+> ~\_vimrc
+	"	207	0
+	^	226	1
+	.	226	0
+	+	21	23
+	+	139	0
+	+	140	0
+	+	167	0
+	+	169	0
+	+	177	1
+	+	179	0
+	+	175	0
+	+	181	0
+	+	180	20
+	+	186	8
+	+	180	8
+	+	226	0
+	+	222	1
+	+	224	0
+	+	223	1
+	+	224	63
+	+	225	1
+	+	226	14
+	+	188	32
+	+	190	34
+	+	193	23
+	+	184	0
+	+	188	0
+	+	190	0
+	+	193	0
+	+	197	0
+	+	199	0
+	+	201	0
+	+	203	0
+	+	205	0
+	+	207	0
+	+	209	0
+	+	210	0
+	+	212	1
+	+	214	1
+	+	216	1
+	+	218	1
+	+	219	1
+	+	221	1
+	+	222	1
+	+	224	1
+	+	225	1
+	+	226	0
+
+> ~\[unite] - default
+	"	11	0
+	^	20	3
+	.	3	0
+	+	21	0
+	+	20	2
+	+	3	0
+
+> ~\[unite] - action - 1
+	"	24	0
+	.	25	0
+	+	5	0
+	+	25	0
+
+> ~\_gvimrc
+	"	1	0
+
+> D:\FreeSoft\vim73-kaoriya-win64\[unite] - files
+	"	3	0
+	.	3	0
+	+	3	0
+
+> D:\FreeSoft\vim73-kaoriya-win64\[Vundle] Installer
+	"	4	0
+	.	1	0
+	+	10	0
+	+	7	0
+	+	4	0
+	+	1	0
+
+> C:\Users\tanabe\AppData\Local\Temp\VIAA26.tmp
+	"	4	12
+
+> C:\Users\tanabe\AppData\Local\Temp\VIAAD60.tmp
+	"	1	14
+
+> ~\_viminfo
+	"	4	0
+
+> c:\Program Files (x86)\Git\etc\profile
+	"	183	46
+	^	183	47
+	.	183	46
+	+	189	46
+	+	187	46
+	+	185	46
+	+	183	46
+
+> ~\.minttyrc
+	"	1	0
+
+> ~\dotfiles\.gitmodules
+	"	1	0
+
+> ~\dotfiles\.gitignore
+	"	2	3
+	^	2	4
+	.	2	3
+	+	3	0
+	+	2	3
