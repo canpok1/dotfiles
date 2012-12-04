@@ -6,22 +6,20 @@ set nocompatible
 "ファイルタイプを一時的にオフ
 filetype off
 
-"vundle初期化"
+"neobundle初期化"
 if has("win32") || has("win64")
-    set rtp+=~/vimfiles/vundle.git/
-    call vundle#rc('~/vimfiles/bundle/')
+    set rtp+=~/vimfiles/neobundle.vim.git/
+    call neobundle#rc('~/vimfiles/bundle/')
 else
-    set rtp+=~/.vim/vundle.git/
+    set rtp+=~/.vim/neobundle.vim.git/
     let g:vundle_default_git_proto='git'
-    call vundle#rc()
+    call neobundle#rc()
 endif
 
-"vim-scriptsリポジトリ
+"プラグインのリポジトリ
+NeoBundle 'git://github.com/Shougo/unite.vim.git'
+NeoBundle 'git://github.com/Shougo/vimfiler.git'
 
-"githubの任意のリポジトリ
-Bundle 'Shougo/unite.vim'
-
-"github以外のリポジトリ
 
 "ファイル形式検出、プラグイン、インデントをオン
 filetype plugin indent on
@@ -54,9 +52,6 @@ set clipboard=unnamed
 "入力されているテキストの最大幅 [0]で無効
 set textwidth=0
 
-"新しい行を作った時に高度な自動インデント
-set smarttab
-
 "ファイル候補が複数ある場合、共通する文字までを補完"
 set wildmode=list:longest
 
@@ -68,12 +63,6 @@ set hidden
 
 "インクリメンタルサーチ
 set incsearch
-
-"vimの内部文字エンコーディング
-:set encoding=utf-8
-
-"文字エンコーディング
-:set fileencodings=ucs-bom,iso-2022-jp-3,iso-2022-jp,eucjp-ms,euc-jisx0213,euc-jp,sjis,cp932,utf-8
 
 "縦分割の新規ウィンドウは右に開く
 set splitright
@@ -88,7 +77,7 @@ set t_Co=256
 syntax on
 
 "カラースキーマ
-colorscheme jellybeans
+"colorscheme jellybeans
 
 "シンタックスハイライト
 "au BufNewFile,BufRead *.log setf mpacs_log
@@ -144,6 +133,9 @@ set softtabstop=4
 "自動インデントの各段階に使われる空白数
 set shiftwidth=4
 
+"新しい行を作った時に高度な自動インデント
+set smarttab
+
 "オートインデントオフ
 set noautoindent
 
@@ -176,15 +168,32 @@ augroup Binary
 augroup END
 
 "=======================================================
+" unite設定
+"=======================================================
+"unite general settings
+"インサートモードで開始
+let g:unite_enable_start_insert=1
+"最近聞いたファイル履歴の保存数
+let g:unite_source_file_mru_limit=50
+
+"=======================================================
 "キーマッピング
 "=======================================================
-"--------------------------
-"   ノーマルモード(nmap)
-"--------------------------
+
+"-----------------------------
+"nmap : ノーマルモード
+"vmap : ビジュアルモード
+"omap : モーション待ちモード
+"imap : 挿入モード
+"cmap : コマンドラインモード
+"-----------------------------
 
 "_vimrcと_gvimrcの編集用ショートカット
-"nmap <Space>ev :<C-u>tabnew $MYVIMRC<CR>
-"nmap <Space>eg :<C-u>tabnew $MYGVIMRC<CR>
+nmap <Space>ev :<C-u>e $MYVIMRC<CR>
+nmap <Space>eg :<C-u>e $MYGVIMRC<CR>
+"_vimrcと_gvimrcの再読み込み用ショートカット
+nmap <Space>sv :<C-u>source $MYVIMRC<CR>
+nmap <Space>sg :<C-u>source $MYGVIMRC<CR>
 
 "ESC押したときIMEオフ
 "nmap <ESC> <ESC>:set iminsert=0<CR>
@@ -192,53 +201,14 @@ augroup END
 "ESCを連続で押したとき検索のハイライトを消す
 nmap <ESC><ESC> :nohlsearch<CR><ESC>
 
-
-"--------------------------
-"  ビジュアルモード(vmap)
-"--------------------------
-
-
-"--------------------------
-"モーション待ちモード(omap)
-"--------------------------
-"
-"
-"--------------------------
-"     挿入モード(imap)
-"--------------------------
-"
-"ESC押したときIMEオフ
-"imap <ESC> <ESC>:set iminsert=0<CR>
-
-"括弧やクオートなどを入力した際に左に自動で移動
-"imap {<Space>} {}<Left>
-"imap [<Space>] []<Left>
-"imap (<Space>) ()<Left>
-"imap '<Space>' ''<Left>
-"imap <<Space>> <><Left>
-
-"--------------------------
-"コマンドラインモード(cmap)
-"--------------------------
-
-
-
-
-"--------------------------
-"unite設定
-"--------------------------
-"unite prefix key.
-nnoremap [unite] <Nop>
-nmap <Space>u [unite]
-
-"unite general settings
-"インサートモードで開始
-let g:unite_enable_start_insert=1
-"最近聞いたファイル履歴の保存数
-let g:unite_source_file_mru_limit=50
-
 "file_mruの表示フォーマットを指定。空にすると表示スピードが高速化
 "let g:unite_source_file_mru_filename_format=''
+
+"--------------------------
+"unite起動
+"--------------------------
+nnoremap [unite] <Nop>
+nmap <Space>u [unite]
 
 "現在開いているファイルのディレクトリ下のファイル一覧。
 "開いていない場合はカレントディレクトリ
@@ -253,7 +223,21 @@ nnoremap <silent> [unite]b :<C-u>Unite buffer<CR>
 "nnoremap <silent> [unite]c :<C-u>Unite bookmark<CR>
 "ブックマークに追加
 "nnoremap <silent> [unite]a :<C-u>UniteBookmarkAdd<CR>
+
+"--------------------------
+"vimfiler起動
+"--------------------------
+nnoremap [vimfiler] <Nop>
+nmap <Space>f [vimfiler]
+
+"縦区切りで起動
+nnoremap <silent> [vimfiler]c :VimFiler -split -simple -winwidth=35 -no-quit<CR>
+
+nnoremap <silent> [vimfiler]b :VimFilerBufferDir -split -simple -winwidth=35 -no-quit<CR>
+
+"-----------------------------
 "uniteを開いている間のキーマッピング
+"-----------------------------
 autocmd FileType unite call s:unite_my_settings()
 function! s:unite_my_settings()"{{{
     "ESC二回でuniteを終了
