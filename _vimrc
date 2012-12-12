@@ -79,8 +79,10 @@ syntax on
 "カラースキーマ
 "colorscheme jellybeans
 
-"シンタックスハイライト
-"au BufNewFile,BufRead *.log setf mpacs_log
+if has("win32") || has("win64")
+    "シンタックスハイライト
+    au BufNewFile,BufRead *.log setf mpacs_log
+endif
 
 "入力モード時、ステータスラインのカラーを変更
 "augroup InsertHook
