@@ -1,6 +1,7 @@
 "=======================================================
-"プラグイン設定
+"プラグイン設定 {{{
 "=======================================================
+
 "vi互換オフ
 set nocompatible
 "ファイルタイプを一時的にオフ
@@ -23,9 +24,11 @@ NeoBundle 'git://github.com/Shougo/vimfiler.git'
 "ファイル形式検出、プラグイン、インデントをオン
 filetype plugin indent on
 
+"}}}
+"=======================================================
 
 "=======================================================
-"基本設定設定
+"基本設定設定 {{{
 "=======================================================
 if has("win32") || has("win64")
     "スワップファイルの出力先設定
@@ -69,8 +72,13 @@ set splitright
 "検査をファイルの先頭へループしない"
 set nowrapscan
 
+"折りたたみ設定
+set foldmethod=marker
+"}}}
 "=======================================================
-"見た目
+
+"=======================================================
+"見た目 {{{
 "=======================================================
 "256色対応
 set t_Co=256
@@ -124,9 +132,11 @@ set list
 
 "listで表示される文字のフォーマットを指定
 set listchars=eol:<,tab:>\ ,trail:-,extends:>,precedes:<
+"}}}
+"=======================================================
 
 "=======================================================
-"インデント設定
+"インデント設定"{{{
 "=======================================================
 "ファイル内の<Tab>が対応する空白の数
 set tabstop=4
@@ -148,9 +158,11 @@ set cindent
 
 "タブを使用しない
 set expandtab
+"}}}
+"=======================================================
 
 "=======================================================
-"フォーマット
+"フォーマット"{{{
 "=======================================================
 "改行後の自動コメント挿入を解除
 "r 挿入モードで<Enter>を打ち込んだ後にコメント開始文字列を自動挿入
@@ -170,32 +182,38 @@ augroup Binary
     au BufWritePost *.bin if &bin | silent %!xxd -g 1
     au BufWritePost *.bin set nomod | endif
 augroup END
+"}}}
+"=======================================================
 
 "=======================================================
-"自作コマンド
+"自作コマンド"{{{
 "=======================================================
 "画面端での折り返しの切替
 command! ToggleWrap :set invwrap
 "vimrc,gvimrcの編集
-command! VimrcEdit :e $MYVIMRC
-command! GVimrcEdit :e $MYGVIMRC
+command! VimrcEdit :e $HOME\dotfiles\_vimrc
+command! GVimrcEdit :e $HOME\dotfiles\_gvimrc
 "vimrc,gvimrcの再読み込み
-command! VimrcReload :source $MYVIMRC"
-command! GVimrcReload :source $MYGVIMRC"
+command! VimrcReload :source $HOME\dotfiles\_vimrc
+command! GVimrcReload :source $HOME\dotfiles\_gvimrc
 "よくないログの検索"
 command! ListupBadLog :g/ FATAL \| ERROR \| WARN 
+"}}}
+"=======================================================
 
 "=======================================================
-" unite設定
+" unite設定"{{{
 "=======================================================
 "unite general settings
 "インサートモードで開始
 let g:unite_enable_start_insert=1
 "最近聞いたファイル履歴の保存数
 let g:unite_source_file_mru_limit=50
+"}}}
+"=======================================================
 
 "=======================================================
-"キーマッピング
+"キーマッピング"{{{
 "=======================================================
 
 "-----------------------------
@@ -237,6 +255,7 @@ nnoremap <silent> [unite]b :<C-u>Unite buffer<CR>
 "ブックマークに追加
 "nnoremap <silent> [unite]a :<C-u>UniteBookmarkAdd<CR>
 
+
 "--------------------------
 "vimfiler起動
 "--------------------------
@@ -252,6 +271,7 @@ nnoremap <silent> [vimfiler]b :VimFilerBufferDir -split -simple -winwidth=35 -no
 "uniteを開いている間のキーマッピング
 "-----------------------------
 autocmd FileType unite call s:unite_my_settings()
+
 function! s:unite_my_settings()"{{{
     "ESC二回でuniteを終了
     nmap <buffer> <ESC><ESC> <Plug>(unite_exit)
