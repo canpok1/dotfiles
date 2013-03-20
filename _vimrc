@@ -20,7 +20,6 @@ endif
 NeoBundle 'git://github.com/Shougo/unite.vim.git'
 NeoBundle 'git://github.com/Shougo/vimfiler.git'
 
-
 "ファイル形式検出、プラグイン、インデントをオン
 filetype plugin indent on
 
@@ -66,6 +65,9 @@ set incsearch
 
 "縦分割の新規ウィンドウは右に開く
 set splitright
+
+"検査をファイルの先頭へループしない"
+set nowrapscan
 
 "=======================================================
 "見た目
@@ -170,6 +172,20 @@ augroup Binary
 augroup END
 
 "=======================================================
+"自作コマンド
+"=======================================================
+"画面端での折り返しの切替
+command! ToggleWrap :set invwrap
+"vimrc,gvimrcの編集
+command! VimrcEdit :e $MYVIMRC
+command! GVimrcEdit :e $MYGVIMRC
+"vimrc,gvimrcの再読み込み
+command! VimrcReload :source $MYVIMRC"
+command! GVimrcReload :source $MYGVIMRC"
+"よくないログの検索"
+command! ListupBadLog :g/ FATAL \| ERROR \| WARN 
+
+"=======================================================
 " unite設定
 "=======================================================
 "unite general settings
@@ -190,13 +206,6 @@ let g:unite_source_file_mru_limit=50
 "cmap : コマンドラインモード
 "-----------------------------
 
-"_vimrcと_gvimrcの編集用ショートカット
-nmap <Space>ev :<C-u>e $MYVIMRC<CR>
-nmap <Space>eg :<C-u>e $MYGVIMRC<CR>
-"_vimrcと_gvimrcの再読み込み用ショートカット
-nmap <Space>sv :<C-u>source $MYVIMRC<CR>
-nmap <Space>sg :<C-u>source $MYGVIMRC<CR>
-
 "ESC押したときIMEオフ
 "nmap <ESC> <ESC>:set iminsert=0<CR>
 
@@ -205,6 +214,8 @@ nmap <ESC><ESC> :nohlsearch<CR><ESC>
 
 "file_mruの表示フォーマットを指定。空にすると表示スピードが高速化
 "let g:unite_source_file_mru_filename_format=''
+"補完
+imap <C-Space> <C-x><C-o>
 
 "--------------------------
 "unite起動
