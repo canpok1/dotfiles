@@ -20,6 +20,8 @@ endif
 "プラグインのリポジトリ
 NeoBundle 'git://github.com/Shougo/unite.vim.git'
 "NeoBundle 'git://github.com/Shougo/vimfiler.git'
+NeoBundle 'git://github.com/thinca/vim-quickrun.git'
+NeoBundle 'git://github.com/tyru/open-browser.vim.git'
 
 "ファイル形式検出、プラグイン、インデントをオン
 filetype plugin indent on
@@ -107,6 +109,9 @@ if has("win32") || has("win64")
     "シンタックスハイライト
     au BufNewFile,BufRead *.log setf mpacs_log
 endif
+
+autocmd BufRead,BufNewFile *.mkd setfiletype mkd
+autocmd BufRead,BufNewFile *.md setfiletype mkd
 
 "入力モード時、ステータスラインのカラーを変更
 "augroup InsertHook
@@ -252,6 +257,16 @@ endfunction
 "=======================================================
 
 "=======================================================
+" QuickRun設定 {{{
+"=======================================================
+let g:quickrun_config = {}
+let g:quickrun_config['markdown'] = {
+        \   'outputter': 'browser',
+        \ }
+"}}}
+"=======================================================
+
+"=======================================================
 " unite設定"{{{
 "=======================================================
 "unite general settings
@@ -311,6 +326,9 @@ nnoremap <silent> [unite]b :<C-u>Unite buffer<CR>
 "ブックマークに追加
 "nnoremap <silent> [unite]a :<C-u>UniteBookmarkAdd<CR>
 
+"ブラウザで開く"
+nmap <Leader>w <Plug>(openbrowser-open)
+vmap <Leader>w <Plug>(openbrowser-open)
 
 "--------------------------
 "vimfiler起動
