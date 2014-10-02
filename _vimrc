@@ -19,7 +19,7 @@ endif
 
 "プラグインのリポジトリ
 NeoBundle 'git://github.com/Shougo/unite.vim.git'
-NeoBundle 'git://github.com/Shougo/vimfiler.git'
+"NeoBundle 'git://github.com/Shougo/vimfiler.git'
 
 "ファイル形式検出、プラグイン、インデントをオン
 filetype plugin indent on
@@ -28,7 +28,14 @@ filetype plugin indent on
 "=======================================================
 
 "=======================================================
-"基本設定設定 {{{
+"ファイルタイプ設定"{{{
+"=======================================================
+au BufRead,BufNewFile *.gradle set filetype=groovy
+"}}}
+"=======================================================
+
+"=======================================================
+"基本設定 {{{
 "=======================================================
 if has("win32") || has("win64")
     "スワップファイルの出力先設定
@@ -77,6 +84,9 @@ set foldmethod=marker
 
 "検索時に大文字を含んでいたら大/小を区別
 set smartcase
+
+"文字コードの自動認識
+set fileencodings=ucs-bom,utf-8,iso-2022-jp,sjis,cp932,euc-jp,cp20932
 
 "}}}
 "=======================================================
@@ -136,6 +146,13 @@ set list
 
 "listで表示される文字のフォーマットを指定
 set listchars=eol:<,tab:>\ ,trail:-,extends:>,precedes:<
+
+"タブ表示設定
+"0 : 常に非表示
+"1 : 2つ以上タブがあれば表示
+"2 : 常に表示
+set showtabline=2
+
 "}}}
 "=======================================================
 
@@ -195,13 +212,42 @@ augroup END
 "画面端での折り返しの切替
 command! ToggleWrap :set invwrap
 "vimrc,gvimrcの編集
-command! VimrcEdit :e $HOME\dotfiles\_vimrc
-command! GVimrcEdit :e $HOME\dotfiles\_gvimrc
+command! VimrcEdit :tabe $HOME\dotfiles\_vimrc
+command! GvimrcEdit :tabe $HOME\dotfiles\_gvimrc
 "vimrc,gvimrcの再読み込み
 command! VimrcReload :source $HOME\dotfiles\_vimrc
-command! GVimrcReload :source $HOME\dotfiles\_gvimrc
-"よくないログの検索"
+command! GvimrcReload :source $HOME\dotfiles\_gvimrc
+"よくないログの検索
 command! ListupBadLog :g/ FATAL \| ERROR \| WARN 
+command! ListupBadLogQF :vim/ FATAL \| ERROR \| WARN /%|cw
+"文字コード設定
+command! SetSJIS :set fenc=cp932
+command! SetJIS :set fenc=iso-2022-jp
+command! SetEUC :set fenc=euc-jp
+command! SetUTF8 :set fenc=utf-8
+command! SetUTF8BOM :set fenc=utf-8 bomb
+"文字コード指定で開きなおす
+command! ReloadSJIS :e ++enc=cp932
+command! ReloadJIS :e ++enc=iso-2022-jp
+command! ReloadEUC :e ++enc=euc-jp
+command! ReloadUTF8 :e ++enc=utf-8
+command! ReloadUTF8BOM :e ++enc=utf-8 bomb
+"改行コード設定
+command! SetCRLF :set ff=dos
+command! SetCR :set ff=mac
+command! SetLF :set ff=unix
+"改行コード指定で開きなおす
+command! ReloadCRLF :e ++ff=dos
+command! ReloadCR :e ++ff=mac
+command! ReloadLF :e ++ff=unix
+
+function! OpenNewTab()
+    if winner('$')!=1 || tabpagenr('$')!=1
+        execute ":q"
+        let l:f=expand("%:p")
+        execute ":tabnew" .l:f
+    endif
+endfunction
 "}}}
 "=======================================================
 
@@ -238,6 +284,12 @@ nmap <ESC><ESC> :nohlsearch<CR><ESC>
 "let g:unite_source_file_mru_filename_format=''
 "補完
 imap <C-Space> <C-x><C-o>
+
+"ファイルをタブで開くのをデフォルトにする
+nnoremap gf <C-w>gF
+nnoremap gF <C-w>gf
+nnoremap <C-w>gf gF
+nnoremap <C-w>gF gf
 
 "--------------------------
 "unite起動

@@ -6,6 +6,14 @@
 colorscheme desert
 
 "全角スペースを視覚化
-highlight JpSpace guibg=#9999FF
-au BufWinEnter,WinEnter * match JpSpace /　/
-
+scriptencoding utf-8
+if has('syntax')
+    function! HighlightDoubleByteSpace()
+        highlight DoubleByteSpace term=underline guibg=#9999FF
+        match DoubleByteSpace /　/
+    endfunction
+    augroup highlightDoubleByteSpace
+        autocmd!
+        autocmd VimEnter,WinEnter,BufRead  * call HighlightDoubleByteSpace()
+    augroup END
+endif
