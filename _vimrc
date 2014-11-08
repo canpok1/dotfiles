@@ -93,6 +93,9 @@ set fileencodings=ucs-bom,utf-8,iso-2022-jp,sjis,cp932,euc-jp,cp20932
 "コマンドラインモードの保管を<Tab>でできるように
 set wildmenu
 
+"バックスペースで文字を消せるように
+set backspace=indent,eol,start
+
 "}}}
 "=======================================================
 
