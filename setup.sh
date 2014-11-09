@@ -1,7 +1,7 @@
 #!/bin/sh
 ln -sf ~/dotfiles/_vimrc ~/.vimrc
 ln -sf ~/dotfiles/_gvimrc ~/.gvimrc
-ln -sfd ~/dotfiles/vimfiles ~/vimfiles
+ln -sfd ~/dotfiles/.vim ~/vimfiles
 ln -sf ~/dotfiles/.gitconfig ~/.gitconfig
 
 FirstDir=`pwd`
