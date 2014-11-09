@@ -223,11 +223,11 @@ augroup END
 "画面端での折り返しの切替
 command! ToggleWrap :set invwrap
 "vimrc,gvimrcの編集
-command! VimrcEdit :tabe $HOME\dotfiles\_vimrc
-command! GvimrcEdit :tabe $HOME\dotfiles\_gvimrc
+command! VimrcEdit :tabe $HOME/dotfiles/_vimrc
+command! GvimrcEdit :tabe $HOME/dotfiles/_gvimrc
 "vimrc,gvimrcの再読み込み
-command! VimrcReload :source $HOME\dotfiles\_vimrc
-command! GvimrcReload :source $HOME\dotfiles\_gvimrc
+command! VimrcReload :source $HOME/dotfiles/_vimrc
+command! GvimrcReload :source $HOME/dotfiles/_gvimrc
 "よくないログの検索
 command! ListupBadLog :g/ FATAL \| ERROR \| WARN 
 command! ListupBadLogQF :vim/ FATAL \| ERROR \| WARN /%|cw
