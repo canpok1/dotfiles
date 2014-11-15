@@ -78,6 +78,9 @@ set incsearch
 "縦分割の新規ウィンドウは右に開く
 set splitright
 
+"横分割の新規ウィンドウは下に開く
+set splitbelow
+
 "検査をファイルの先頭へループしない"
 set nowrapscan
 
@@ -266,9 +269,16 @@ endfunction
 " QuickRun設定 {{{
 "=======================================================
 let g:quickrun_config = {}
-let g:quickrun_config['markdown'] = {
-        \   'outputter': 'browser',
-        \ }
+let g:quickrun_config = {
+            \   '_': {
+            \       'outputter/buffer/split': ':botright',
+            \       'outputter/buffer/close_on_empty': 1,
+            \       'hook/time/enable': '1'
+            \   },
+            \   'markdown': {
+            \       'outputter': 'browser',
+            \   }
+            \}
 "}}}
 "=======================================================
 
