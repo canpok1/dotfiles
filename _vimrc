@@ -99,6 +99,12 @@ set wildmenu
 "バックスペースで文字を消せるように
 set backspace=indent,eol,start
 
+"検索時に大文字小文字を無視する
+set ignorecase
+
+"大文字を混ぜて検索した場合だけ大文字小文字を区別する
+set smartcase
+
 "}}}
 "=======================================================
 
@@ -173,14 +179,16 @@ set showtabline=2
 "=======================================================
 "インデント設定"{{{
 "=======================================================
-"ファイル内の<Tab>が対応する空白の数
-set tabstop=4
 
-"<Tab>の挿入や<BS>の使用の編集操作をするときに、<Tab>が対応する空白数
-set softtabstop=4
+autocmd BufNewFile,BufRead * call SetIndent()
 
-"自動インデントの各段階に使われる空白数
-set shiftwidth=4
+function! SetIndent()
+  if &syntax=='ruby' || &syntax=='yaml' || &syntax=='vim' || &syntax=='eruby'
+    execute 'set softtabstop=2 | set shiftwidth=2 | set tabstop=2'
+  else
+    execute 'set softtabstop=4 | set shiftwidth=4 | set tabstop=4'
+  endif
+endf
 
 "新しい行を作った時に高度な自動インデント
 set smarttab
