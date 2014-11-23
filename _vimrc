@@ -19,7 +19,6 @@ endif
 
 "プラグインのリポジトリ
 NeoBundle 'git://github.com/Shougo/unite.vim.git'
-"NeoBundle 'git://github.com/Shougo/vimfiler.git'
 NeoBundle 'git://github.com/thinca/vim-quickrun.git'
 NeoBundle 'git://github.com/tyru/open-browser.vim.git'
 
@@ -33,6 +32,7 @@ filetype plugin indent on
 "ファイルタイプ設定"{{{
 "=======================================================
 au BufRead,BufNewFile *.gradle set filetype=groovy
+au BufRead,BufNewFile *.{md,mdwn,mkd,mkdn} set filetype=markdown
 "}}}
 "=======================================================
 
@@ -353,17 +353,6 @@ nnoremap <silent> [unite]b :<C-u>Unite buffer<CR>
 "ブラウザで開く"
 nmap <Leader>w <Plug>(openbrowser-open)
 vmap <Leader>w <Plug>(openbrowser-open)
-
-"--------------------------
-"vimfiler起動
-"--------------------------
-nnoremap [vimfiler] <Nop>
-nmap <Space>f [vimfiler]
-
-"縦区切りで起動
-nnoremap <silent> [vimfiler]c :VimFiler -split -simple -winwidth=35 -no-quit<CR>
-
-nnoremap <silent> [vimfiler]b :VimFilerBufferDir -split -simple -winwidth=35 -no-quit<CR>
 
 "-----------------------------
 "uniteを開いている間のキーマッピング
