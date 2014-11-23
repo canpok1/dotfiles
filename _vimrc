@@ -21,6 +21,7 @@ endif
 NeoBundle 'git://github.com/Shougo/unite.vim.git'
 NeoBundle 'git://github.com/thinca/vim-quickrun.git'
 NeoBundle 'git://github.com/tyru/open-browser.vim.git'
+NeoBundle 'kannokanno/previm'
 
 "ファイル形式検出、プラグイン、インデントをオン
 filetype plugin indent on
@@ -350,9 +351,19 @@ nnoremap <silent> [unite]b :<C-u>Unite buffer<CR>
 "ブックマークに追加
 "nnoremap <silent> [unite]a :<C-u>UniteBookmarkAdd<CR>
 
-"ブラウザで開く"
-nmap <Leader>w <Plug>(openbrowser-open)
-vmap <Leader>w <Plug>(openbrowser-open)
+"--------------------------
+"open-browser起動
+"--------------------------
+nnoremap [open-browser] <Nop>
+nmap <Space>o [open-browser]
+nmap <silent> [open-browser]s <Plug>(openbrowser-smart-search)
+
+"--------------------------
+"previm起動
+"--------------------------
+nnoremap [previm] <Nop>
+nmap <Space>p [previm]
+nmap <silent> [previm]o :<C-u>PrevimOpen<CR>
 
 "-----------------------------
 "uniteを開いている間のキーマッピング
