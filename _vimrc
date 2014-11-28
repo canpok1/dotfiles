@@ -340,6 +340,7 @@ nmap <Space>u [unite]
 "現在開いているファイルのディレクトリ下のファイル一覧。
 "開いていない場合はカレントディレクトリ
 nnoremap <silent> [unite]f :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
+nnoremap <silent> [unite]o :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
 "バッファ一覧
 nnoremap <silent> [unite]b :<C-u>Unite buffer<CR>
 "レジスタ一覧
@@ -357,6 +358,7 @@ nnoremap <silent> [unite]b :<C-u>Unite buffer<CR>
 nnoremap [open-browser] <Nop>
 nmap <Space>o [open-browser]
 nmap <silent> [open-browser]s <Plug>(openbrowser-smart-search)
+nmap <silent> [open-browser]o <Plug>(openbrowser-smart-search)
 
 "--------------------------
 "previm起動
