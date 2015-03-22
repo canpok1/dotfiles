@@ -1,3 +1,4 @@
 vimfiles/bundle/
 vimfiles/tmp/*
 !vimfiles/tmp/readme.txt
+.DS_Store
