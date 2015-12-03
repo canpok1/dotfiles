@@ -110,6 +110,9 @@ set ignorecase
 "大文字を混ぜて検索した場合だけ大文字小文字を区別する
 set smartcase
 
+"インクリメント時は常に10進数として判断
+set nf=""
+
 "}}}
 "=======================================================
 
@@ -195,17 +198,12 @@ function! SetIndent()
   endif
 endf
 
-"新しい行を作った時に高度な自動インデント
-set smarttab
+set smarttab "新しい行を作った時に高度な自動インデント
+set noautoindent "改行時に前の行のインデントを継続しない
+set smartindent "改行時に入力された行の末尾に合わせて次の行のインデントを増減する
+set cindent "Cプログラム用自動インデント
+set expandtab "タブを使用しない
 
-"オートインデントオフ
-set noautoindent
-
-"Cプログラム用自動インデント
-set cindent
-
-"タブを使用しない
-set expandtab
 "}}}
 "=======================================================
 
