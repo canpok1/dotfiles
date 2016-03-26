@@ -24,6 +24,7 @@ NeoBundle 'git://github.com/Shougo/neocomplcache.git'
 NeoBundle 'git://github.com/thinca/vim-quickrun.git'
 NeoBundle 'git://github.com/tyru/open-browser.vim.git'
 NeoBundle 'kannokanno/previm'
+NeoBundle 'git://github.com/wakatime/vim-wakatime.git'
 
 "ファイル形式検出、プラグイン、インデントをオン
 filetype plugin indent on
@@ -186,7 +187,7 @@ set showtabline=2
 autocmd BufNewFile,BufRead * call SetIndent()
 
 function! SetIndent()
-  if &syntax=='ruby' || &syntax=='yaml' || &syntax=='vim' || &syntax=='eruby'
+  if &syntax=='ruby' || &syntax=='yaml' || &syntax=='vim' || &syntax=='eruby' || &syntax=='html'
     execute 'set softtabstop=2 | set shiftwidth=2 | set tabstop=2'
   else
     execute 'set softtabstop=4 | set shiftwidth=4 | set tabstop=4'
