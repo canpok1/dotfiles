@@ -24,9 +24,9 @@ NeoBundle 'git://github.com/Shougo/neocomplcache.git'
 NeoBundle 'git://github.com/thinca/vim-quickrun.git'
 NeoBundle 'git://github.com/tyru/open-browser.vim.git'
 NeoBundle 'kannokanno/previm'
-NeoBundle 'git://github.com/wakatime/vim-wakatime.git'
 NeoBundle 'Shougo/neosnippet'
 NeoBundle 'Shougo/neosnippet-snippets'
+NeoBundle 'mattn/emmet-vim'
 
 "ファイル形式検出、プラグイン、インデントをオン
 filetype plugin indent on
