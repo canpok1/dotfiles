@@ -29,3 +29,22 @@ dotfiles
         ./setup.sh
         ```
 
+
+## 削除方法
+
+1. セットアップスクリプトを実行
+
+    * Mac
+
+        ```
+        ./setup.sh --uninstall
+        ```
+
+    * Linux
+
+        ```
+        ./setup.sh --uninstall
+        ```
+
+2. dotfilesフォルダを削除
+
