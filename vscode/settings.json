@@ -1,7 +1,9 @@
 {
+    "editor.minimap.enabled": false,
+
     "vim.disableAnnoyingNeovimMessage": true,
     "vim.hlsearch": true,
     "vim.useSystemClipboard": true,
 
-    "java.jdt.ls.vmargs": "-noverify -Xmx1G -XX:+UseG1GC -XX:+UseStringDeduplication -javaagent:/Users/tanabe/lombok.jar -Xbootclasspath/a:/Users/tanabe/lombok.jar"
+    "terminal.integrated.shell.windows": "C:\\Program Files (x86)\\Git\\bin\\bash.exe",
 }
