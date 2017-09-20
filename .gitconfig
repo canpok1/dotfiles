@@ -1,5 +1,5 @@
-[user]
-	name = canpok1
-	email = 6isstrong@gmail.com
 [core]
 	editor = vim -c \"set fenc=utf-8\"
+[include]
+    path = ~/.gitconfig.local
+
