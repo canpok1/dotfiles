@@ -1,6 +1,8 @@
 {
     "editor.minimap.enabled": false,
 
+    "files.autoGuessEncoding": true,
+
     "vim.disableAnnoyingNeovimMessage": true,
     "vim.hlsearch": true,
     "vim.useSystemClipboard": true,
@@ -10,4 +12,5 @@
         "--login",
         "-i"
     ]
+
 }
