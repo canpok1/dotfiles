@@ -8,25 +8,24 @@ set nocompatible
 filetype off
 
 "neobundle初期化"
-if has("win32") || has("win64")
-    set rtp+=~/vimfiles/neobundle.vim.git/
-    call neobundle#rc('~/vimfiles/bundle/')
-else
-    set rtp+=~/.vim/neobundle.vim.git/
-    let g:vundle_default_git_proto='git'
-    call neobundle#rc()
-endif
+set runtimepath+=~/.vim/bundle/neobundle.vim/
+call neobundle#begin(expand('~/.vim/bundle/'))
+NeoBundleFetch 'Shougo/neobundle.vim'
 
 "プラグインのリポジトリ
-NeoBundle 'git://github.com/Shougo/unite.vim.git'
-NeoBundle 'git://github.com/Shougo/vimfiler.git'
-NeoBundle 'git://github.com/Shougo/neocomplcache.git'
-NeoBundle 'git://github.com/thinca/vim-quickrun.git'
-NeoBundle 'git://github.com/tyru/open-browser.vim.git'
+NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/vimfiler'
+NeoBundle 'Shougo/neocomplcache'
+NeoBundle 'thinca/vim-quickrun'
+NeoBundle 'tyru/open-browser.vim'
 NeoBundle 'kannokanno/previm'
 NeoBundle 'Shougo/neosnippet'
 NeoBundle 'Shougo/neosnippet-snippets'
 NeoBundle 'mattn/emmet-vim'
+
+call neobundle#end()
+
+NeoBundleCheck
 
 "ファイル形式検出、プラグイン、インデントをオン
 filetype plugin indent on
