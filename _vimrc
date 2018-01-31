@@ -3,33 +3,35 @@
 "=======================================================
 
 "vi互換オフ
-set nocompatible
+if &compatible
+  set nocompatible
+endif
 
-"ファイルタイプを一時的にオフ
-filetype off
+let dein_installation_path = '~/.vim/dein'
+let dein_path = dein_installation_path . '/repos/github.com/Shougo/dein.vim'
+let plugin_base_path = '~/.vim/dein'
 
-"neobundle初期化"
-"if has("win32") || has("win64")
-"    set rtp+=~/vimfiles/neobundle.vim.git/
-"    call neobundle#rc('~/vimfiles/bundle/')
-"else
-"    set rtp+=~/.vim/neobundle.vim.git/
-"    let g:vundle_default_git_proto='git'
-"    call neobundle#rc()
-"endif
+execute 'set runtimepath+=' . dein_path
 
-"プラグインのリポジトリ
-"NeoBundle 'git://github.com/Shougo/unite.vim.git'
-"NeoBundle 'git://github.com/Shougo/vimfiler.git'
-"NeoBundle 'git://github.com/Shougo/neocomplcache.git'
-"NeoBundle 'git://github.com/thinca/vim-quickrun.git'
-"NeoBundle 'git://github.com/tyru/open-browser.vim.git'
-"NeoBundle 'kannokanno/previm'
-"NeoBundle 'Shougo/neosnippet'
-"NeoBundle 'Shougo/neosnippet-snippets'
-"NeoBundle 'mattn/emmet-vim'
+if dein#load_state(plugin_base_path)
+  call dein#begin(plugin_base_path)
 
-"ファイル形式検出、プラグイン、インデントをオン
+  call dein#add('Shougo/dein.vim')
+
+  call dein#add('Shougo/unite.vim')
+  call dein#add('Shougo/vimfiler')
+  call dein#add('Shougo/neocomplcache')
+  call dein#add('thinca/vim-quickrun')
+  call dein#add('tyru/open-browser.vim')
+  call dein#add('kannokanno/previm')
+  call dein#add('Shougo/neosnippet')
+  call dein#add('Shougo/neosnippet-snippets')
+  call dein#add('mattn/emmet-vim')
+
+  call dein#end()
+  call dein#save_state()
+endif
+
 filetype plugin indent on
 
 "}}}

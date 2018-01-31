@@ -28,9 +28,8 @@ function deploy() {
 }
 
 function install() {
-    echo submodule init and update
-    git submodule init
-    git submodule update
+    curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > ~/dotfiles/installer.sh
+    sh ~/dotfiles/install.sh ~/.vim/dein
 }
 
 function undeploy() {
