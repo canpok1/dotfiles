@@ -4,29 +4,30 @@
 
 "vi互換オフ
 set nocompatible
+
 "ファイルタイプを一時的にオフ
 filetype off
 
 "neobundle初期化"
-if has("win32") || has("win64")
-    set rtp+=~/vimfiles/neobundle.vim.git/
-    call neobundle#rc('~/vimfiles/bundle/')
-else
-    set rtp+=~/.vim/neobundle.vim.git/
-    let g:vundle_default_git_proto='git'
-    call neobundle#rc()
-endif
+"if has("win32") || has("win64")
+"    set rtp+=~/vimfiles/neobundle.vim.git/
+"    call neobundle#rc('~/vimfiles/bundle/')
+"else
+"    set rtp+=~/.vim/neobundle.vim.git/
+"    let g:vundle_default_git_proto='git'
+"    call neobundle#rc()
+"endif
 
 "プラグインのリポジトリ
-NeoBundle 'git://github.com/Shougo/unite.vim.git'
-NeoBundle 'git://github.com/Shougo/vimfiler.git'
-NeoBundle 'git://github.com/Shougo/neocomplcache.git'
-NeoBundle 'git://github.com/thinca/vim-quickrun.git'
-NeoBundle 'git://github.com/tyru/open-browser.vim.git'
-NeoBundle 'kannokanno/previm'
-NeoBundle 'Shougo/neosnippet'
-NeoBundle 'Shougo/neosnippet-snippets'
-NeoBundle 'mattn/emmet-vim'
+"NeoBundle 'git://github.com/Shougo/unite.vim.git'
+"NeoBundle 'git://github.com/Shougo/vimfiler.git'
+"NeoBundle 'git://github.com/Shougo/neocomplcache.git'
+"NeoBundle 'git://github.com/thinca/vim-quickrun.git'
+"NeoBundle 'git://github.com/tyru/open-browser.vim.git'
+"NeoBundle 'kannokanno/previm'
+"NeoBundle 'Shougo/neosnippet'
+"NeoBundle 'Shougo/neosnippet-snippets'
+"NeoBundle 'mattn/emmet-vim'
 
 "ファイル形式検出、プラグイン、インデントをオン
 filetype plugin indent on
@@ -470,15 +471,15 @@ endif
 "=======================================================
 " NeoBundleInstall自動化"{{{
 "=======================================================
-if(!empty(neobundle#get_not_installed_bundle_names()))
-  echomsg 'Not installed bundles: '
-        \ string(neobundle#get_not_installed_bundle_names())
-  if confirm('Install bundles now?', "yes\nNo", 2) == 1
-    " vimrc を再度読み込み、インストールした Bundle を有効化
-    " vimrc は必ず再読み込み可能な形式で記述すること
-    NeoBundleInstall
-    source ~/.vimrc
-  endif
-end
+"if(!empty(neobundle#get_not_installed_bundle_names()))
+"  echomsg 'Not installed bundles: '
+"        \ string(neobundle#get_not_installed_bundle_names())
+"  if confirm('Install bundles now?', "yes\nNo", 2) == 1
+"    " vimrc を再度読み込み、インストールした Bundle を有効化
+"    " vimrc は必ず再読み込み可能な形式で記述すること
+"    NeoBundleInstall
+"    source ~/.vimrc
+"  endif
+"end
 "}}}
 "=======================================================
