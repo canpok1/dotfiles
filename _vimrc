@@ -283,32 +283,32 @@ endfunction
 "=======================================================
 " QuickRun設定 {{{
 "=======================================================
-let g:quickrun_config = {}
-let g:quickrun_config = {
-            \   '_': {
-            \       'outputter/buffer/split': ':botright',
-            \       'outputter/buffer/close_on_empty': 1,
-            \       'hook/time/enable': '1'
-            \   },
-            \   'markdown': {
-            \       'outputter': 'browser',
-            \   }
-            \}
+"let g:quickrun_config = {}
+"let g:quickrun_config = {
+"            \   '_': {
+"            \       'outputter/buffer/split': ':botright',
+"            \       'outputter/buffer/close_on_empty': 1,
+"            \       'hook/time/enable': '1'
+"            \   },
+"            \   'markdown': {
+"            \       'outputter': 'browser',
+"            \   }
+"            \}
 "}}}
 "=======================================================
 
 "=======================================================
 " neocomplcache設定"{{{
 "=======================================================
-let g:acp_enableAtStartup = 0
-let g:neocomplcache_enable_at_startup = 1
-let g:neocomplcache_enable_smart_case = 1
-let g:neocomplcache_min_syntax_length = 3
-let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
-
-let g:neocomplcache_dictionary_filetype_lists = {
-  \ 'default' : ''
-  \ }
+"let g:acp_enableAtStartup = 0
+"let g:neocomplcache_enable_at_startup = 1
+"let g:neocomplcache_enable_smart_case = 1
+"let g:neocomplcache_min_syntax_length = 3
+"let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
+"
+"let g:neocomplcache_dictionary_filetype_lists = {
+"  \ 'default' : ''
+"  \ }
 "}}}
 
 "=======================================================
@@ -316,22 +316,22 @@ let g:neocomplcache_dictionary_filetype_lists = {
 "=======================================================
 "unite general settings
 "インサートモードで開始
-let g:unite_enable_start_insert=1
+"let g:unite_enable_start_insert=1
 "最近聞いたファイル履歴の保存数
-let g:unite_source_file_mru_limit=50
+"let g:unite_source_file_mru_limit=50
 "}}}
 "=======================================================
 
 "=======================================================
 " vimfiler設定"{{{
 "=======================================================
-let g:vimfiler_as_default_explorer = 1"}}}
+"let g:vimfiler_as_default_explorer = 1"}}}
 "=======================================================
 
 "=======================================================
 "matchit設定"{{{
 "=======================================================
-source $VIMRUNTIME/macros/matchit.vim
+"source $VIMRUNTIME/macros/matchit.vim
 "}}}
 "=======================================================
 
@@ -367,15 +367,15 @@ nnoremap <C-w>gF gf
 "--------------------------
 "unite起動
 "--------------------------
-nnoremap [unite] <Nop>
-nmap <Space>u [unite]
+"nnoremap [unite] <Nop>
+"nmap <Space>u [unite]
 
 "現在開いているファイルのディレクトリ下のファイル一覧。
 "開いていない場合はカレントディレクトリ
-nnoremap <silent> [unite]f :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
-nnoremap <silent> [unite]o :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
+"nnoremap <silent> [unite]f :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
+"nnoremap <silent> [unite]o :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
 "バッファ一覧
-nnoremap <silent> [unite]b :<C-u>Unite buffer<CR>
+"nnoremap <silent> [unite]b :<C-u>Unite buffer<CR>
 "レジスタ一覧
 "nnoremap <silent> [unite]r :<C-u>-buffer-name=register register<CR>
 "最近使用したファイル一覧
@@ -388,22 +388,22 @@ nnoremap <silent> [unite]b :<C-u>Unite buffer<CR>
 "--------------------------
 "open-browser起動
 "--------------------------
-nnoremap [open-browser] <Nop>
-nmap <Space>o [open-browser]
-nmap <silent> [open-browser]s <Plug>(openbrowser-smart-search)
-nmap <silent> [open-browser]o <Plug>(openbrowser-smart-search)
+"nnoremap [open-browser] <Nop>
+"nmap <Space>o [open-browser]
+"nmap <silent> [open-browser]s <Plug>(openbrowser-smart-search)
+"nmap <silent> [open-browser]o <Plug>(openbrowser-smart-search)
 
 "--------------------------
 "previm起動
 "--------------------------
-nnoremap [previm] <Nop>
-nmap <Space>p [previm]
-nmap <silent> [previm]o :<C-u>PrevimOpen<CR>
+"nnoremap [previm] <Nop>
+"nmap <Space>p [previm]
+"nmap <silent> [previm]o :<C-u>PrevimOpen<CR>
 
 "-----------------------------
 "uniteを開いている間のキーマッピング
 "-----------------------------
-autocmd FileType unite call s:unite_my_settings()
+"autocmd FileType unite call s:unite_my_settings()
 
 function! s:unite_my_settings()"{{{
     "ESC二回でuniteを終了
@@ -426,44 +426,44 @@ endfunction"}}}
 "-----------------------------
 "neocomplcache
 "-----------------------------
-inoremap <expr><C-g> neocomplcache#undo_completion()
-inoremap <expr><C-l> neocomplcache#complete_common_string()
+"inoremap <expr><C-g> neocomplcache#undo_completion()
+"inoremap <expr><C-l> neocomplcache#complete_common_string()
 
 " Recommended key-mappings.
 " <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-    return neocomplcache#smart_close_popup() . "\<CR>"
-endfunction
+"inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+"function! s:my_cr_function()
+"    return neocomplcache#smart_close_popup() . "\<CR>"
+"endfunction
 " <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+"inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 " <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><C-y>  neocomplcache#close_popup()
-inoremap <expr><C-e>  neocomplcache#cancel_popup()
+"inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
+"inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
+"inoremap <expr><C-y>  neocomplcache#close_popup()
+"inoremap <expr><C-e>  neocomplcache#cancel_popup()
 
 
 "-----------------------------
 "neosnippet
 "-----------------------------
 " Plugin key-mappings.
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
+"imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+"smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+"xmap <C-k>     <Plug>(neosnippet_expand_target)
 
 " SuperTab like snippets behavior.
 "imap <expr><TAB>
 " \ pumvisible() ? "\<C-n>" :
 " \ neosnippet#expandable_or_jumpable() ?
 " \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-      \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+"smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+"      \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 
 " For conceal markers.
-if has('conceal')
-  set conceallevel=2 concealcursor=niv
-endif
+"if has('conceal')
+"  set conceallevel=2 concealcursor=niv
+"endif
 
 "}}}
 "=======================================================
