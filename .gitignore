@@ -4,3 +4,4 @@ vimfiles/tmp/*
 .DS_Store
 vscode/workspaceStorage/
 vimfiles/dein/
+installer.sh

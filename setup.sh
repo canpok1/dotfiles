@@ -29,7 +29,7 @@ function deploy() {
 
 function install() {
     curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > ~/dotfiles/installer.sh
-    sh ~/dotfiles/install.sh ~/.vim/dein
+    sh ~/dotfiles/installer.sh ~/.vim/dein
 }
 
 function undeploy() {
