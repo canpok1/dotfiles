@@ -146,16 +146,9 @@ set showtabline=2
 "=======================================================
 "インデント設定
 "=======================================================
-
-autocmd BufNewFile,BufRead * call SetIndent()
-
-function! SetIndent()
-  if &syntax=='ruby' || &syntax=='yaml' || &syntax=='vim' || &syntax=='eruby' || &syntax=='html'
-    execute 'set softtabstop=2 | set shiftwidth=2 | set tabstop=2'
-  else
-    execute 'set softtabstop=4 | set shiftwidth=4 | set tabstop=4'
-  endif
-endf
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
 
 "新しい行を作った時に高度な自動インデント
 set smarttab
