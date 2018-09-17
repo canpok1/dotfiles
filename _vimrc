@@ -29,6 +29,7 @@ if dein#load_state(plugin_base_path)
   call dein#add('mattn/emmet-vim')
   call dein#add('tpope/vim-rails')
   call dein#add('w0rp/ale')
+  call dein#add('tpope/vim-surround')
 
   call dein#end()
   call dein#save_state()
