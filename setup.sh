@@ -19,6 +19,8 @@ function deploy() {
     ln -fnsv ~/dotfiles/_gvimrc ~/.gvimrc
     ln -fnsv ~/dotfiles/vimfiles ~/.vim
     ln -fnsv ~/dotfiles/.gitconfig ~/.gitconfig
+    ln -fnsv ~/dotfiles/.pryrc ~/.pryrc
+    ln -fnsv ~/dotfiles/.tigrc ~/.tigrc
     
     if [ "$OS" == "mac" ]; then
         ln -fnsv ~/dotfiles/vscode ~/Library/Application\ Support/Code/User

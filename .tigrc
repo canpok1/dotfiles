@@ -1,0 +1,7 @@
+set ignore-case = true
+set wrap-lines = yes
+
+bind generic g     move-first-line
+bind main    g     move-first-line
+bind generic G     move-last-line
+bind main    G     move-last-line
