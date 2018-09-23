@@ -17,3 +17,7 @@ if has('syntax')
         autocmd VimEnter,WinEnter,BufRead  * call HighlightDoubleByteSpace()
     augroup END
 endif
+
+"フォントの設定
+:set guifont=RictyDiminishedDiscord-Regular:h11
+
