@@ -1,0 +1,24 @@
+export PATH="/usr/local/Cellar/git/2.16.2/bin:$PATH"
+
+source /usr/local/etc/bash_completion.d/git-prompt.sh
+source /usr/local/etc/bash_completion.d/git-completion.bash
+
+GIT_PS1_SHOWDIRTYSTATE=true
+export PS1='\h\[\033[00m\]:\W\[\033[31m\]$(__git_ps1 [%s])\[\033[00m\]\$ '
+
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+
+alias ctags='/usr/local/Cellar/ctags/5.8_1/bin/ctags'
+
+case "${OSTYPE}" in
+darwin*)
+  alias ls="ls -G"
+  alias ll="ls -lG"
+  alias la="ls -laG"
+  ;;
+linux*)
+  alias ls="ls --color"
+  alias ll="ls -l --color"
+  alias la="ls -la --color"
+  ;;
+esac

@@ -21,6 +21,7 @@ function deploy() {
     ln -fnsv ~/dotfiles/.gitconfig ~/.gitconfig
     ln -fnsv ~/dotfiles/.pryrc ~/.pryrc
     ln -fnsv ~/dotfiles/.tigrc ~/.tigrc
+    ln -fnsv ~/dotfiles/.bash_profile ~/.bash_profile
     
     if [ "$OS" == "mac" ]; then
         ln -fnsv ~/dotfiles/vscode ~/Library/Application\ Support/Code/User
@@ -39,6 +40,9 @@ function undeploy() {
     unlink ~/.gvimrc
     unlink ~/.vim
     unlink ~/.gitconfig
+    unlink ~/.pryrc
+    unlink ~/.tigrc
+    unlink ~/.bash_profile
 
     if [ "$OS" == "mac" ]; then
         unlink ~/Library/Application\ Support/Code/User
