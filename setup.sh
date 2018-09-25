@@ -51,10 +51,21 @@ function undeploy() {
     fi
 }
 
+function install_app() {
+    if [ "$OS" == "mac" ]; then
+        /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+        brew install vim git tig
+    fi
+}
+
 if [ "$1" == "--uninstall" ]; then
     echo ---- dotfiles uninstall start ----
     undeploy
     echo ---- dotfiles uninstall end ----
+elif [ "$1" == "--install-app" ]; then
+    echo ---- install app start ----
+    install_app
+    echo ---- install app end ----
 else
     echo ---- dotfiles setup start ----
     deploy
