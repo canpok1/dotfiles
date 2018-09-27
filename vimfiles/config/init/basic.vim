@@ -122,9 +122,9 @@ let loaded_matchparen=1
 
 "文字コードと改行コードを表示
 if exists("ALEGetStatusLine")
-    set statusline=%F%m%r%h%w\ [%Y][%{&fenc}%{&bomb?':BOM':':'}][%{&ff}][%04l,%04v][%p%%][LEN=%L]
-else
     set statusline=%F%m%r%h%w\ [%Y][%{&fenc}%{&bomb?':BOM':':'}][%{&ff}][%04l,%04v][%p%%][LEN=%L]%{ALEGetStatusLine()}
+else
+    set statusline=%F%m%r%h%w\ [%Y][%{&fenc}%{&bomb?':BOM':':'}][%{&ff}][%04l,%04v][%p%%][LEN=%L]
 endif
 
 "エディタウインドウの末尾から2行目にステータスラインを常時表示
