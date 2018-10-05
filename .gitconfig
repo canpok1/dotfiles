@@ -1,5 +1,8 @@
 [core]
-	editor = vim -c \"set fenc=utf-8\"
+    editor = vim -c \"set fenc=utf-8\"
 [include]
     path = ~/.gitconfig.local
-
+[alias]
+    co = checkout
+    st = status
+    cm = commit
