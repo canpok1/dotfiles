@@ -22,6 +22,7 @@ function deploy() {
     ln -fnsv ~/dotfiles/.pryrc ~/.pryrc
     ln -fnsv ~/dotfiles/.tigrc ~/.tigrc
     ln -fnsv ~/dotfiles/.bash_profile ~/.bash_profile
+    ln -fnsv ~/dotfiles/.bashrc ~/.bashrc
     
     if [ "$OS" == "mac" ]; then
         ln -fnsv ~/dotfiles/vscode ~/Library/Application\ Support/Code/User
