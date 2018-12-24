@@ -15,3 +15,5 @@ if has('conceal')
   set conceallevel=2 concealcursor=niv
 endif
 
+"set snippet file dir
+let g:neosnippet#snippets_directory='~/.vim/dein/repos/github.com/Shougo/neosnippet-snippets/neosnippets/,~/.vim/snippets'
