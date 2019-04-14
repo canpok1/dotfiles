@@ -1,0 +1,11 @@
+snippet     desc
+abbr        describe 'name' do...end
+    describe '${1:#:name}' do
+      ${2:#:TARGET}
+    end
+
+snippet     cont
+abbr        context 'name' do...end
+    context '${1:#:name}' do
+      ${2:#:TARGET}
+    end
