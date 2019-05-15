@@ -23,6 +23,9 @@ endif
 "チルダファイルの出力先設定
 set nobackup
 
+"アンドゥファイルの出力設定
+set noundofile
+
 "行表示
 set number
 
