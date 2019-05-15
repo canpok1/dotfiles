@@ -4,6 +4,7 @@ highlight ALEError cterm=underline ctermfg=NONE ctermbg=NONE
 let g:ale_linters = {
       \ 'ruby': ['rubocop', 'reek', 'rails_best_practices'],
       \ 'javascript': ['eslint'],
+      \ 'sql': ['sqlint'],
       \ }
 
 let g:ale_statusline_format = ['[E:%d]', '[W:%d]', '']

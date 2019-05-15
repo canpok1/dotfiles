@@ -30,6 +30,7 @@ if dein#load_state(plugin_base_path)
   call dein#add('tpope/vim-rails')
   call dein#add('w0rp/ale')
   call dein#add('tpope/vim-surround')
+  call dein#add('fatih/vim-go')
 
   call dein#end()
   call dein#save_state()
