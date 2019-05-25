@@ -27,10 +27,11 @@ function deploy() {
     
     touch ~/.bash_profile_local
     touch ~/.gitconfig.local
+}
+
+function deploy_vscode() {
     if [ "$OS" == "mac" ]; then
         ln -fnsv ~/dotfiles/vscode ~/Library/Application\ Support/Code/User
-    elif [ "$OS" == 'linux' ]; then
-        echo setup for linux
     fi
 }
 
@@ -69,11 +70,15 @@ if [ "$1" == "--undeploy" ]; then
     echo ---- dotfiles undeploy end ----
 elif [ "$1" == "--init" ]; then
     echo ---- initialize start ----
+    deploy
     initialize
+    deploy_vscode
+    initialize_vim
     echo ---- initialize end ----
 else
     echo ---- dotfiles setup start ----
     deploy
+    deploy_vscode
     initialize_vim
     echo ---- dotfiles setup end ----
 fi
