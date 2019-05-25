@@ -23,7 +23,9 @@ function deploy() {
     ln -fnsv ~/dotfiles/.tigrc ~/.tigrc
     ln -fnsv ~/dotfiles/.bash_profile ~/.bash_profile
     ln -fnsv ~/dotfiles/.bashrc ~/.bashrc
+    ln -fnsv ~/dotfiles/.Brewfile ~/.Brewfile
     
+    touch ~/.bash_profile_local
     if [ "$OS" == "mac" ]; then
         ln -fnsv ~/dotfiles/vscode ~/Library/Application\ Support/Code/User
     elif [ "$OS" == 'linux' ]; then
@@ -44,6 +46,7 @@ function undeploy() {
     unlink ~/.pryrc
     unlink ~/.tigrc
     unlink ~/.bash_profile
+    unlink ~/.Brewfile
 
     if [ "$OS" == "mac" ]; then
         unlink ~/Library/Application\ Support/Code/User
@@ -55,7 +58,7 @@ function undeploy() {
 function install_app() {
     if [ "$OS" == "mac" ]; then
         /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-        brew install vim git tig
+        brew bundle --global
     fi
 }
 
