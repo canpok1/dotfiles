@@ -26,6 +26,7 @@ function deploy() {
     ln -fnsv ~/dotfiles/.Brewfile ~/.Brewfile
     
     touch ~/.bash_profile_local
+    touch ~/.gitconfig.local
     if [ "$OS" == "mac" ]; then
         ln -fnsv ~/dotfiles/vscode ~/Library/Application\ Support/Code/User
     elif [ "$OS" == 'linux' ]; then
@@ -33,7 +34,7 @@ function deploy() {
     fi
 }
 
-function install() {
+function initialize_vim() {
     curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > ~/dotfiles/installer.sh
     sh ~/dotfiles/installer.sh ~/.vim/dein
 }
@@ -55,24 +56,24 @@ function undeploy() {
     fi
 }
 
-function install_app() {
+function initialize() {
     if [ "$OS" == "mac" ]; then
         /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
         brew bundle --global
     fi
 }
 
-if [ "$1" == "--uninstall" ]; then
-    echo ---- dotfiles uninstall start ----
+if [ "$1" == "--undeploy" ]; then
+    echo ---- dotfiles undeploy start ----
     undeploy
-    echo ---- dotfiles uninstall end ----
-elif [ "$1" == "--install-app" ]; then
-    echo ---- install app start ----
-    install_app
-    echo ---- install app end ----
+    echo ---- dotfiles undeploy end ----
+elif [ "$1" == "--init" ]; then
+    echo ---- initialize start ----
+    initialize
+    echo ---- initialize end ----
 else
     echo ---- dotfiles setup start ----
     deploy
-    install
+    initialize_vim
     echo ---- dotfiles setup end ----
 fi
