@@ -12,6 +12,7 @@ cask "cheatsheet"
 cask "google-chrome"
 cask "google-japanese-ime"
 cask "iterm2"
+cask "scroll-reverser"
 cask "shiftit"
 cask "visual-studio-code"
 
