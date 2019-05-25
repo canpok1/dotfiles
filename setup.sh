@@ -10,7 +10,7 @@ elif [ "$(expr substr $(uname -s) 1 5)" == 'Linux' ]; then
     OS="linux"
 else
     echo "OS is unknown. exit setup."
-    return -1
+    exit -1
 fi
 
 function deploy() {
