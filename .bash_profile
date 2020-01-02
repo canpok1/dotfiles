@@ -6,7 +6,7 @@ export GOPATH="$HOME/code/go"
 
 # for goenv
 export GOENV_ROOT="$HOME/.goenv"
-export PATH="$GOENV_ROOT/bin;$PATH"
+export PATH="$GOENV_ROOT/bin:$PATH"
 
 export GIT_PAGER="LESSCHARSET=utf-8 less"
 if [ -e ~/.bash_profile_local ]; then
