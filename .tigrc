@@ -1,5 +1,6 @@
 set ignore-case = true
 set wrap-lines = yes
+set main-view = id date author commit-title:graph=yes,refs=yes
 
 bind generic g     move-first-line
 bind main    g     move-first-line
