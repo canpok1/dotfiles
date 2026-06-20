@@ -1,6 +1,6 @@
 ---
 name: assign-tasks
-description: dev/vox-radioセクションのreadyタスクを優先度順に評価し、指定件数にassign-to-claudeラベルを付与するスキル
+description: dev プロジェクト・対象リポジトリ名セクションのreadyタスクを優先度順に評価し、指定件数にassign-to-claudeラベルを付与するスキル
 allowed-tools: Bash, Read, Grep, Glob, Agent, mcp__todoist__find-tasks, mcp__todoist__update-tasks
 user-invocable: true
 argument-hint: "[--count N]"
@@ -10,7 +10,7 @@ argument-hint: "[--count N]"
 
 ## 手順
 
-1. `mcp__todoist__find-tasks`（`vox-radio` セクション、`labels: ["ready"]`）で未完了かつ `ready` ラベル付きのタスクを取得する。
+1. `mcp__todoist__find-tasks`（対象リポジトリ名のセクション、`labels: ["ready"]`）で未完了かつ `ready` ラベル付きのタスクを取得する。
 2. `assign-to-claude` または `in-progress` ラベルが付いているタスクを除外する（除外したタスクはターミナルへログ出力する）。
 3. 残りのタスクを `task-assigner` エージェントの優先度基準に従って優先順位付けする。
 4. 上位N件（`$ARGUMENTS` の `--count` で指定、デフォルト: 2件）に `assign-to-claude` ラベルを付与する（`mcp__todoist__update-tasks` で既存 `labels` に追加）。

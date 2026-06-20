@@ -5,9 +5,9 @@
 ## 登録先
 
 - プロジェクト: `dev`
-- セクション: `vox-radio`
+- セクション: **作業対象のリポジトリ名**（例: リポジトリ `foo` で作業しているなら セクション `foo`）
 
-projectId / sectionId は名前から特定する（`mcp__todoist__find-projects` でプロジェクト `dev`、`mcp__todoist__find-sections` でセクション `vox-radio` を引いて ID を得る）。各自の Todoist 環境に合わせて利用すること。
+リポジトリ名は git から特定する（`basename "$(git rev-parse --show-toplevel)"`）。projectId / sectionId は名前から特定する（`mcp__todoist__find-projects` でプロジェクト `dev`、`mcp__todoist__find-sections` で対象リポジトリ名のセクションを引いて ID を得る）。対象セクションが見つからない場合は、作成してよいかをユーザーに確認する。
 
 ## タスクの作成・更新・参照
 
@@ -17,9 +17,9 @@ projectId / sectionId は名前から特定する（`mcp__todoist__find-projects
 
 ## ラベル運用
 
-タスクの状態管理には以下のラベルを使う（GitHub Issue 運用から引き継いだもの）。
+タスクの状態管理には以下のラベルを使う。
 
-- `vox-radio`: 対象プロジェクトを示す
+- `<リポジトリ名>`: 対象リポジトリを示す（セクション名と同じリポジトリ名のラベル）
 - `ready`: 着手してよい（対応可能）状態
 - `assign-to-claude`: Claude が対応する対象
 - `in-progress`: 対応中
@@ -34,7 +34,7 @@ projectId / sectionId は名前から特定する（`mcp__todoist__find-projects
 
 ## タスク内容の書き方
 
-- `content`: 何をするかを簡潔・具体的に書く（例: 「`readJSON` / `loadProfile` の重複を共通ヘルパーへ抽出」）。
+- `content`: 何をするかを簡潔・具体的に書く（例: 「重複したバリデーション処理を共通ヘルパーへ抽出」）。
 - `description`: 背景・根拠を Markdown で記載する。「どのメモ / PR のどの指摘か」を必ず明記し、後から再調査コストがかからないようにする。受け入れ条件があればチェックリストで含める。
 - **重複登録を避ける** — 作成前に `find-tasks` で同種タスクの有無を確認し、あれば新規作成せず既存タスクへ追記する。
 
@@ -44,7 +44,7 @@ projectId / sectionId は名前から特定する（`mcp__todoist__find-projects
 
 - dotfiles の `setup.sh --vox-radio` で `td`（`@doist/todoist-cli`）が導入される。
 - 認証は環境変数 `TODOIST_API_TOKEN` を使う。
-- 対象タスクの絞り込みは環境変数 `TODOIST_FILTER`（例: `#dev & /vox-radio` = プロジェクト dev・セクション vox-radio）を使う。`TODOIST_API_TOKEN` とともに `~/.bash_profile_local` に設定する。
+- 対象タスクの絞り込みは環境変数 `TODOIST_FILTER`（例: `#dev & /<リポジトリ名>` = プロジェクト dev・対象リポジトリのセクション）を使う。`TODOIST_API_TOKEN` とともに `~/.bash_profile_local` に設定する。
 
 ## 注意
 

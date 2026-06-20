@@ -10,7 +10,7 @@ allowed-tools: mcp__todoist__find-tasks, mcp__todoist__fetch-object, mcp__todois
 ## 確認方法
 
 - 引数がタスクIDの場合: `mcp__todoist__fetch-object` でタスクを取得する。
-- 引数が検索キーワードの場合: `mcp__todoist__find-tasks`（`searchText`、必要に応じて `sectionId` で `vox-radio` セクションに絞る）で対象タスクを特定する。
+- 引数が検索キーワードの場合: `mcp__todoist__find-tasks`（`searchText`、必要に応じて `sectionId` で対象リポジトリ名のセクションに絞る）で対象タスクを特定する。
 - コメントは `mcp__todoist__find-comments` で取得する。
 
 ## 注意点
