@@ -1,24 +1,4 @@
-cask_args appdir: "/Applications"
-tap "homebrew/bundle"
-tap "homebrew/cask"
-tap "homebrew/core"
-
-brew "git"
-brew "mas"
-brew "tig"
+# mac / Linux 両対応。macOS GUI アプリ(cask)は使わず、formula と binary cask のみで管理する。
+tap "canpok1/tap"
 brew "vim"
-
-cask "alfred"
-cask "cheatsheet"
-cask "google-backup-and-sync"
-cask "google-chrome"
-cask "google-japanese-ime"
-cask "iterm2"
-cask "karabiner-elements"
-cask "macpass"
-cask "scroll-reverser"
-cask "shiftit"
-cask "visual-studio-code"
-
-brew "docker"
-cask "docker"
+cask "vox-actor"

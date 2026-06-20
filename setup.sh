@@ -1,84 +1,120 @@
 #!/bin/sh
-cd `dirname $0`
+cd "$(dirname "$0")" || exit 1
 
-OS="unknown"
-if [ "$(uname)" == 'Darwin' ]; then
+if [ "$(uname)" = 'Darwin' ]; then
     echo setup for mac
-    OS="mac"
-elif [ "$(expr substr $(uname -s) 1 5)" == 'Linux' ]; then
+elif [ "$(expr substr $(uname -s) 1 5)" = 'Linux' ]; then
     echo setup for linux
-    OS="linux"
 else
     echo "OS is unknown. exit setup."
-    exit -1
+    exit 1
 fi
 
-function deploy() {
+# 既存の実体（symlink でない通常ファイル/ディレクトリ）があれば .bak に退避する。
+# 既に symlink の場合は退避しない（再実行時はそのまま張り替える）。
+backup_if_real() {
+    if [ -e "$1" ] && [ ! -L "$1" ]; then
+        _bak="$1.bak"
+        if [ -e "$_bak" ]; then
+            _bak="$1.bak.$(date +%Y%m%d%H%M%S)"
+        fi
+        echo "backup $1 -> $_bak"
+        mv "$1" "$_bak"
+    fi
+}
+
+# 実体があればバックアップしてから symlink を張る
+link_file() {
+    backup_if_real "$2"
+    ln -fnsv "$1" "$2"
+}
+
+deploy() {
     echo make link
-    ln -fnsv ~/dotfiles/_vimrc ~/.vimrc
-    ln -fnsv ~/dotfiles/_gvimrc ~/.gvimrc
-    ln -fnsv ~/dotfiles/vimfiles ~/.vim
-    ln -fnsv ~/dotfiles/.gitconfig ~/.gitconfig
-    ln -fnsv ~/dotfiles/.pryrc ~/.pryrc
-    ln -fnsv ~/dotfiles/.tigrc ~/.tigrc
-    ln -fnsv ~/dotfiles/.bash_profile ~/.bash_profile
-    ln -fnsv ~/dotfiles/.bashrc ~/.bashrc
-    ln -fnsv ~/dotfiles/.Brewfile ~/.Brewfile
-    
-    touch ~/.bash_profile_local
+    link_file ~/dotfiles/_vimrc ~/.vimrc
+    link_file ~/dotfiles/_gvimrc ~/.gvimrc
+    link_file ~/dotfiles/vimfiles ~/.vim
+    link_file ~/dotfiles/.gitconfig ~/.gitconfig
+    link_file ~/dotfiles/.bash_profile ~/.bash_profile
+    link_file ~/dotfiles/.bashrc ~/.bashrc
+    link_file ~/dotfiles/.zprofile ~/.zprofile
+    link_file ~/dotfiles/.zshrc ~/.zshrc
+    link_file ~/dotfiles/.Brewfile ~/.Brewfile
+
+    touch ~/.shell_local
     touch ~/.gitconfig.local
+
+    # Claude 個人設定（CLAUDE.md / agents / skills / rules）を ~/.claude へ展開する
+    mkdir -p ~/.claude/skills ~/.claude/agents ~/.claude/rules
+    link_file ~/dotfiles/claude/CLAUDE.md ~/.claude/CLAUDE.md
+    for agent in ~/dotfiles/claude/agents/*.md; do
+        [ -e "$agent" ] || continue
+        link_file "$agent" ~/.claude/agents/"$(basename "$agent")"
+    done
+    for skill_dir in ~/dotfiles/claude/skills/*/; do
+        [ -e "$skill_dir" ] || continue
+        link_file "${skill_dir%/}" ~/.claude/skills/"$(basename "$skill_dir")"
+    done
+    for rule in ~/dotfiles/claude/rules/*; do
+        [ -e "$rule" ] || continue
+        link_file "$rule" ~/.claude/rules/"$(basename "$rule")"
+    done
 }
 
-function deploy_vscode() {
-    if [ "$OS" == "mac" ]; then
-        ln -fnsv ~/dotfiles/vscode ~/Library/Application\ Support/Code/User
+undeploy() {
+    # symlink のものだけ撤去する（実体ファイルや未デプロイ時は触らない）
+    for f in ~/.vimrc ~/.gvimrc ~/.vim ~/.gitconfig ~/.bash_profile ~/.bashrc ~/.zprofile ~/.zshrc ~/.Brewfile; do
+        [ -L "$f" ] && unlink "$f"
+    done
+
+    # Claude 個人設定の symlink を撤去する。
+    # dotfiles 側の現状ではなく、~/.claude 配下で dotfiles を指している
+    # 既存 symlink を動的に検出して外す（追加/削除後の張り直しでも取りこぼさない）。
+    if [ -d ~/.claude ]; then
+        find ~/.claude -type l | while read -r link; do
+            case "$(readlink "$link")" in
+                "$HOME"/dotfiles/*) unlink "$link" 2>/dev/null || true ;;
+            esac
+        done
     fi
 }
 
-function initialize_vim() {
-    curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > ~/dotfiles/installer.sh
-    sh ~/dotfiles/installer.sh ~/.vim/dein
-}
-
-function undeploy() {
-    unlink ~/.vimrc
-    unlink ~/.gvimrc
-    unlink ~/.vim
-    unlink ~/.gitconfig
-    unlink ~/.pryrc
-    unlink ~/.tigrc
-    unlink ~/.bash_profile
-    unlink ~/.Brewfile
-
-    if [ "$OS" == "mac" ]; then
-        unlink ~/Library/Application\ Support/Code/User
-    elif [ "$OS" == 'linux' ]; then
-        echo uninstall for linux
+initialize() {
+    # Homebrew 未導入なら導入する（mac / Linux 共通インストーラ）
+    if ! command -v brew >/dev/null 2>&1 && [ ! -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     fi
-}
-
-function initialize() {
-    if [ "$OS" == "mac" ]; then
-        /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    # Linux 版 Homebrew を PATH に通す
+    if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    fi
+    # Brewfile を適用する（mac / Linux 両対応。vox-actor もここで導入される）
+    if command -v brew >/dev/null 2>&1; then
         brew bundle --global
+    else
+        echo "brew not found; skip brew bundle" >&2
+    fi
+    # Todoist CLI (td) を導入する（workflow-scripts が利用）
+    if ! command -v td >/dev/null 2>&1; then
+        if command -v npm >/dev/null 2>&1; then
+            npm install -g @doist/todoist-cli
+        else
+            echo "npm not found; skip td install" >&2
+        fi
     fi
 }
 
-if [ "$1" == "--undeploy" ]; then
+if [ "$1" = "--undeploy" ]; then
     echo ---- dotfiles undeploy start ----
     undeploy
     echo ---- dotfiles undeploy end ----
-elif [ "$1" == "--init" ]; then
+elif [ "$1" = "--init" ]; then
     echo ---- initialize start ----
     deploy
     initialize
-    deploy_vscode
-    initialize_vim
     echo ---- initialize end ----
 else
     echo ---- dotfiles setup start ----
     deploy
-    deploy_vscode
-    initialize_vim
     echo ---- dotfiles setup end ----
 fi
