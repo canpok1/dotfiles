@@ -83,10 +83,12 @@ trap cleanup EXIT
 echo "Adding in-progress label to ${TASK_ID}..."
 add_label "$TASK_ID" "in-progress"
 
-# mainブランチを最新化
+# デフォルトブランチを最新化
 cd "$WORKSPACE_DIR"
-git checkout main
-git pull origin main
+DEFAULT_BRANCH=$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null | sed 's#^origin/##')
+DEFAULT_BRANCH="${DEFAULT_BRANCH:-main}"
+git checkout "$DEFAULT_BRANCH"
+git pull origin "$DEFAULT_BRANCH"
 
 # Claude実行（worktreeモード）
 if [[ "$PRINT_MODE" == "true" ]]; then

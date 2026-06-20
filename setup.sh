@@ -1,5 +1,5 @@
 #!/bin/sh
-cd `dirname $0`
+cd "$(dirname "$0")" || exit 1
 
 if [ "$(uname)" = 'Darwin' ]; then
     echo setup for mac
@@ -60,13 +60,10 @@ deploy() {
 }
 
 undeploy() {
-    unlink ~/.vimrc
-    unlink ~/.gvimrc
-    unlink ~/.vim
-    unlink ~/.gitconfig
-    unlink ~/.bash_profile
-    unlink ~/.bashrc
-    unlink ~/.Brewfile
+    # symlink のものだけ撤去する（実体ファイルや未デプロイ時は触らない）
+    for f in ~/.vimrc ~/.gvimrc ~/.vim ~/.gitconfig ~/.bash_profile ~/.bashrc ~/.Brewfile; do
+        [ -L "$f" ] && unlink "$f"
+    done
 
     # Claude 個人設定の symlink を撤去する。
     # dotfiles 側の現状ではなく、~/.claude 配下で dotfiles を指している

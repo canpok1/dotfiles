@@ -8,6 +8,13 @@ export GOPATH="$HOME/code/go"
 export GOENV_ROOT="$HOME/.goenv"
 export PATH="$GOENV_ROOT/bin:$PATH"
 
+# Homebrew (Linux / Apple Silicon mac) を PATH に通す
+if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+elif [ -x /opt/homebrew/bin/brew ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
 export GIT_PAGER="LESSCHARSET=utf-8 less"
 if [ -e ~/.bash_profile_local ]; then
     source ~/.bash_profile_local
