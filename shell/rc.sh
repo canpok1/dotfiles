@@ -1,8 +1,6 @@
 # bash / zsh 共通の対話シェル設定（エイリアス）。
 # .bashrc と .zshrc から source する。
 
-alias memo='vim ~/memo.txt'
-alias todo='vim ~/todo.txt'
 alias rm='rm -i'
 alias mv='mv -i'
 alias cp='cp -i'
