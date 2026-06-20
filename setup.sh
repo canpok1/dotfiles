@@ -36,7 +36,6 @@ deploy() {
     link_file ~/dotfiles/.bashrc ~/.bashrc
     link_file ~/dotfiles/.zprofile ~/.zprofile
     link_file ~/dotfiles/.zshrc ~/.zshrc
-    link_file ~/dotfiles/.Brewfile ~/.Brewfile
 
     touch ~/.shell_local
 
@@ -59,7 +58,7 @@ deploy() {
 
 undeploy() {
     # symlink のものだけ撤去する（実体ファイルや未デプロイ時は触らない）
-    for f in ~/.vimrc ~/.bash_profile ~/.bashrc ~/.zprofile ~/.zshrc ~/.Brewfile; do
+    for f in ~/.vimrc ~/.bash_profile ~/.bashrc ~/.zprofile ~/.zshrc; do
         [ -L "$f" ] && unlink "$f"
     done
 
@@ -76,19 +75,9 @@ undeploy() {
 }
 
 initialize() {
-    # Homebrew 未導入なら導入する（mac / Linux 共通インストーラ）
-    if ! command -v brew >/dev/null 2>&1 && [ ! -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    fi
-    # Linux 版 Homebrew を PATH に通す
-    if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
-        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-    fi
-    # Brewfile を適用する（mac / Linux 両対応。vox-actor もここで導入される）
-    if command -v brew >/dev/null 2>&1; then
-        brew bundle --global
-    else
-        echo "brew not found; skip brew bundle" >&2
+    # vox-actor を公式インストーラで導入する（mac / Linux 両対応）
+    if ! command -v vox-actor >/dev/null 2>&1; then
+        curl -fsSL https://github.com/canpok1/vox-actor/releases/latest/download/install.sh | bash
     fi
     # Todoist CLI (td) を導入する（workflow-scripts が利用）
     if ! command -v td >/dev/null 2>&1; then
