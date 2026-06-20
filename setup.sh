@@ -50,9 +50,19 @@ undeploy() {
 }
 
 initialize() {
-    if [ "$OS" = "mac" ]; then
-        /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    # Homebrew 未導入なら導入する（mac / Linux 共通インストーラ）
+    if ! command -v brew >/dev/null 2>&1 && [ ! -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
+    # Linux 版 Homebrew を PATH に通す
+    if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    fi
+    # Brewfile を適用する（mac / Linux 両対応）
+    if command -v brew >/dev/null 2>&1; then
         brew bundle --global
+    else
+        echo "brew not found; skip brew bundle" >&2
     fi
 }
 
