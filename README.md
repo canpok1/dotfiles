@@ -5,7 +5,7 @@ dotfiles
 
 ## （初回のみ）初期設定の方法
 
-よく使うアプリのインストールとPC設定変更、設定ファイルの展開を行います。
+よく使うアプリのインストールと設定ファイルの展開を行います。
 
 1. githubからファイルを取得
 
@@ -16,7 +16,7 @@ dotfiles
 2. スクリプト実行（Mac、Linux）
 
     ```
-    ./setup.sh --init
+    ~/dotfiles/setup.sh --init
     ```
 
 ## 設定ファイルの展開方法
@@ -27,7 +27,7 @@ dotfiles
 1. スクリプトを実行（Mac、Linux）
 
     ```
-    ./setup.sh
+    ~/dotfiles/setup.sh
     ```
 
     既に同名の実体ファイル/ディレクトリ（symlink でないもの）が存在する場合は、
@@ -38,7 +38,7 @@ dotfiles
 ## Todoist 連携（workflow-scripts）の設定
 
 `workflow-scripts`（auto-assign / auto-solve / solve-task など）は Todoist CLI（`td` = `@doist/todoist-cli`）を使います。
-`td` は `./setup.sh --init` で導入されます。
+`td` は `~/dotfiles/setup.sh --init` で導入されます。
 
 ### 認証（どちらか一方）
 
@@ -64,7 +64,7 @@ dotfiles
 1. セットアップスクリプトを実行（Mac、Linux）
 
     ```
-    ./setup.sh --undeploy
+    ~/dotfiles/setup.sh --undeploy
     ```
 
     `~/.claude` へ展開した Claude 個人設定（CLAUDE.md / agents / skills の symlink）も併せて撤去します。
