@@ -5,7 +5,7 @@ argument-hint: "[task-id]"
 disable-model-invocation: true
 ---
 
-タスクの登録先・ラベル運用は `~/.claude/CLAUDE.md` に従う。
+タスクの登録先・ラベル運用は `~/.claude/rules/task-management.md` に従う。
 
 ## 手順
 
@@ -25,14 +25,14 @@ disable-model-invocation: true
     - コマンドやツールの実行結果が空・想定外だった場合は、次のアクションへ進む前に状態確認を挟むこと。例: タスク取得が空なら `mcp__todoist__find-tasks` / `mcp__todoist__fetch-object` の条件を見直して再取得、`gh pr view` が空出力なら `--json` で再取得、`git mv` / `git rm` 等の無出力コマンド直後は `git status` で結果確認、リモートブランチ削除前は `git ls-remote origin <branch>` で存在確認。
     - **作業を進められない状況になったら、理由をコメントしてから `ready` ラベルを外す** — 要件が不明確で確認待ち・依存タスクが未完了・前提が崩れている等で作業を継続できないと判断した場合は、次の順で対応すること。
         1. 進められない理由（何が・なぜ進められないか、再開に必要な条件）をタスクにコメントする（`mcp__todoist__add-comments`）。
-        2. その後にタスクから `ready` ラベルを外す（`mcp__todoist__update-tasks` の `labels` で除去。全置換のため現ラベルから `ready` のみ除いて指定する）。ラベル運用は `~/.claude/CLAUDE.md` に従う。
+        2. その後にタスクから `ready` ラベルを外す（`mcp__todoist__update-tasks` の `labels` で除去。全置換のため現ラベルから `ready` のみ除いて指定する）。ラベル運用は `~/.claude/rules/task-management.md` に従う。
         - コメントを残す前に `ready` を外さないこと（再開時に理由が追えなくなるのを防ぐ）。
 - ステップ1
     - 引数 `$ARGUMENTS` が指定されている場合はそのタスクIDのタスクを対象にすること。
     - タスクを特定できない場合や完了済みの場合はユーザーに報告し、続行するか判断を仰ぐこと。
     - タスクの内容（タイトル、本文、ラベル、コメント等）から実装要件を整理すること。
     - 要件が不明確な場合はユーザーに確認すること。
-    - 着手したら `in-progress` ラベルを付与する（ラベル運用は `~/.claude/CLAUDE.md` に従う）。
+    - 着手したら `in-progress` ラベルを付与する（ラベル運用は `~/.claude/rules/task-management.md` に従う）。
 - ステップ2
     - コードを変更した場合は論理的な変更ごとにコミットすること。
     - `.claude/` 配下（スキル・ルール・フック・CLAUDE.md・エージェント等）を変更した場合は、`.claude/rules/` の該当ルールに従い関連ドキュメントへの反映漏れがないか確認すること。

@@ -6,7 +6,7 @@ tools: Bash, Read, Grep, Glob, mcp__todoist__find-tasks
 
 # タスク優先度評価エージェント
 
-`ready` ラベルが付いた未完了の Todoist タスク（`dev` プロジェクト / 対象リポジトリ名のセクション、詳細は `~/.claude/CLAUDE.md`）を、以下の基準で優先度順に評価する。
+`ready` ラベルが付いた未完了の Todoist タスク（`dev` プロジェクト / 対象リポジトリ名のセクション、詳細は `~/.claude/rules/task-management.md`）を、以下の基準で優先度順に評価する。
 
 ## 優先度分類
 

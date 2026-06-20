@@ -5,7 +5,7 @@ user-invocable: true
 allowed-tools: Bash, Read, Grep, Glob, mcp__todoist__find-tasks, mcp__todoist__add-tasks
 ---
 
-タスクの登録先・ラベル運用・本文の書き方は `~/.claude/CLAUDE.md` に従う。
+タスクの登録先・ラベル運用・本文の書き方は `~/.claude/rules/task-management.md` に従う。
 
 ## 手順
 
@@ -42,7 +42,7 @@ allowed-tools: Bash, Read, Grep, Glob, mcp__todoist__find-tasks, mcp__todoist__a
     - 改善点が見つからない場合はその旨を報告して終了すること。
 - ステップ4
     - 既存の未完了タスクを `mcp__todoist__find-tasks`（対象リポジトリ名のセクション）で取得し、重複がないか確認すること。
-    - 重複しない改善点についてのみ `mcp__todoist__add-tasks` でタスクを作成すること（`projectId` / `sectionId` は `~/.claude/CLAUDE.md` に従う）。
+    - 重複しない改善点についてのみ `mcp__todoist__add-tasks` でタスクを作成すること（`projectId` / `sectionId` は `~/.claude/rules/task-management.md` に従う）。
     - タスクには以下を含めること:
         - `content`（タイトル）: 改善内容を簡潔に示す
         - `description`（本文、Markdown）:

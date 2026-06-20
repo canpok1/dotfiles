@@ -6,7 +6,7 @@ allowed-tools: Bash, Read, Grep, Glob, Agent, AskUserQuestion, Skill, mcp__todoi
 user-invocable: true
 ---
 
-タスクの登録先・ラベル運用は `~/.claude/CLAUDE.md` に従う。
+タスクの登録先・ラベル運用は `~/.claude/rules/task-management.md` に従う。
 
 ## このスキルの位置づけ
 
@@ -63,6 +63,6 @@ user-invocable: true
 
 - **判断はユーザー、詳細はスキル**: 実施可否の最終判断は `AskUserQuestion` でユーザーに委ね、再現可能な技術詳細はスキルが既存規約から決めてタスクに固定する。
 - **破棄は完了扱い**: `delete-object` は使わず `complete-tasks` を用いる（誤判断時の復元・トレースを残すため）。理由コメントは完了前に残す。
-- **ラベルは全置換に注意**: `update-tasks` の `labels` は全置換のため、現ラベルを保持したまま追加/除去する（`~/.claude/CLAUDE.md` 準拠）。
+- **ラベルは全置換に注意**: `update-tasks` の `labels` は全置換のため、現ラベルを保持したまま追加/除去する（`~/.claude/rules/task-management.md` 準拠）。
 - **タスク作成時のラベル不付与ルールとの整合**: 本スキルはタスクを「作成」しないため当該ルールには抵触しない。`ready` 付与は人手による着手可否判断の代替として、ユーザー確認を経て行う。
 - **実装はしない**: CLAUDE.md「明示的な実装指示がない限りファイル編集・作成をしない」に従い、対象機能のコードには着手しない。

@@ -6,7 +6,7 @@ user-invocable: true
 argument-hint: "[--count N]"
 ---
 
-タスクの登録先・ラベル運用は `~/.claude/CLAUDE.md` に従う。
+タスクの登録先・ラベル運用は `~/.claude/rules/task-management.md` に従う。
 
 ## 手順
 

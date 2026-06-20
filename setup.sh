@@ -23,13 +23,17 @@ deploy() {
     touch ~/.bash_profile_local
     touch ~/.gitconfig.local
 
-    # Claude 個人設定（CLAUDE.md / agents / skills）を ~/.claude へ展開する
-    mkdir -p ~/.claude/skills ~/.claude/agents
+    # Claude 個人設定（CLAUDE.md / agents / skills / rules）を ~/.claude へ展開する
+    mkdir -p ~/.claude/skills ~/.claude/agents ~/.claude/rules
     ln -fnsv ~/dotfiles/claude/CLAUDE.md ~/.claude/CLAUDE.md
     ln -fnsv ~/dotfiles/claude/agents/task-assigner.md ~/.claude/agents/task-assigner.md
     for skill_dir in ~/dotfiles/claude/skills/*/; do
         skill_name=$(basename "$skill_dir")
         ln -fnsv ~/dotfiles/claude/skills/"$skill_name" ~/.claude/skills/"$skill_name"
+    done
+    for rule in ~/dotfiles/claude/rules/*; do
+        rule_name=$(basename "$rule")
+        ln -fnsv ~/dotfiles/claude/rules/"$rule_name" ~/.claude/rules/"$rule_name"
     done
 }
 
@@ -48,6 +52,10 @@ undeploy() {
     for skill_dir in ~/dotfiles/claude/skills/*/; do
         skill_name=$(basename "$skill_dir")
         unlink ~/.claude/skills/"$skill_name" 2>/dev/null || true
+    done
+    for rule in ~/dotfiles/claude/rules/*; do
+        rule_name=$(basename "$rule")
+        unlink ~/.claude/rules/"$rule_name" 2>/dev/null || true
     done
 }
 
