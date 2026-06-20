@@ -42,7 +42,7 @@
 
 `~/dotfiles/workflow-scripts/` の自動化スクリプト（auto-assign / auto-solve / solve-task など。PATH 経由で実行可能）は、MCP ではなく Todoist CLI（`td` = `@doist/todoist-cli`）でタスクを参照・更新する。
 
-- dotfiles の `setup.sh --vox-radio` で `td`（`@doist/todoist-cli`）が導入される。
+- dotfiles の `setup.sh --init` で `td`（`@doist/todoist-cli`）が導入される。
 - 認証は環境変数 `TODOIST_API_TOKEN` を使う。
 - 対象タスクの絞り込みは環境変数 `TODOIST_FILTER`（例: `#dev & /<リポジトリ名>` = プロジェクト dev・対象リポジトリのセクション）を使う。`TODOIST_API_TOKEN` とともに `~/.bash_profile_local` に設定する。
 
