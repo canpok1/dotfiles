@@ -5,19 +5,11 @@ dotfiles
 
 ## （初回のみ）初期設定の方法
 
-よく使うアプリのインストールとPC設定変更、設定ファイルの展開を行います。
+よく使うアプリのインストールと設定ファイルの展開を、以下の1コマンドで行います（Mac / Linux、要 git）。
 
-1. githubからファイルを取得
-
-    ```
-    git clone http://github.com/canpok1/dotfiles.git ~/dotfiles
-    ```
-
-2. スクリプト実行（Mac、Linux）
-
-    ```
-    ./setup.sh --init
-    ```
+```
+git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/setup.sh --init
+```
 
 ## 設定ファイルの展開方法
 
@@ -27,18 +19,18 @@ dotfiles
 1. スクリプトを実行（Mac、Linux）
 
     ```
-    ./setup.sh
+    ~/dotfiles/setup.sh
     ```
 
     既に同名の実体ファイル/ディレクトリ（symlink でないもの）が存在する場合は、
     上書きせず `<対象>.bak` に退避してから symlink を張ります（2回目以降の symlink 張り替えでは退避しません）。
 
-設定ファイルの展開時には、Claude 個人設定（`CLAUDE.md` / agents / skills）も `~/.claude` へ展開されます。
+設定ファイルの展開時には、Claude 個人設定（`CLAUDE.md` / agents / skills / rules）も `~/.claude` へ展開されます。
 
 ## Todoist 連携（workflow-scripts）の設定
 
 `workflow-scripts`（auto-assign / auto-solve / solve-task など）は Todoist CLI（`td` = `@doist/todoist-cli`）を使います。
-`td` は `./setup.sh --init` で導入されます。
+`td` は `~/dotfiles/setup.sh --init` で導入されます。
 
 ### 認証（どちらか一方）
 
@@ -64,10 +56,10 @@ dotfiles
 1. セットアップスクリプトを実行（Mac、Linux）
 
     ```
-    ./setup.sh --undeploy
+    ~/dotfiles/setup.sh --undeploy
     ```
 
-    `~/.claude` へ展開した Claude 個人設定（CLAUDE.md / agents / skills の symlink）も併せて撤去します。
+    `~/.claude` へ展開した Claude 個人設定（CLAUDE.md / agents / skills / rules の symlink）も併せて撤去します。
 
 2. dotfilesフォルダを削除
 
