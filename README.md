@@ -13,52 +13,30 @@ dotfiles
     git clone http://github.com/canpok1/dotfiles.git ~/dotfiles
     ```
 
-2. スクリプト実行
+2. スクリプト実行（Mac、Linux）
 
-    * Windows
-
-        ```
-        setup.bat
-        ```
-
-    * Mac、Linux
-
-        ```
-        ./setup.sh --init
-        ```
+    ```
+    ./setup.sh --init
+    ```
 
 ## 設定ファイルの展開方法
 
 設定ファイルのみを再度展開します。
 設定ファイルを削除してしまった時などに実行します。
 
-1. スクリプトを実行
+1. スクリプトを実行（Mac、Linux）
 
-    * Windows
-
-        ```
-        setup.bat
-        ```
-
-    * Mac、Linux
-
-        ```
-        ./setup.sh
-        ```
+    ```
+    ./setup.sh
+    ```
 
 ## 設定ファイルの削除方法
 
-1. セットアップスクリプトを実行
+1. セットアップスクリプトを実行（Mac、Linux）
 
-    * Windows
-
-        * スクリプトを用意してません。
-
-    * Mac、Linux
-
-        ```
-        ./setup.sh --undeploy
-        ```
+    ```
+    ./setup.sh --undeploy
+    ```
 
 2. dotfilesフォルダを削除
 

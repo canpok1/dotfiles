@@ -19,8 +19,6 @@ function deploy() {
     ln -fnsv ~/dotfiles/_gvimrc ~/.gvimrc
     ln -fnsv ~/dotfiles/vimfiles ~/.vim
     ln -fnsv ~/dotfiles/.gitconfig ~/.gitconfig
-    ln -fnsv ~/dotfiles/.pryrc ~/.pryrc
-    ln -fnsv ~/dotfiles/.tigrc ~/.tigrc
     ln -fnsv ~/dotfiles/.bash_profile ~/.bash_profile
     ln -fnsv ~/dotfiles/.bashrc ~/.bashrc
     ln -fnsv ~/dotfiles/.Brewfile ~/.Brewfile
@@ -45,8 +43,6 @@ function undeploy() {
     unlink ~/.gvimrc
     unlink ~/.vim
     unlink ~/.gitconfig
-    unlink ~/.pryrc
-    unlink ~/.tigrc
     unlink ~/.bash_profile
     unlink ~/.Brewfile
 

@@ -5,7 +5,6 @@ tap "homebrew/core"
 
 brew "git"
 brew "mas"
-brew "tig"
 brew "vim"
 
 cask "alfred"
