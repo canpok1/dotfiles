@@ -10,33 +10,52 @@ else
     exit 1
 fi
 
+# 既存の実体（symlink でない通常ファイル/ディレクトリ）があれば .bak に退避する。
+# 既に symlink の場合は退避しない（再実行時はそのまま張り替える）。
+backup_if_real() {
+    if [ -e "$1" ] && [ ! -L "$1" ]; then
+        _bak="$1.bak"
+        if [ -e "$_bak" ]; then
+            _bak="$1.bak.$(date +%Y%m%d%H%M%S)"
+        fi
+        echo "backup $1 -> $_bak"
+        mv "$1" "$_bak"
+    fi
+}
+
+# 実体があればバックアップしてから symlink を張る
+link_file() {
+    backup_if_real "$2"
+    ln -fnsv "$1" "$2"
+}
+
 deploy() {
     echo make link
-    ln -fnsv ~/dotfiles/_vimrc ~/.vimrc
-    ln -fnsv ~/dotfiles/_gvimrc ~/.gvimrc
-    ln -fnsv ~/dotfiles/vimfiles ~/.vim
-    ln -fnsv ~/dotfiles/.gitconfig ~/.gitconfig
-    ln -fnsv ~/dotfiles/.bash_profile ~/.bash_profile
-    ln -fnsv ~/dotfiles/.bashrc ~/.bashrc
-    ln -fnsv ~/dotfiles/.Brewfile ~/.Brewfile
+    link_file ~/dotfiles/_vimrc ~/.vimrc
+    link_file ~/dotfiles/_gvimrc ~/.gvimrc
+    link_file ~/dotfiles/vimfiles ~/.vim
+    link_file ~/dotfiles/.gitconfig ~/.gitconfig
+    link_file ~/dotfiles/.bash_profile ~/.bash_profile
+    link_file ~/dotfiles/.bashrc ~/.bashrc
+    link_file ~/dotfiles/.Brewfile ~/.Brewfile
 
     touch ~/.bash_profile_local
     touch ~/.gitconfig.local
 
     # Claude 個人設定（CLAUDE.md / agents / skills / rules）を ~/.claude へ展開する
     mkdir -p ~/.claude/skills ~/.claude/agents ~/.claude/rules
-    ln -fnsv ~/dotfiles/claude/CLAUDE.md ~/.claude/CLAUDE.md
+    link_file ~/dotfiles/claude/CLAUDE.md ~/.claude/CLAUDE.md
     for agent in ~/dotfiles/claude/agents/*.md; do
         [ -e "$agent" ] || continue
-        ln -fnsv "$agent" ~/.claude/agents/"$(basename "$agent")"
+        link_file "$agent" ~/.claude/agents/"$(basename "$agent")"
     done
     for skill_dir in ~/dotfiles/claude/skills/*/; do
         [ -e "$skill_dir" ] || continue
-        ln -fnsv "${skill_dir%/}" ~/.claude/skills/"$(basename "$skill_dir")"
+        link_file "${skill_dir%/}" ~/.claude/skills/"$(basename "$skill_dir")"
     done
     for rule in ~/dotfiles/claude/rules/*; do
         [ -e "$rule" ] || continue
-        ln -fnsv "$rule" ~/.claude/rules/"$(basename "$rule")"
+        link_file "$rule" ~/.claude/rules/"$(basename "$rule")"
     done
 }
 
