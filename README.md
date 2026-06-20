@@ -43,7 +43,7 @@ dotfiles
 ### 認証（どちらか一方）
 
 - **コマンドでログイン**: `td auth login`（ブラウザで OAuth 認証。トークンは OS の資格情報ストアに保存される）
-- **環境変数で指定**: `~/.bash_profile_local` に `TODOIST_API_TOKEN` を設定する（環境変数が優先される）
+- **環境変数で指定**: `~/.shell_local` に `TODOIST_API_TOKEN` を設定する（環境変数が優先される）
 
     ```
     export TODOIST_API_TOKEN=xxxx   # Todoist Settings > Integrations > Developer で取得
