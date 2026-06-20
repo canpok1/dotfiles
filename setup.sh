@@ -33,11 +33,6 @@ function deploy_vscode() {
     fi
 }
 
-function initialize_vim() {
-    curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > ~/dotfiles/installer.sh
-    sh ~/dotfiles/installer.sh ~/.vim/dein
-}
-
 function undeploy() {
     unlink ~/.vimrc
     unlink ~/.gvimrc
@@ -69,12 +64,10 @@ elif [ "$1" == "--init" ]; then
     deploy
     initialize
     deploy_vscode
-    initialize_vim
     echo ---- initialize end ----
 else
     echo ---- dotfiles setup start ----
     deploy
     deploy_vscode
-    initialize_vim
     echo ---- dotfiles setup end ----
 fi
