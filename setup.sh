@@ -32,8 +32,6 @@ link_file() {
 deploy() {
     echo make link
     link_file ~/dotfiles/_vimrc ~/.vimrc
-    link_file ~/dotfiles/_gvimrc ~/.gvimrc
-    link_file ~/dotfiles/vimfiles ~/.vim
     link_file ~/dotfiles/.bash_profile ~/.bash_profile
     link_file ~/dotfiles/.bashrc ~/.bashrc
     link_file ~/dotfiles/.zprofile ~/.zprofile
@@ -61,7 +59,7 @@ deploy() {
 
 undeploy() {
     # symlink のものだけ撤去する（実体ファイルや未デプロイ時は触らない）
-    for f in ~/.vimrc ~/.gvimrc ~/.vim ~/.bash_profile ~/.bashrc ~/.zprofile ~/.zshrc ~/.Brewfile; do
+    for f in ~/.vimrc ~/.bash_profile ~/.bashrc ~/.zprofile ~/.zshrc ~/.Brewfile; do
         [ -L "$f" ] && unlink "$f"
     done
 
