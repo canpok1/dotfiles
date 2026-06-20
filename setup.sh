@@ -56,9 +56,51 @@ initialize() {
     fi
 }
 
+# vox-radio 個人設定（Claude スキル/agents/CLAUDE.md）を ~/.claude へ展開する。
+# Todoist 連携スキルは vox-radio 専用のため opt-in（--vox-radio）でのみ実行する。
+deploy_claude() {
+    echo deploy claude config
+    mkdir -p ~/.claude/skills ~/.claude/agents
+    ln -fnsv ~/dotfiles/claude/CLAUDE.md ~/.claude/CLAUDE.md
+    ln -fnsv ~/dotfiles/claude/agents/task-assigner.md ~/.claude/agents/task-assigner.md
+    for skill_dir in ~/dotfiles/claude/skills/*/; do
+        skill_name=$(basename "$skill_dir")
+        ln -fnsv ~/dotfiles/claude/skills/"$skill_name" ~/.claude/skills/"$skill_name"
+    done
+}
+
+# workflow-scripts が依存するツール（td / vox-actor）を導入する。
+install_vox_radio_tools() {
+    echo install vox-radio tools
+    # Todoist CLI (td)
+    if ! command -v td >/dev/null 2>&1; then
+        npm install -g @doist/todoist-cli
+    fi
+    # vox-actor (Homebrew cask)
+    if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    fi
+    if command -v brew >/dev/null 2>&1 && ! brew list --cask vox-actor >/dev/null 2>&1; then
+        brew tap canpok1/tap
+        brew trust canpok1/tap
+        brew install --cask vox-actor
+    fi
+}
+
+undeploy_claude() {
+    echo undeploy claude config
+    unlink ~/.claude/CLAUDE.md 2>/dev/null || true
+    unlink ~/.claude/agents/task-assigner.md 2>/dev/null || true
+    for skill_dir in ~/dotfiles/claude/skills/*/; do
+        skill_name=$(basename "$skill_dir")
+        unlink ~/.claude/skills/"$skill_name" 2>/dev/null || true
+    done
+}
+
 if [ "$1" = "--undeploy" ]; then
     echo ---- dotfiles undeploy start ----
     undeploy
+    undeploy_claude
     echo ---- dotfiles undeploy end ----
 elif [ "$1" = "--init" ]; then
     echo ---- initialize start ----
@@ -66,6 +108,11 @@ elif [ "$1" = "--init" ]; then
     initialize
     deploy_vscode
     echo ---- initialize end ----
+elif [ "$1" = "--vox-radio" ]; then
+    echo ---- vox-radio setup start ----
+    deploy_claude
+    install_vox_radio_tools
+    echo ---- vox-radio setup end ----
 else
     echo ---- dotfiles setup start ----
     deploy

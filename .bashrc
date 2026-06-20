@@ -8,6 +8,9 @@ if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 if which ndenv > /dev/null; then eval "$(ndenv init -)"; fi
 if which goenv > /dev/null; then eval "$(goenv init -)"; fi
 
+# workflow-scripts をどの git リポからでも呼べるよう PATH に追加
+export PATH="$HOME/dotfiles/workflow-scripts:$PATH"
+
 alias ctags='/usr/local/Cellar/ctags/5.8_1/bin/ctags'
 alias memo='vim ~/memo.txt'
 alias todo='vim ~/todo.txt'
