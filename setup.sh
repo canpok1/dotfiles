@@ -34,7 +34,6 @@ deploy() {
     link_file ~/dotfiles/_vimrc ~/.vimrc
     link_file ~/dotfiles/_gvimrc ~/.gvimrc
     link_file ~/dotfiles/vimfiles ~/.vim
-    link_file ~/dotfiles/.gitconfig ~/.gitconfig
     link_file ~/dotfiles/.bash_profile ~/.bash_profile
     link_file ~/dotfiles/.bashrc ~/.bashrc
     link_file ~/dotfiles/.zprofile ~/.zprofile
@@ -42,7 +41,6 @@ deploy() {
     link_file ~/dotfiles/.Brewfile ~/.Brewfile
 
     touch ~/.shell_local
-    touch ~/.gitconfig.local
 
     # Claude 個人設定（CLAUDE.md / agents / skills / rules）を ~/.claude へ展開する
     mkdir -p ~/.claude/skills ~/.claude/agents ~/.claude/rules
@@ -63,7 +61,7 @@ deploy() {
 
 undeploy() {
     # symlink のものだけ撤去する（実体ファイルや未デプロイ時は触らない）
-    for f in ~/.vimrc ~/.gvimrc ~/.vim ~/.gitconfig ~/.bash_profile ~/.bashrc ~/.zprofile ~/.zshrc ~/.Brewfile; do
+    for f in ~/.vimrc ~/.gvimrc ~/.vim ~/.bash_profile ~/.bashrc ~/.zprofile ~/.zshrc ~/.Brewfile; do
         [ -L "$f" ] && unlink "$f"
     done
 
