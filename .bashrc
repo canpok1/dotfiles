@@ -4,13 +4,6 @@ source /usr/local/etc/bash_completion.d/git-completion.bash
 GIT_PS1_SHOWDIRTYSTATE=true
 export PS1='\h\[\033[00m\]:\W\[\033[31m\]$(__git_ps1 [%s])\[\033[00m\]\$ '
 
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
-if which ndenv > /dev/null; then eval "$(ndenv init -)"; fi
-if which goenv > /dev/null; then eval "$(goenv init -)"; fi
-
-# workflow-scripts をどの git リポからでも呼べるよう PATH に追加
-export PATH="$HOME/dotfiles/workflow-scripts:$PATH"
-
 alias ctags='/usr/local/Cellar/ctags/5.8_1/bin/ctags'
 alias memo='vim ~/memo.txt'
 alias todo='vim ~/todo.txt'
