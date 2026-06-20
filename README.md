@@ -5,19 +5,11 @@ dotfiles
 
 ## （初回のみ）初期設定の方法
 
-よく使うアプリのインストールと設定ファイルの展開を行います。
+よく使うアプリのインストールと設定ファイルの展開を、以下の1コマンドで行います（Mac / Linux、要 git）。
 
-1. githubからファイルを取得
-
-    ```
-    git clone http://github.com/canpok1/dotfiles.git ~/dotfiles
-    ```
-
-2. スクリプト実行（Mac、Linux）
-
-    ```
-    ~/dotfiles/setup.sh --init
-    ```
+```
+git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/setup.sh --init
+```
 
 ## 設定ファイルの展開方法
 
