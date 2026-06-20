@@ -8,8 +8,9 @@ elif [ -x /opt/homebrew/bin/brew ]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
-# workflow-scripts をどの git リポからでも呼べるよう PATH に追加
-export PATH="$HOME/dotfiles/workflow-scripts:$PATH"
+# workflow-scripts をどの git リポからでも呼べるよう PATH の末尾に追加する
+# （末尾にすることで既存コマンドを上書きしない）
+export PATH="$PATH:$HOME/dotfiles/workflow-scripts"
 
 # 秘密・マシン固有の設定（非追跡）
 if [ -e "$HOME/.shell_local" ]; then
