@@ -30,8 +30,9 @@ if [[ -z "${TASK_ID:-}" ]]; then
   exit 1
 fi
 
-if [[ -z "${TODOIST_API_TOKEN:-}" ]]; then
-  echo "Error: TODOIST_API_TOKEN is not set" >&2
+# Todoist 認証: 環境変数 TODOIST_API_TOKEN か `td auth login` のどちらかが必要
+if [[ -z "${TODOIST_API_TOKEN:-}" ]] && ! command td auth status >/dev/null 2>&1; then
+  echo "Error: Todoist が未認証です。TODOIST_API_TOKEN を設定するか td auth login を実行してください" >&2
   exit 1
 fi
 
