@@ -46,17 +46,12 @@ dotfiles
     export TODOIST_API_TOKEN=xxxx   # Todoist Settings > Integrations > Developer で取得
     ```
 
-### タスクの絞り込みフィルタ（auto-assign / auto-solve 用）
+### タスクの絞り込み対象
 
-`auto-assign` / `auto-solve` は、どのタスクを対象に巡回するかを環境変数 `TODOIST_FILTER` で決めます。
-これは Todoist のフィルタクエリで、スクリプト内で状態ラベル条件（`@ready` / `@assign-to-claude` / `@in-progress` など）と
-AND 結合して対象タスクを絞り込みます。`~/.bash_profile_local` に設定してください。
-
-```
-export TODOIST_FILTER='#dev & /<リポジトリ名>'  # 例: プロジェクト dev・対象リポジトリ名のセクション
-```
-
-秘密情報・固有値は dotfiles にコミットせず `~/.bash_profile_local` に集約します。
+`auto-assign` / `auto-solve` が巡回する対象タスクは、実行したカレントの git リポジトリから自動的に決まります
+（プロジェクト `dev` / セクション = リポジトリ名）。スクリプト内で `#dev & /<リポジトリ名>` というフィルタを組み立て、
+状態ラベル条件（`@ready` / `@assign-to-claude` / `@in-progress` など）と AND 結合して絞り込みます。
+そのため対象の指定に環境変数は不要です。
 
 `workflow-scripts` は PATH に追加済みのため、対象としたい git リポジトリ内で直接実行できます
 （git リポジトリ外で実行するとエラー終了します）。

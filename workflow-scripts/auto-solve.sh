@@ -19,7 +19,9 @@ if [[ -z "${TODOIST_API_TOKEN:-}" ]] && ! command td auth status >/dev/null 2>&1
 fi
 
 # 対象タスクの絞り込みフィルタ。~/.bash_profile_local 等で設定する。
-: "${TODOIST_FILTER:?TODOIST_FILTER を設定してください}"
+# 対象タスクの絞り込みフィルタ: プロジェクト dev / セクション = リポジトリ名
+REPO_NAME=$(basename "$(git rev-parse --show-toplevel)")
+TODOIST_FILTER="#dev & /${REPO_NAME}"
 
 RUNNING=true
 trap 'RUNNING=false; echo ""; echo "Shutting down..."; exit 0' SIGINT SIGTERM
