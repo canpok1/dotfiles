@@ -25,7 +25,7 @@ git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/setup
     既に同名の実体ファイル/ディレクトリ（symlink でないもの）が存在する場合は、
     上書きせず `<対象>.bak` に退避してから symlink を張ります（2回目以降の symlink 張り替えでは退避しません）。
 
-設定ファイルの展開時には、Claude 個人設定（`CLAUDE.md` / agents / skills）も `~/.claude` へ展開されます。
+設定ファイルの展開時には、Claude 個人設定（`CLAUDE.md` / agents / skills / rules）も `~/.claude` へ展開されます。
 
 ## Todoist 連携（workflow-scripts）の設定
 
@@ -59,7 +59,7 @@ git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/setup
     ~/dotfiles/setup.sh --undeploy
     ```
 
-    `~/.claude` へ展開した Claude 個人設定（CLAUDE.md / agents / skills の symlink）も併せて撤去します。
+    `~/.claude` へ展開した Claude 個人設定（CLAUDE.md / agents / skills / rules の symlink）も併せて撤去します。
 
 2. dotfilesフォルダを削除
 
