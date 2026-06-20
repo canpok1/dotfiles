@@ -11,8 +11,6 @@ fi
 # workflow-scripts をどの git リポからでも呼べるよう PATH に追加
 export PATH="$HOME/dotfiles/workflow-scripts:$PATH"
 
-export GIT_PAGER="LESSCHARSET=utf-8 less"
-
 # 秘密・マシン固有の設定（非追跡）
 if [ -e "$HOME/.shell_local" ]; then
     . "$HOME/.shell_local"
