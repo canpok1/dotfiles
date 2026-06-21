@@ -39,9 +39,11 @@ deploy() {
 
     touch ~/.shell_local
 
-    # Claude 個人設定（CLAUDE.md / agents / skills / rules）を ~/.claude へ展開する
+    # Claude 個人設定（CLAUDE.md / settings.json / statusline.sh / agents / skills / rules）を ~/.claude へ展開する
     mkdir -p ~/.claude/skills ~/.claude/agents ~/.claude/rules
     link_file ~/dotfiles/claude/CLAUDE.md ~/.claude/CLAUDE.md
+    link_file ~/dotfiles/claude/settings.json ~/.claude/settings.json
+    link_file ~/dotfiles/claude/statusline.sh ~/.claude/statusline.sh
     for agent in ~/dotfiles/claude/agents/*.md; do
         [ -e "$agent" ] || continue
         link_file "$agent" ~/.claude/agents/"$(basename "$agent")"
