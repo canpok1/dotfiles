@@ -5,15 +5,15 @@ argument-hint: "[task-id または検索キーワード]"
 allowed-tools: mcp__todoist__find-tasks, mcp__todoist__fetch-object, mcp__todoist__find-comments
 ---
 
-タスクの登録先・ラベル運用は `~/.claude/rules/task-management.md` に従う。
+タスクの登録先・ラベル運用はプロジェクトのタスク管理ルールに従う。
 
 ## 確認方法
 
-- 引数がタスクIDの場合: `mcp__todoist__fetch-object` でタスクを取得する。
-- 引数が検索キーワードの場合: `mcp__todoist__find-tasks`（`searchText`、必要に応じて `sectionId` で対象リポジトリ名のセクションに絞る）で対象タスクを特定する。
-- コメントは `mcp__todoist__find-comments` で取得する。
+- 引数がタスクIDの場合: そのIDでタスクを取得する。
+- 引数が検索キーワードの場合: キーワードで検索し（必要に応じて対象リポジトリ名のセクションに絞る）対象タスクを特定する。
+- タスクに紐づくコメントも取得する。
 
 ## 注意点
 
 - 確認した内容は、節目ごとに作業メモとして残すこと。要件の整理結果や判断のポイントを記録し、後続の作業で参照できるようにする。
-- 取得結果が空だった場合は、タスク未取得のまま後続作業に進まないこと。ID指定なら `fetch-object`、検索なら `find-tasks` の条件（`searchText` / `sectionId` / `labels`）を見直して再取得してから内容を確認すること。
+- 取得結果が空だった場合は、タスク未取得のまま後続作業に進まないこと。ID指定なら対象ID、検索ならキーワード・セクション・ラベルなどの条件を見直して再取得してから内容を確認すること。

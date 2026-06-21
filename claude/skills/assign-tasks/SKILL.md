@@ -6,14 +6,14 @@ user-invocable: true
 argument-hint: "[--count N]"
 ---
 
-タスクの登録先・ラベル運用は `~/.claude/rules/task-management.md` に従う。
+タスクの登録先・ラベル運用はプロジェクトのタスク管理ルールに従う。
 
 ## 手順
 
-1. `mcp__todoist__find-tasks`（対象リポジトリ名のセクション、`labels: ["ready"]`）で未完了かつ `ready` ラベル付きのタスクを取得する。
+1. 対象リポジトリ名のセクションから、未完了かつ `ready` ラベル付きのタスクを取得する。
 2. `assign-to-claude` または `in-progress` ラベルが付いているタスクを除外する（除外したタスクはターミナルへログ出力する）。
-3. 残りのタスクを `task-assigner` エージェントの優先度基準に従って優先順位付けする。
-4. 上位N件（`$ARGUMENTS` の `--count` で指定、デフォルト: 2件）に `assign-to-claude` ラベルを付与する（`mcp__todoist__update-tasks` で既存 `labels` に追加）。
+3. 残りのタスクを優先度基準（緊急度・価値・実現性・前提の妥当性など）に従って優先順位付けする。優先度評価用のエージェント／スキルが利用できれば活用してよい。
+4. 上位N件（`$ARGUMENTS` の `--count` で指定、デフォルト: 2件）に `assign-to-claude` ラベルを付与する（既存 `labels` に追加する）。
 
 ## 出力
 
@@ -22,6 +22,6 @@ argument-hint: "[--count N]"
 
 ## 制約
 
-- タスクへのコメント投稿（`mcp__todoist__add-comments`）は禁止
-- 使用する Todoist 操作: `mcp__todoist__find-tasks`, `mcp__todoist__update-tasks` のみ
-- ラベル更新時は既存ラベルを保持したまま追加/除去すること（`update-tasks` の `labels` は全置換のため、取得済みの現ラベルをベースに編集する）
+- タスクへのコメント投稿は禁止
+- 行う操作はタスクの取得とラベル更新のみ（コメント・完了・削除などはしない）
+- ラベル更新は全置換になり得るため、取得済みの現ラベルをベースに追加/除去し、既存ラベルを失わないこと
