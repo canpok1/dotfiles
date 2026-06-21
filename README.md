@@ -22,8 +22,16 @@ git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/setup
     ~/dotfiles/setup.sh
     ```
 
-    既に同名の実体ファイル/ディレクトリ（symlink でないもの）が存在する場合は、
-    上書きせず `<対象>.bak` に退避してから symlink を張ります（2回目以降の symlink 張り替えでは退避しません）。
+    `_vimrc` や Claude 個人設定は symlink で展開します。既に同名の実体ファイル/ディレクトリ
+    （symlink でないもの）が存在する場合は、上書きせず `<対象>.bak` に退避してから symlink を張ります
+    （2回目以降の symlink 張り替えでは退避しません）。
+
+    シェル設定（`.bashrc` / `.zshrc` / `.zprofile` / `.bash_profile`）は symlink で置き換えず、
+    dotfiles の共通設定（`shell/rc.sh` / `shell/profile.sh`）を読み込む管理ブロックを追記します。
+    これにより devcontainer などで既にこれらのファイルが配置されている場合でも、
+    既存の内容を活かしたまま dotfiles の設定を併用できます（`.bak` への退避は行いません）。
+    管理ブロックは `# >>> dotfiles managed block >>>` ～ `# <<< dotfiles managed block <<<` で囲まれ、
+    再実行しても重複追記されません。旧バージョンで張られた dotfiles 向け symlink は、実体ファイルへ自動で作り直します。
 
 設定ファイルの展開時には、Claude 個人設定（`CLAUDE.md` / `settings.json` / `statusline.sh` / agents / skills / rules）も `~/.claude` へ展開されます。
 
@@ -72,6 +80,7 @@ git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/setup
     ```
 
     `~/.claude` へ展開した Claude 個人設定（CLAUDE.md / agents / skills / rules の symlink）も併せて撤去します。
+    シェル設定からは追記した管理ブロックのみを取り除き、既存ファイル本体（devcontainer などが配置した内容）は残します。
 
 2. dotfilesフォルダを削除
 

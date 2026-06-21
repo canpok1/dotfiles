@@ -29,13 +29,66 @@ link_file() {
     ln -fnsv "$1" "$2"
 }
 
+# 管理ブロックの開始/終了マーカー（追記・撤去の目印に使う）
+DOTFILES_BLOCK_BEGIN="# >>> dotfiles managed block >>>"
+DOTFILES_BLOCK_END="# <<< dotfiles managed block <<<"
+
+# シェル設定（.bashrc 等）へ source 行を冪等に追記する。
+# symlink で置き換えないため、devcontainer などで既に配置済みのファイルの内容を
+# 活かしたまま dotfiles の共通設定（shell/*.sh）を読み込める。
+#   - 旧方式で張られた dotfiles への symlink は実体ファイルへ作り直す（移行対応）
+#   - 実体が無ければ管理ブロックだけのファイルを新規作成する
+#   - 既存ファイルに管理ブロックが無ければ末尾へ追記する（既存内容は保持）
+ensure_managed_block() {
+    target="$1"
+    body="$2"
+
+    # 旧方式（dotfiles を指す symlink）なら撤去して実体ファイルへ移行する
+    if [ -L "$target" ]; then
+        case "$(readlink "$target")" in
+            "$HOME"/dotfiles/*)
+                echo "convert legacy symlink to file: $target"
+                rm -f "$target"
+                ;;
+        esac
+    fi
+
+    if [ ! -e "$target" ]; then
+        printf '%s\n%s\n%s\n' "$DOTFILES_BLOCK_BEGIN" "$body" "$DOTFILES_BLOCK_END" > "$target"
+        echo "create $target"
+        return
+    fi
+
+    if grep -qF "$DOTFILES_BLOCK_BEGIN" "$target" 2>/dev/null; then
+        echo "managed block already present in $target"
+    else
+        printf '\n%s\n%s\n%s\n' "$DOTFILES_BLOCK_BEGIN" "$body" "$DOTFILES_BLOCK_END" >> "$target"
+        echo "append managed block to $target"
+    fi
+}
+
+# ensure_managed_block で追記した管理ブロックを撤去する（ファイル本体は残す）
+remove_managed_block() {
+    target="$1"
+    [ -f "$target" ] || return 0
+    grep -qF "$DOTFILES_BLOCK_BEGIN" "$target" 2>/dev/null || return 0
+
+    _tmp="$(mktemp)"
+    sed "/^${DOTFILES_BLOCK_BEGIN}$/,/^${DOTFILES_BLOCK_END}$/d" "$target" > "$_tmp" && mv "$_tmp" "$target"
+    echo "remove managed block from $target"
+}
+
 deploy() {
     echo make link
     link_file ~/dotfiles/_vimrc ~/.vimrc
-    link_file ~/dotfiles/.bash_profile ~/.bash_profile
-    link_file ~/dotfiles/.bashrc ~/.bashrc
-    link_file ~/dotfiles/.zprofile ~/.zprofile
-    link_file ~/dotfiles/.zshrc ~/.zshrc
+
+    # シェル設定は symlink で置き換えず source 行を追記する（既存ファイルを活かす）
+    ensure_managed_block ~/.bashrc '. "$HOME/dotfiles/shell/rc.sh"'
+    ensure_managed_block ~/.zshrc '. "$HOME/dotfiles/shell/rc.sh"'
+    ensure_managed_block ~/.zprofile '. "$HOME/dotfiles/shell/profile.sh"'
+    # ログインシェル（.bash_profile）でも環境変数・エイリアスを読み込む
+    ensure_managed_block ~/.bash_profile '. "$HOME/dotfiles/shell/profile.sh"
+. "$HOME/dotfiles/shell/rc.sh"'
 
     touch ~/.shell_local
 
@@ -60,8 +113,18 @@ deploy() {
 
 undeploy() {
     # symlink のものだけ撤去する（実体ファイルや未デプロイ時は触らない）
-    for f in ~/.vimrc ~/.bash_profile ~/.bashrc ~/.zprofile ~/.zshrc; do
-        [ -L "$f" ] && unlink "$f"
+    [ -L ~/.vimrc ] && unlink ~/.vimrc
+
+    # シェル設定は管理ブロックのみ撤去する（既存ファイル本体は残す）。
+    # 旧方式で張られた dotfiles への symlink が残っていれば併せて撤去する。
+    for f in ~/.bashrc ~/.zshrc ~/.zprofile ~/.bash_profile; do
+        if [ -L "$f" ]; then
+            case "$(readlink "$f")" in
+                "$HOME"/dotfiles/*) unlink "$f" ;;
+            esac
+        else
+            remove_managed_block "$f"
+        fi
     done
 
     # Claude 個人設定の symlink を撤去する。

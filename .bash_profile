@@ -1,2 +1,0 @@
-source ~/dotfiles/shell/profile.sh
-source ~/.bashrc
