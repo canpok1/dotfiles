@@ -21,7 +21,7 @@ allowed-tools: Bash, Read, Grep, Glob, mcp__todoist__find-tasks, mcp__todoist__a
 - 全体
     - 分析は事実ベースで行うこと。推測や主観的な評価は根拠となるメモの記述を添えること。
     - 改善タスクは具体的かつ実行可能な内容にすること。抽象的な提案は避ける。
-    - 既存の未完了タスクと重複するタスクを作成しないこと。ステップ4の前に `mcp__todoist__find-tasks` で確認する。
+    - 既存の未完了タスクと重複するタスクを作成しないこと。ステップ4の前に既存タスクを検索して確認する。
 - ステップ1
     - アーカイブ済みの作業メモを収集すること。
     - アーカイブ済みメモが存在しない場合はその旨を報告して終了すること。
@@ -41,8 +41,8 @@ allowed-tools: Bash, Read, Grep, Glob, mcp__todoist__find-tasks, mcp__todoist__a
     - 抽出した改善点をタスク単位にグルーピングすること。1つのタスクには1つの改善テーマを割り当てる。
     - 改善点が見つからない場合はその旨を報告して終了すること。
 - ステップ4
-    - 既存の未完了タスクを `mcp__todoist__find-tasks`（対象リポジトリ名のセクション）で取得し、重複がないか確認すること。
-    - 重複しない改善点についてのみ `mcp__todoist__add-tasks` でタスクを作成すること（`projectId` / `sectionId` は `~/.claude/rules/task-management.md` に従う）。
+    - 対象リポジトリ名のセクションから既存の未完了タスクを取得し、重複がないか確認すること。
+    - 重複しない改善点についてのみタスクを作成すること（登録先は `~/.claude/rules/task-management.md` に従う）。
     - タスクには以下を含めること:
         - `content`（タイトル）: 改善内容を簡潔に示す
         - `description`（本文、Markdown）:
