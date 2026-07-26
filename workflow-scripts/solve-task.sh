@@ -6,8 +6,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 git rev-parse --is-inside-work-tree >/dev/null 2>&1 || { echo "Error: git リポジトリ内で実行してください" >&2; exit 1; }
 WORKSPACE_DIR="$(pwd)"
 
-# shellcheck source=workflow-scripts/lib.sh
-source "${SCRIPT_DIR}/lib.sh"
+# shellcheck source=workflow-scripts/todoist-lib.sh
+source "${SCRIPT_DIR}/todoist-lib.sh"
 
 PRINT_MODE=false
 

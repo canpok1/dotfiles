@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# workflow-scripts 共通ライブラリ（source して使う）
+# workflow-scripts の Todoist 関連 共通ライブラリ（source して使う）
 #
 # 目的: auto-assign / auto-solve を同時起動しても Todoist の
 # 503（叩きすぎ）でループが落ちないようにする。
