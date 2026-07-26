@@ -39,7 +39,7 @@ while $RUNNING; do
     TASK_TITLE=$(echo "$TASK" | jq -r '.content')
     echo ""
     echo "${TASK_ID} ${TASK_TITLE}"
-    "${SCRIPT_DIR}/solve-task.sh" -p "$TASK_ID"
+    "${SCRIPT_DIR}/todoist-solve-task.sh" -p "$TASK_ID"
   else
     printf "."
   fi

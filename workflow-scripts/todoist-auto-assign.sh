@@ -49,11 +49,11 @@ TODOIST_FILTER="#dev & /${REPO_NAME}"
 # 多重起動防止
 LOCK_DIR="$WORKFLOW_LOCK_DIR"
 mkdir -p "$LOCK_DIR"
-lock_file="${LOCK_DIR}/auto-assign"
+lock_file="${LOCK_DIR}/todoist-auto-assign"
 
 exec 9>"$lock_file"
 if ! flock -n 9; then
-  echo "auto-assign is already running"
+  echo "todoist-auto-assign is already running"
   exit 1
 fi
 

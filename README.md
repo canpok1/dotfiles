@@ -52,7 +52,8 @@ git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/setup
 
 ## Todoist 連携（workflow-scripts）の設定
 
-`workflow-scripts`（auto-assign / auto-solve / solve-task など）は Todoist CLI（`td` = `@doist/todoist-cli`）を使います。
+`workflow-scripts` のうち `todoist-` で始まるスクリプト（`todoist-auto-assign.sh` / `todoist-auto-solve.sh` / `todoist-solve-task.sh`）は
+Todoist CLI（`td` = `@doist/todoist-cli`）を使います（共通処理は `todoist-lib.sh`）。
 `td` は `~/dotfiles/setup.sh --init` で導入されます。
 
 ### 認証（どちらか一方）
@@ -66,7 +67,7 @@ git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/setup
 
 ### タスクの絞り込み対象
 
-`auto-assign` / `auto-solve` が巡回する対象タスクは、実行したカレントの git リポジトリから自動的に決まります
+`todoist-auto-assign` / `todoist-auto-solve` が巡回する対象タスクは、実行したカレントの git リポジトリから自動的に決まります
 （プロジェクト `dev` / セクション = リポジトリ名）。スクリプト内で `#dev & /<リポジトリ名>` というフィルタを組み立て、
 状態ラベル条件（`@ready` / `@assign-to-claude` / `@in-progress` など）と AND 結合して絞り込みます。
 そのため対象の指定に環境変数は不要です。

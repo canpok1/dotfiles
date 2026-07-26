@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # workflow-scripts の Todoist 関連 共通ライブラリ（source して使う）
 #
-# 目的: auto-assign / auto-solve を同時起動しても Todoist の
+# 目的: todoist-auto-assign / todoist-auto-solve を同時起動しても Todoist の
 # 503（叩きすぎ）でループが落ちないようにする。
 #
 #   - td(): 実 td バイナリのラッパー。プロセス横断のスロットリング（最小間隔
