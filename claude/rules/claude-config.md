@@ -6,7 +6,7 @@ paths:
 
 # Claude 設定を変更するときのルール
 
-`.claude/` 配下（スキル・ルール・フック・CLAUDE.md・エージェント等）や、dotfiles リポジトリの `claude/` 配下を変更する作業に適用する。
+Claude の設定ファイル（スキル・ルール・フック・CLAUDE.md・エージェント等）を変更する作業に適用する（対象とするファイルは frontmatter の `paths` で指定）。
 
 ## ドキュメントへの反映
 

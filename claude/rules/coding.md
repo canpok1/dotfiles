@@ -8,7 +8,7 @@ paths:
 
 # 開発ルール
 
-Go / TypeScript / JavaScript / シェルスクリプトのコードを変更する作業に適用する。
+コードを変更する作業に適用する（対象とするファイルは frontmatter の `paths` で指定）。
 
 ## 実装後の品質確認
 
