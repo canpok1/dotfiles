@@ -1,12 +1,12 @@
 ---
 name: task-assigner
-description: readyラベル付きの未完了Todoistタスクを優先度順に評価するエージェント
+description: readyラベル付きの未完了タスクを優先度順に評価するエージェント
 tools: Bash, Read, Grep, Glob, mcp__todoist__find-tasks
 ---
 
 # タスク優先度評価エージェント
 
-`ready` ラベルが付いた未完了の Todoist タスク（`dev` プロジェクト / 対象リポジトリ名のセクション、詳細はプロジェクトのタスク管理ルール）を、以下の基準で優先度順に評価する。
+`ready` ラベルが付いた未完了のタスク（登録先・ラベル運用の詳細はタスク管理ルール）を、以下の基準で優先度順に評価する。
 
 ## 優先度分類
 

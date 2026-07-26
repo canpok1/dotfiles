@@ -5,8 +5,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # 対象はカレントの git リポジトリ
 git rev-parse --is-inside-work-tree >/dev/null 2>&1 || { echo "Error: git リポジトリ内で実行してください" >&2; exit 1; }
 
-# shellcheck source=workflow-scripts/lib.sh
-source "${SCRIPT_DIR}/lib.sh"
+# shellcheck source=workflow-scripts/todoist-lib.sh
+source "${SCRIPT_DIR}/todoist-lib.sh"
 
 if [[ $# -gt 0 ]]; then
   echo "Usage: $0" >&2; exit 1
@@ -39,7 +39,7 @@ while $RUNNING; do
     TASK_TITLE=$(echo "$TASK" | jq -r '.content')
     echo ""
     echo "${TASK_ID} ${TASK_TITLE}"
-    "${SCRIPT_DIR}/solve-task.sh" -p "$TASK_ID"
+    "${SCRIPT_DIR}/todoist-solve-task.sh" -p "$TASK_ID"
   else
     printf "."
   fi

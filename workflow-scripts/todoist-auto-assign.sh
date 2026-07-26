@@ -6,8 +6,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 git rev-parse --is-inside-work-tree >/dev/null 2>&1 || { echo "Error: git リポジトリ内で実行してください" >&2; exit 1; }
 WORKSPACE_DIR="$(pwd)"
 
-# shellcheck source=workflow-scripts/lib.sh
-source "${SCRIPT_DIR}/lib.sh"
+# shellcheck source=workflow-scripts/todoist-lib.sh
+source "${SCRIPT_DIR}/todoist-lib.sh"
 
 ASSIGN_COUNT=1
 
@@ -49,11 +49,11 @@ TODOIST_FILTER="#dev & /${REPO_NAME}"
 # 多重起動防止
 LOCK_DIR="$WORKFLOW_LOCK_DIR"
 mkdir -p "$LOCK_DIR"
-lock_file="${LOCK_DIR}/auto-assign"
+lock_file="${LOCK_DIR}/todoist-auto-assign"
 
 exec 9>"$lock_file"
 if ! flock -n 9; then
-  echo "auto-assign is already running"
+  echo "todoist-auto-assign is already running"
   exit 1
 fi
 
@@ -94,7 +94,7 @@ while $RUNNING; do
       echo ""
       echo "Queue: ${QUEUE_COUNT} (< ${MIN_QUEUE}), assigning..."
 
-      "${SCRIPT_DIR}/claude-stream.sh" -p "/assign-tasks --count ${ASSIGN_COUNT}"
+      "${SCRIPT_DIR}/claude-stream.sh" -p "/todoist-assign-tasks --count ${ASSIGN_COUNT}"
     fi
   fi
 

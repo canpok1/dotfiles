@@ -1,12 +1,12 @@
 ---
-name: triage-task
+name: todoist-triage-task
 description: ラベルなし（未トリアージ）のTodoistタスクを1件選び、実施可否をユーザーと判断するスキル。判断に迷う点は詳細化し、実施するなら ready ラベル付与、実施しないなら完了扱いで破棄する。
 argument-hint: "[task-id]"
 allowed-tools: Bash, Read, Grep, Glob, Agent, AskUserQuestion, Skill, mcp__todoist__find-tasks, mcp__todoist__fetch-object, mcp__todoist__find-comments, mcp__todoist__add-comments, mcp__todoist__update-tasks, mcp__todoist__complete-tasks, mcp__todoist__find-sections, mcp__todoist__find-projects
 user-invocable: true
 ---
 
-タスクの登録先・ラベル運用はプロジェクトのタスク管理ルールに従う。
+前提: 本スキルは Todoist でタスク管理していることを前提とする。タスクの登録先・ラベル運用は `~/.claude/rules/todoist.md`（タスク管理ルール）に従う。
 
 ## このスキルの位置づけ
 
@@ -26,7 +26,7 @@ user-invocable: true
 
 ### ステップ2: タスク内容の確認
 
-- タイトル・本文・コメント・ラベルを把握する（タスク内容確認用のスキルが利用できれば活用する）。
+- タイトル・本文・コメント・ラベルを把握する（タスク管理ルールの参照方針に従う）。
 
 ### ステップ3: コードベース調査
 
@@ -53,7 +53,7 @@ user-invocable: true
   - 理由コメントを残す前に完了しないこと（後から判断根拠が追えなくなるのを防ぐ）。
 - **実施する**場合 → ready 化する。
   1. ステップ4で詳細化した内容をタスク本文（`description`）に反映する。
-  2. `ready` ラベルを付与する（ラベル更新は全置換になり得るため、取得済みの現ラベルをベースに `ready` を追加する）。
+  2. `ready` ラベルを付与する。
 
 ### ステップ7: 仕上げ確認
 
@@ -63,6 +63,5 @@ user-invocable: true
 
 - **判断はユーザー、詳細はスキル**: 実施可否の最終判断はユーザーに確認して委ね、再現可能な技術詳細はスキルが既存規約から決めてタスクに固定する。
 - **破棄は完了扱い**: タスクは削除せず完了扱いにする（誤判断時の復元・トレースを残すため）。理由コメントは完了前に残す。
-- **ラベルは全置換に注意**: ラベル更新は全置換になり得るため、現ラベルを保持したまま追加/除去する（プロジェクトのタスク管理ルールに準拠）。
 - **タスク作成時のラベル不付与ルールとの整合**: 本スキルはタスクを「作成」しないため当該ルールには抵触しない。`ready` 付与は人手による着手可否判断の代替として、ユーザー確認を経て行う。
 - **実装はしない**: 本スキルは仕分けと詳細化のみを行い、対象機能のコードには着手しない（ファイルの編集・作成をしない）。

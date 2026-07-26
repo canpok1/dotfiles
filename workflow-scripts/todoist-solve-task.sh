@@ -6,8 +6,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 git rev-parse --is-inside-work-tree >/dev/null 2>&1 || { echo "Error: git リポジトリ内で実行してください" >&2; exit 1; }
 WORKSPACE_DIR="$(pwd)"
 
-# shellcheck source=workflow-scripts/lib.sh
-source "${SCRIPT_DIR}/lib.sh"
+# shellcheck source=workflow-scripts/todoist-lib.sh
+source "${SCRIPT_DIR}/todoist-lib.sh"
 
 PRINT_MODE=false
 
@@ -92,7 +92,7 @@ git pull origin "$DEFAULT_BRANCH"
 
 # Claude実行（worktreeモード）
 if [[ "$PRINT_MODE" == "true" ]]; then
-  "${SCRIPT_DIR}/claude-stream.sh" --worktree "task-${TASK_ID}" --model sonnet -p "/solve-task ${TASK_ID}"
+  "${SCRIPT_DIR}/claude-stream.sh" --worktree "task-${TASK_ID}" --model sonnet -p "/todoist-solve-task ${TASK_ID}"
 else
-  claude --worktree "task-${TASK_ID}" --permission-mode auto --model sonnet "/solve-task ${TASK_ID}"
+  claude --worktree "task-${TASK_ID}" --permission-mode auto --model sonnet "/todoist-solve-task ${TASK_ID}"
 fi
