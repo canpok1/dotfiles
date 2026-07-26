@@ -1,12 +1,12 @@
 ---
-name: triage-task
+name: todoist-triage-task
 description: ラベルなし（未トリアージ）のTodoistタスクを1件選び、実施可否をユーザーと判断するスキル。判断に迷う点は詳細化し、実施するなら ready ラベル付与、実施しないなら完了扱いで破棄する。
 argument-hint: "[task-id]"
 allowed-tools: Bash, Read, Grep, Glob, Agent, AskUserQuestion, Skill, mcp__todoist__find-tasks, mcp__todoist__fetch-object, mcp__todoist__find-comments, mcp__todoist__add-comments, mcp__todoist__update-tasks, mcp__todoist__complete-tasks, mcp__todoist__find-sections, mcp__todoist__find-projects
 user-invocable: true
 ---
 
-タスクの登録先・ラベル運用はタスク管理ルールに従う。
+前提: 本スキルは Todoist でタスク管理していることを前提とする。タスクの登録先・ラベル運用は `~/.claude/rules/todoist.md`（タスク管理ルール）に従う。
 
 ## このスキルの位置づけ
 

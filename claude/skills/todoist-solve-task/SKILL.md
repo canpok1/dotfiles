@@ -1,11 +1,11 @@
 ---
-name: solve-task
+name: todoist-solve-task
 description: Todoistタスクの対応を行うスキル。実装が必要な場合は実装・品質改善・自己レビュー・PR作成・マージまでを一貫して行う。
 argument-hint: "[task-id]"
 disable-model-invocation: true
 ---
 
-タスクの登録先・ラベル運用はタスク管理ルールに従う。
+前提: 本スキルは Todoist でタスク管理していることを前提とする。タスクの登録先・ラベル運用は `~/.claude/rules/todoist.md`（タスク管理ルール）に従う。
 
 ## 手順
 

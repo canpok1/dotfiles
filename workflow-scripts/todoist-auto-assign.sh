@@ -94,7 +94,7 @@ while $RUNNING; do
       echo ""
       echo "Queue: ${QUEUE_COUNT} (< ${MIN_QUEUE}), assigning..."
 
-      "${SCRIPT_DIR}/claude-stream.sh" -p "/assign-tasks --count ${ASSIGN_COUNT}"
+      "${SCRIPT_DIR}/claude-stream.sh" -p "/todoist-assign-tasks --count ${ASSIGN_COUNT}"
     fi
   fi
 

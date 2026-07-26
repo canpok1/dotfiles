@@ -92,7 +92,7 @@ git pull origin "$DEFAULT_BRANCH"
 
 # Claude実行（worktreeモード）
 if [[ "$PRINT_MODE" == "true" ]]; then
-  "${SCRIPT_DIR}/claude-stream.sh" --worktree "task-${TASK_ID}" --model sonnet -p "/solve-task ${TASK_ID}"
+  "${SCRIPT_DIR}/claude-stream.sh" --worktree "task-${TASK_ID}" --model sonnet -p "/todoist-solve-task ${TASK_ID}"
 else
-  claude --worktree "task-${TASK_ID}" --permission-mode auto --model sonnet "/solve-task ${TASK_ID}"
+  claude --worktree "task-${TASK_ID}" --permission-mode auto --model sonnet "/todoist-solve-task ${TASK_ID}"
 fi
