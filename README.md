@@ -57,7 +57,7 @@ git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/setup
 
 - `CLAUDE.md` … 全プロジェクト共通の個人設定。
 - `settings.json` … Claude Code の設定。ステータスライン（`~/.claude/statusline.sh`）を有効化します。
-- `statusline.sh` … モデル名・コンテキスト使用率・トークン数・コストを表示するステータスライン用スクリプト（`jq` が必要）。
+- `statusline.sh` … 起動ディレクトリ・モデル名・コンテキスト使用率・トークン数・コストを表示するステータスライン用スクリプト（`jq` が必要）。表示例: `/workspaces/dotfiles | Opus 5 | ctx 42% | 421.2k in / 1.5k out | $0.37`
 - `skills/` … スキル群。`todoist-` で始まるものは Todoist でのタスク管理を前提とします（`todoist-solve-task` / `todoist-assign-tasks` / `todoist-triage-task`）。ほかに、相談から仕様・タスクを整理する `discuss`、重要判断を ADR として記録する `create-adr` を含みます。
 - `agents/` … エージェント定義。
 - `rules/` … 共通ルール。`~/.claude/rules/` 配下は全プロジェクトに適用されます。`paths` を持つルールは該当ファイルを扱うときだけ、持たないルールはセッション開始時に読み込まれます。
