@@ -5,6 +5,8 @@ input=$(cat)
 
 # ヘルパー関数
 get_model_name() { echo "$input" | jq -r '.model.display_name // "Unknown"'; }
+# Claude Code を起動したディレクトリ（セッション中は変化しない）
+get_project_dir() { echo "$input" | jq -r '.workspace.project_dir // .cwd // "unknown"'; }
 get_context_window_size() { echo "$input" | jq -r '.context_window.context_window_size // 0'; }
 get_current_usage() { echo "$input" | jq '.context_window.current_usage'; }
 get_cost() { echo "$input" | jq -r '.cost.total_cost_usd // empty'; }
@@ -46,6 +48,7 @@ calc_context_percent() {
 }
 
 # 各値を取得
+PROJECT_DIR=$(get_project_dir)
 MODEL=$(get_model_name)
 CONTEXT_PERCENT=$(calc_context_percent)
 INPUT_TOKENS=$(format_tokens "$(get_input_tokens)")
@@ -54,9 +57,9 @@ COST=$(get_cost)
 
 # ステータスラインを出力
 if [ -n "$COST" ]; then
-  printf "Model: %s | Context: %s%% | Tokens: %s in / %s out | Cost: \$%.2f" \
-    "$MODEL" "$CONTEXT_PERCENT" "$INPUT_TOKENS" "$OUTPUT_TOKENS" "$COST"
+  printf "%s | %s | ctx %s%% | %s in / %s out | \$%.2f" \
+    "$PROJECT_DIR" "$MODEL" "$CONTEXT_PERCENT" "$INPUT_TOKENS" "$OUTPUT_TOKENS" "$COST"
 else
-  printf "Model: %s | Context: %s%% | Tokens: %s in / %s out" \
-    "$MODEL" "$CONTEXT_PERCENT" "$INPUT_TOKENS" "$OUTPUT_TOKENS"
+  printf "%s | %s | ctx %s%% | %s in / %s out" \
+    "$PROJECT_DIR" "$MODEL" "$CONTEXT_PERCENT" "$INPUT_TOKENS" "$OUTPUT_TOKENS"
 fi

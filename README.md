@@ -11,6 +11,9 @@ dotfiles
 git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/setup.sh --init
 ```
 
+`setup.sh` は自身が置かれているディレクトリを dotfiles の実体として扱うため、clone 先は `~/dotfiles` でなくても構いません
+（例: `/workspaces/dotfiles` に clone してそこの `setup.sh` を実行すれば、そのクローンを指すリンクが張られます）。
+
 ## 設定ファイルの展開方法
 
 設定ファイルのみを再度展開します。
@@ -31,7 +34,20 @@ git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/setup
     これにより devcontainer などで既にこれらのファイルが配置されている場合でも、
     既存の内容を活かしたまま dotfiles の設定を併用できます（`.bak` への退避は行いません）。
     管理ブロックは `# >>> dotfiles managed block >>>` ～ `# <<< dotfiles managed block <<<` で囲まれ、
-    再実行しても重複追記されません。旧バージョンで張られた dotfiles 向け symlink は、実体ファイルへ自動で作り直します。
+    以下の内容が書き込まれます。
+
+    ```
+    # >>> dotfiles managed block >>>
+    export DOTFILES_DIR="/home/you/dotfiles"
+    . "$DOTFILES_DIR/shell/rc.sh"
+    # <<< dotfiles managed block <<<
+    ```
+
+    再実行時は重複追記せず、ブロックの中身を最新内容へ書き替えます（dotfiles を別の場所へ移した場合もパスが追従します）。
+    ブロック内は毎回上書きされるため、手を入れる場合はブロックの外か `~/.shell_local` に書いてください。
+    旧バージョンで張られた dotfiles 向け symlink は、実体ファイルへ自動で作り直します。
+
+    `DOTFILES_DIR` は dotfiles の配置場所を示す環境変数で、`shell/profile.sh` の PATH 追加（`workflow-scripts`）などで参照します。
 
 設定ファイルの展開時には、Claude 個人設定（`CLAUDE.md` / `settings.json` / `statusline.sh` / agents / skills / rules）も `~/.claude` へ展開されます。
 
@@ -41,7 +57,7 @@ git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/setup
 
 - `CLAUDE.md` … 全プロジェクト共通の個人設定。
 - `settings.json` … Claude Code の設定。ステータスライン（`~/.claude/statusline.sh`）を有効化します。
-- `statusline.sh` … モデル名・コンテキスト使用率・トークン数・コストを表示するステータスライン用スクリプト（`jq` が必要）。
+- `statusline.sh` … 起動ディレクトリ・モデル名・コンテキスト使用率・トークン数・コストを表示するステータスライン用スクリプト（`jq` が必要）。表示例: `/workspaces/dotfiles | Opus 5 | ctx 42% | 421.2k in / 1.5k out | $0.37`
 - `skills/` … スキル群。`todoist-` で始まるものは Todoist でのタスク管理を前提とします（`todoist-solve-task` / `todoist-assign-tasks` / `todoist-triage-task`）。ほかに、相談から仕様・タスクを整理する `discuss`、重要判断を ADR として記録する `create-adr` を含みます。
 - `agents/` … エージェント定義。
 - `rules/` … 共通ルール。`~/.claude/rules/` 配下は全プロジェクトに適用されます。`paths` を持つルールは該当ファイルを扱うときだけ、持たないルールはセッション開始時に読み込まれます。
