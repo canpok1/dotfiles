@@ -45,7 +45,7 @@ git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/setup
 - `skills/` … スキル群。`todoist-` で始まるものは Todoist でのタスク管理を前提とします（`todoist-solve-task` / `todoist-assign-tasks` / `todoist-triage-task`）。ほかに、相談から仕様・タスクを整理する `discuss`、重要判断を ADR として記録する `create-adr` を含みます。
 - `agents/` … エージェント定義。
 - `rules/` … 共通ルール。`~/.claude/rules/` 配下は全プロジェクトに適用されます。`paths` を持つルールは該当ファイルを扱うときだけ、持たないルールはセッション開始時に読み込まれます。
-    - `coding.md` … 実装後の品質確認・自己レビュー、コミット粒度。コードを扱うときに適用されます（対象ファイルは各ルールの `paths` を参照）。
+    - `coding.md` … 実装後の品質確認・自己レビュー、コミット粒度。コードを扱うときに適用されます。
     - `claude-config.md` … Claude 設定（スキル・ルール・エージェント等）を変更するときのドキュメント反映確認。
     - `todoist.md` … タスク管理に Todoist を使う場合にのみ適用されるルール。Todoist を使わないプロジェクトには適用されません（適用条件はファイル冒頭に記載）。
 
