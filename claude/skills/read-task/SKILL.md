@@ -5,7 +5,7 @@ argument-hint: "[task-id または検索キーワード]"
 allowed-tools: mcp__todoist__find-tasks, mcp__todoist__fetch-object, mcp__todoist__find-comments
 ---
 
-タスクの登録先・ラベル運用はプロジェクトのタスク管理ルールに従う。
+タスクの登録先・ラベル運用はタスク管理ルールに従う。
 
 ## 確認方法
 
