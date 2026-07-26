@@ -35,6 +35,15 @@ link_file() {
     ln -fnsv "$1" "$2"
 }
 
+# symlink を撤去し、撤去した内容を表示する。
+# unlink は ln -v のような表示機能を持たないため、ここで自前に出力する
+# （deploy 側の `'A' -> 'B'` 表示と対になる）。
+unlink_file() {
+    _dest="$(readlink "$1")"
+    unlink "$1" 2>/dev/null && echo "unlink $1 -> $_dest"
+    return 0
+}
+
 # symlink の参照先が dotfiles（実行中のクローン or 旧デフォルト配置）配下かを判定する
 is_dotfiles_link() {
     case "$(readlink "$1")" in
@@ -146,14 +155,14 @@ deploy() {
 undeploy() {
     # dotfiles を指す symlink だけ撤去する（実体ファイルや未デプロイ時は触らない）
     if [ -L ~/.vimrc ] && is_dotfiles_link ~/.vimrc; then
-        unlink ~/.vimrc
+        unlink_file ~/.vimrc
     fi
 
     # シェル設定は管理ブロックのみ撤去する（既存ファイル本体は残す）。
     # 旧方式で張られた dotfiles への symlink が残っていれば併せて撤去する。
     for f in ~/.bashrc ~/.zshrc ~/.zprofile ~/.bash_profile; do
         if [ -L "$f" ]; then
-            is_dotfiles_link "$f" && unlink "$f"
+            is_dotfiles_link "$f" && unlink_file "$f"
         else
             remove_managed_block "$f"
         fi
@@ -165,7 +174,7 @@ undeploy() {
     if [ -d ~/.claude ]; then
         find ~/.claude -type l | while read -r link; do
             if is_dotfiles_link "$link"; then
-                unlink "$link" 2>/dev/null || true
+                unlink_file "$link"
             fi
         done
     fi
