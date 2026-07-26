@@ -44,7 +44,9 @@ git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/setup
 - `statusline.sh` … モデル名・コンテキスト使用率・トークン数・コストを表示するステータスライン用スクリプト（`jq` が必要）。
 - `skills/` … スキル群。タスク管理系（`solve-task` / `read-task` / `assign-tasks` / `triage-task` / `analyze-work-memo-task`）に加え、相談から仕様・タスクを整理する `discuss`、重要判断を ADR として記録する `create-adr` を含みます。
 - `agents/` … エージェント定義。
-- `rules/` … 共通ルール。`~/.claude/rules/` 配下は全プロジェクトのセッション開始時に自動で読み込まれます。`todoist.md` はタスク管理に Todoist を使う場合にのみ適用されるルールで、Todoist を使わないプロジェクトには適用されません（適用条件はファイル冒頭に記載）。
+- `rules/` … 共通ルール。`~/.claude/rules/` 配下は全プロジェクトのセッション開始時に自動で読み込まれます。
+    - `coding.md` … 実装後の品質確認・自己レビュー、コミット粒度、ドキュメント反映など、コード変更に共通して適用する開発ルール。
+    - `todoist.md` … タスク管理に Todoist を使う場合にのみ適用されるルール。Todoist を使わないプロジェクトには適用されません（適用条件はファイル冒頭に記載）。
 
 既に `~/.claude/settings.json` などの実体ファイルがある場合は、`<対象>.bak` へ退避してから symlink を張ります。
 
