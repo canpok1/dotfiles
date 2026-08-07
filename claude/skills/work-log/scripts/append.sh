@@ -21,11 +21,6 @@
 set -euo pipefail
 
 VAULT_REMOTE_MATCH="canpok1/obsidian-vault"
-VAULT_DIR_CANDIDATES=(
-  "${OBSIDIAN_VAULT_DIR:-}"
-  "$HOME/obsidian-vault"
-  "$HOME/src/obsidian-vault"
-)
 
 usage() {
   echo "usage: $(basename "$0") <project> <content>" >&2
@@ -41,32 +36,51 @@ entry="${heading}
 
 ${content}"
 
+# プロジェクトノートのひな形。obsidian CLI 経由（改行はリテラル \n にエスケープ
+# して渡す）と git 直接書き込み（実改行のまま書く）の両方から参照する。
+project_note_body="# ${project}"$'\n\n'"## 概要"$'\n'
+
 using_obsidian() {
   command -v obsidian >/dev/null 2>&1 && obsidian vault=obsidian-vault vault >/dev/null 2>&1
 }
 
 append_via_obsidian() {
   if ! obsidian vault=obsidian-vault file "file=${project}" >/dev/null 2>&1; then
+    local body_escaped="${project_note_body//$'\n'/\\n}"
     obsidian vault=obsidian-vault create "path=projects/${project}.md" \
-      "content=# ${project}\n\n## 概要\n\n" >/dev/null
+      "content=${body_escaped}\n" >/dev/null
   fi
 
   local escaped="${entry//$'\n'/\\n}"
   obsidian vault=obsidian-vault daily:append "content=${escaped}\n" >/dev/null
 }
 
-# clone の実体を、環境変数指定 → 既定の候補パスの順に探す。
-# .git があり、origin が vault を指しているものだけを採用する。
+# clone の置き場所の候補を優先度順に出力する。
+# $HOME はセッション種別によって実際の作業ディレクトリと一致しない
+# ことがある（例: $HOME=/root だが各リポジトリは /home/user/ 配下）ため、
+# 現在のプロジェクトの隣（兄弟ディレクトリ）も候補に含める。
+vault_dir_candidates() {
+  [ -n "${OBSIDIAN_VAULT_DIR:-}" ] && printf '%s\n' "$OBSIDIAN_VAULT_DIR"
+
+  local proj_root
+  if proj_root="$(git rev-parse --show-toplevel 2>/dev/null)"; then
+    printf '%s\n' "$(dirname "$proj_root")/obsidian-vault"
+  fi
+
+  printf '%s\n' "$HOME/obsidian-vault" "$HOME/src/obsidian-vault"
+}
+
+# 候補を順に見て、.git があり origin が vault を指しているものを採用する。
+# 候補は重複しうる（例: プロジェクトの親ディレクトリ = $HOME）ため awk で去重する。
 find_vault_dir() {
   local dir
-  for dir in "${VAULT_DIR_CANDIDATES[@]}"; do
-    [ -n "$dir" ] || continue
+  while IFS= read -r dir; do
     [ -d "$dir/.git" ] || continue
     if git -C "$dir" remote get-url origin 2>/dev/null | grep -qF "$VAULT_REMOTE_MATCH"; then
       printf '%s' "$dir"
       return 0
     fi
-  done
+  done < <(vault_dir_candidates | awk '!seen[$0]++')
   return 1
 }
 
@@ -74,7 +88,7 @@ ensure_project_note_git() {
   local vault_dir="$1" path="projects/${project}.md"
   [ -f "$vault_dir/$path" ] && return 0
   mkdir -p "$vault_dir/projects"
-  printf '# %s\n\n## 概要\n\n' "$project" > "$vault_dir/$path"
+  printf '%s' "$project_note_body" > "$vault_dir/$path"
   git -C "$vault_dir" add "$path"
 }
 
@@ -90,12 +104,10 @@ append_via_git() {
     return 1
   fi
 
-  local date_jst path attempt=1 max_attempts=3 branch err_file
+  local date_jst path attempt=1 max_attempts=3 branch
   date_jst="$(TZ=Asia/Tokyo date '+%F')"
   path="daily/${date_jst}.md"
   branch="$(git -C "$vault_dir" symbolic-ref --short HEAD)"
-  err_file="$(mktemp)"
-  trap 'rm -f "$err_file"' RETURN
 
   while :; do
     if ! git -C "$vault_dir" fetch origin "$branch" --quiet; then
@@ -117,17 +129,16 @@ append_via_git() {
     git -C "$vault_dir" add "$path"
     git -C "$vault_dir" commit --quiet -m "work-log: ${date_jst} (${project})"
 
-    if git -C "$vault_dir" push origin "$branch" --quiet 2>"$err_file"; then
-      return 0
-    fi
+    local push_err
+    push_err="$(git -C "$vault_dir" push origin "$branch" --quiet 2>&1)" && return 0
 
-    if [ "$attempt" -lt "$max_attempts" ] && grep -qE 'rejected|non-fast-forward|fetch first' "$err_file"; then
+    if [ "$attempt" -lt "$max_attempts" ] && printf '%s' "$push_err" | grep -qE 'rejected|non-fast-forward|fetch first'; then
       git -C "$vault_dir" reset --hard --quiet HEAD~1
       attempt=$((attempt + 1))
       continue
     fi
 
-    cat "$err_file" >&2
+    printf '%s\n' "$push_err" >&2
     return 1
   done
 }
