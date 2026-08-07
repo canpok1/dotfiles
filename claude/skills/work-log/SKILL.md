@@ -5,12 +5,12 @@ description: 作業記録・日報を Obsidian vault のデイリーノートに
 
 # 作業記録を Obsidian に残す
 
-このスキルは [[obsidian-vault]] のデイリーノートへ作業記録を追記する。実行環境ごとに追記経路が異なるが、切り替えは `scripts/append.sh` が自動で行うため、呼び出し側は意識しなくてよい。
+このスキルは [[obsidian-vault]] のデイリーノートへ作業記録を追記する。追記できる手段を優先度順に試し、どちらも使えない場合は**何もしない**（エラーにはしない）。
 
-| | devcontainer | Claude Code on the web | ホスト直 |
-|---|---|---|---|
-| vault の実体 | 無い（clone しない） | 無い（clone しない） | ある |
-| 追記経路 | GitHub Contents API（`gh api`） | GitHub Contents API（`gh api`） | `obsidian` CLI |
+1. `obsidian` CLI — ホストで Obsidian.app が起動していれば使える
+2. obsidian-vault のローカル clone への `git commit` + `push` — clone が見つかれば使う
+
+**記録するかどうかは、vault の clone を用意しているかどうかでユーザー側が制御する。** clone しておけば記録され、clone しなければ記録されない。`append.sh` が自分で clone することはない。
 
 ## 手順
 
@@ -35,12 +35,16 @@ git 管理下でない場合はディレクトリ名でよい。
 - `DOTFILES_DIR` は `setup.sh` がシェル設定に export 済み
 - 見出し（`## YYYY-MM-DD HH:MM JST [[プロジェクト名]]`）の生成と、リンク先のプロジェクトノート（`projects/<プロジェクト名>.md`）が無い場合の作成は `append.sh` が自動で行う
 - 時刻は実行環境の TZ に関わらず常に JST 固定（`daily/YYYY-MM-DD.md` のファイル名の日付も同様）
-- 追記後、結果を確認したい場合はホスト直なら `obsidian vault=obsidian-vault daily:read`、環境1・2 なら `gh api repos/canpok1/obsidian-vault/contents/daily/<日付>.md --jq '.content' | base64 -d`
+- 標準エラー出力にメッセージが出た場合は内容を確認する。「clone が見つからないためスキップした」旨のメッセージは正常系（記録しない選択がされているだけ）なので対応不要。それ以外（作業ツリーが汚れている・リモートと分岐している等）は原因を確認する
 
-### 3. 前提条件
+### 3. clone の場所
 
-- devcontainer / Claude Code on the web: `gh` コマンドが認証済みであること（`gh auth status` で確認）。vault の clone は不要 — `gh api` で GitHub を直接読み書きする
+既定では `$HOME/obsidian-vault` または `$HOME/src/obsidian-vault` を探す。別の場所に置いている場合は環境変数 `OBSIDIAN_VAULT_DIR` でパスを指定する。
+
+### 4. 前提条件
+
 - ホスト直: Obsidian.app が起動していること（`obsidian` CLI は起動中の本体にソケット経由で指示を送るだけで、単体では動作しない）
+- clone 経由: `git push` できる認証情報が設定済みであること。clone の作業ツリーが汚れている（未コミットの変更がある）場合や、ローカルとリモートが分岐している場合は追記を中止する（他の用途で clone を使っている可能性があるため、勝手に解消しない）
 
 ## 書く内容
 
@@ -57,5 +61,5 @@ git 管理下でない場合はディレクトリ名でよい。
 
 - Vault は Private リポジトリだが、**認証情報・APIキー・トークン・秘密鍵は書かない**。値だけでなく「どこに置いてあるか」も避ける
 - 顧客固有の機微な情報は、一般化した表現に置き換える
-- **git 操作は不要**。devcontainer / web は `gh api` が直接コミットを作る。ホスト直は obsidian-git プラグインが10分以内に自動コミットする
-- GitHub 側の一時的な競合（複数環境からの同時追記による 409/422）は `append.sh` が自動で数回リトライする。それでも失敗する場合はエラー出力を確認する
+- ホスト直は obsidian-git プラグインが10分以内に自動コミットするため、追記後の git 操作は不要
+- clone 経由での push が競合した場合（複数環境からの同時追記）は `append.sh` が自動で最大3回まで再試行する。それでも失敗する場合はエラー出力を確認する
