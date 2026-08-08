@@ -64,6 +64,7 @@ git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/setup
     - `coding.md` … 実装後の品質確認・自己レビュー、コメントの書き方、コミット粒度。コードを扱うときに適用されます。
     - `claude-config.md` … Claude 設定（スキル・ルール・エージェント等）を変更するときのドキュメント反映確認。
     - `todoist.md` … タスク管理に Todoist を使う場合にのみ適用されるルール。Todoist を使わないプロジェクトには適用されません（適用条件はファイル冒頭に記載）。
+    - `obsidian-task.md` … タスクの保存に Obsidian vault（`canpok1/obsidian-vault` の `tasks/`）を使う場合にのみ適用されるルール。保存先・ファイル命名・frontmatter・書き方を規定します（適用条件はファイル冒頭に記載）。`tasks/**/*.md` を扱うときに読み込まれます。
 
 既に `~/.claude/settings.json` などの実体ファイルがある場合は、`<対象>.bak` へ退避してから symlink を張ります。
 
