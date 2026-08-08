@@ -10,9 +10,10 @@
 # clone の有無で制御する（clone しておけば記録され、しなければ記録されない）。
 #
 # 使い方:
-#   append.sh <project> <content>
+#   append.sh <project> <content> [branch]
 #     project: [[project]] のリンクに使うプロジェクト名（通常は git リポジトリ名）
 #     content: 見出しの下に入る本文
+#     branch:  作業中のブランチ名（省略可）。指定すると見出しに (branch名) を付与する
 #
 # 時刻は実行環境の TZ に関わらず常に JST (Asia/Tokyo) を使う。
 # devcontainer / web はほぼ確実に UTC で、JST 09:00 = UTC 00:00 のため、
@@ -26,15 +27,19 @@ VAULT_REMOTE_MATCH="canpok1/obsidian-vault"
 VAULT_TARGET_BRANCH="main"
 
 usage() {
-  echo "usage: $(basename "$0") <project> <content>" >&2
+  echo "usage: $(basename "$0") <project> <content> [branch]" >&2
   exit 1
 }
 
-[ $# -eq 2 ] || usage
+[ $# -eq 2 ] || [ $# -eq 3 ] || usage
 project="$1"
 content="$2"
+branch="${3:-}"
 
 heading="## $(TZ=Asia/Tokyo date '+%F %H:%M') JST [[${project}]]"
+if [ -n "$branch" ]; then
+  heading="${heading} (${branch})"
+fi
 entry="${heading}
 
 ${content}"
