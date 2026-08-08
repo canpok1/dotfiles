@@ -84,6 +84,18 @@ dotfiles_relpath() {
     esac
 }
 
+# 絞り込みを行わない既定プロファイル。conf を持たない予約名として扱う
+PROFILE_DEFAULT=private
+
+# profiles/*.conf から選択可能なプロファイル名を列挙する（エラーメッセージ用）
+list_profiles() {
+    for _c in "$DOTFILES_DIR"/profiles/*.conf; do
+        [ -e "$_c" ] || continue
+        _n="$(basename "$_c")"
+        printf '%s ' "${_n%.conf}"
+    done
+}
+
 # 展開するプロファイル名。優先順は
 # --profile 引数 > DOTFILES_PROFILE 環境変数 > ~/.dotfiles-profile > private。
 resolve_profile() {
@@ -102,7 +114,7 @@ resolve_profile() {
             return
         fi
     fi
-    printf '%s' private
+    printf '%s' "$PROFILE_DEFAULT"
 }
 
 # プロファイルの許可リスト（改行区切り）。PROFILE_FILTERED=0 のときは絞り込まない。
@@ -111,14 +123,22 @@ PROFILE_FILTERED=0
 PROFILE_ALLOW=""
 
 # profiles/<プロファイル名>.conf を読み込む。
-# conf が無いプロファイル（既定の private を含む）は絞り込みなし＝全件展開とする。
+# private は「絞り込みなし＝全件展開」を表す予約名で、conf を持たない。
 load_profile() {
     PROFILE_NAME="$(resolve_profile)"
     _conf="$DOTFILES_DIR/profiles/$PROFILE_NAME.conf"
 
-    if [ ! -f "$_conf" ]; then
-        echo "profile: $PROFILE_NAME (no conf; deploy all)"
+    if [ "$PROFILE_NAME" = "$PROFILE_DEFAULT" ]; then
+        echo "profile: $PROFILE_NAME (deploy all)"
         return 0
+    fi
+
+    # private 以外で conf が無いのは名前の打ち間違いの可能性が高い。
+    # 黙って全件展開すると仕事環境へ私用設定が入るため、ここで中断する。
+    if [ ! -f "$_conf" ]; then
+        echo "unknown profile: $PROFILE_NAME (profiles/$PROFILE_NAME.conf not found)" >&2
+        echo "available profiles: $PROFILE_DEFAULT $(list_profiles)" >&2
+        exit 1
     fi
 
     PROFILE_FILTERED=1
