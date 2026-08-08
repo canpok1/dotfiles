@@ -7,6 +7,29 @@ cd "$DOTFILES_DIR" || exit 1
 # 旧デフォルト配置。過去に ~/dotfiles から展開した symlink の撤去に使う
 LEGACY_DOTFILES_DIR="$HOME/dotfiles"
 
+MODE=deploy
+PROFILE_ARG=""
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --undeploy) MODE=undeploy ;;
+        --init) MODE=init ;;
+        --profile)
+            shift
+            if [ $# -eq 0 ]; then
+                echo "--profile requires a profile name" >&2
+                exit 1
+            fi
+            PROFILE_ARG="$1"
+            ;;
+        *)
+            echo "unknown option: $1" >&2
+            echo "usage: setup.sh [--init | --undeploy] [--profile <name>]" >&2
+            exit 1
+            ;;
+    esac
+    shift
+done
+
 if [ "$(uname)" = 'Darwin' ]; then
     echo setup for mac
 elif [ "$(expr substr $(uname -s) 1 5)" = 'Linux' ]; then
@@ -50,6 +73,97 @@ is_dotfiles_link() {
         "$DOTFILES_DIR"/* | "$LEGACY_DOTFILES_DIR"/*) return 0 ;;
     esac
     return 1
+}
+
+# symlink の参照先を dotfiles ルートからの相対パスへ変換する。
+# dotfiles 配下でなければ何も出力しない。
+dotfiles_relpath() {
+    case "$1" in
+        "$DOTFILES_DIR"/*) printf '%s' "${1#$DOTFILES_DIR/}" ;;
+        "$LEGACY_DOTFILES_DIR"/*) printf '%s' "${1#$LEGACY_DOTFILES_DIR/}" ;;
+    esac
+}
+
+# 展開するプロファイル名。優先順は
+# --profile 引数 > DOTFILES_PROFILE 環境変数 > ~/.dotfiles-profile > private。
+resolve_profile() {
+    if [ -n "$PROFILE_ARG" ]; then
+        printf '%s' "$PROFILE_ARG"
+        return
+    fi
+    if [ -n "${DOTFILES_PROFILE:-}" ]; then
+        printf '%s' "$DOTFILES_PROFILE"
+        return
+    fi
+    if [ -f "$HOME/.dotfiles-profile" ]; then
+        _p="$(head -n 1 "$HOME/.dotfiles-profile" | tr -d '[:space:]')"
+        if [ -n "$_p" ]; then
+            printf '%s' "$_p"
+            return
+        fi
+    fi
+    printf '%s' private
+}
+
+# プロファイルの許可リスト（改行区切り）。PROFILE_FILTERED=0 のときは絞り込まない。
+PROFILE_NAME=""
+PROFILE_FILTERED=0
+PROFILE_ALLOW=""
+
+# profiles/<プロファイル名>.conf を読み込む。
+# conf が無いプロファイル（既定の private を含む）は絞り込みなし＝全件展開とする。
+load_profile() {
+    PROFILE_NAME="$(resolve_profile)"
+    _conf="$DOTFILES_DIR/profiles/$PROFILE_NAME.conf"
+
+    if [ ! -f "$_conf" ]; then
+        echo "profile: $PROFILE_NAME (no conf; deploy all)"
+        return 0
+    fi
+
+    PROFILE_FILTERED=1
+    # コメント行・空行を落とし、前後の空白と行末の / を取り除く
+    PROFILE_ALLOW="$(
+        grep -v '^[[:space:]]*#' "$_conf" \
+            | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' -e 's#/$##' \
+            | grep -v '^$'
+    )"
+    echo "profile: $PROFILE_NAME (profiles/$PROFILE_NAME.conf)"
+
+    # 実体の無いエントリは書き間違い・リネーム漏れの可能性が高いので知らせる。
+    # 展開そのものは続行する（他のエントリまで巻き込まない）。
+    printf '%s\n' "$PROFILE_ALLOW" | while read -r entry; do
+        [ -n "$entry" ] || continue
+        [ -e "$DOTFILES_DIR/$entry" ] || \
+            echo "warning: $entry not found (profiles/$PROFILE_NAME.conf)" >&2
+    done
+}
+
+# リポジトリルートからの相対パスが、現在のプロファイルで展開対象かを判定する
+is_allowed() {
+    [ "$PROFILE_FILTERED" -eq 1 ] || return 0
+    printf '%s\n' "$PROFILE_ALLOW" | grep -qxF "$1"
+}
+
+# 展開対象であれば symlink を張る（$1 は dotfiles 配下の絶対パス）
+link_if_allowed() {
+    if is_allowed "$(dotfiles_relpath "$1")"; then
+        link_file "$1" "$2"
+    fi
+}
+
+# プロファイルで除外された設定が過去の展開で残っていれば撤去する。
+# プロファイル指定を忘れて全件展開した後に指定し直した場合や、
+# conf からエントリを削った場合に、古い symlink が残り続けるのを防ぐ。
+prune_disallowed_claude_links() {
+    [ "$PROFILE_FILTERED" -eq 1 ] || return 0
+    [ -d ~/.claude ] || return 0
+
+    find ~/.claude -type l | while read -r link; do
+        _rel="$(dotfiles_relpath "$(readlink "$link")")"
+        [ -n "$_rel" ] || continue
+        is_allowed "$_rel" || unlink_file "$link"
+    done
 }
 
 # 管理ブロックの開始/終了マーカー（追記・撤去の目印に使う）
@@ -114,6 +228,9 @@ ensure_managed_block() {
 
 deploy() {
     echo "make link (dotfiles: $DOTFILES_DIR)"
+    load_profile
+
+    # _vimrc とシェル設定はプロファイルの絞り込み対象外（常に展開する）
     link_file "$DOTFILES_DIR/_vimrc" ~/.vimrc
 
     # シェル設定は symlink で置き換えず source 行を追記する（既存ファイルを活かす）。
@@ -133,22 +250,24 @@ deploy() {
 
     touch ~/.shell_local
 
-    # Claude 個人設定（CLAUDE.md / settings.json / statusline.sh / agents / skills / rules）を ~/.claude へ展開する
+    # Claude 個人設定（CLAUDE.md / settings.json / statusline.sh / agents / skills / rules）を
+    # ~/.claude へ展開する。ここはプロファイルの絞り込み対象。
     mkdir -p ~/.claude/skills ~/.claude/agents ~/.claude/rules
-    link_file "$DOTFILES_DIR/claude/CLAUDE.md" ~/.claude/CLAUDE.md
-    link_file "$DOTFILES_DIR/claude/settings.json" ~/.claude/settings.json
-    link_file "$DOTFILES_DIR/claude/statusline.sh" ~/.claude/statusline.sh
+    prune_disallowed_claude_links
+    link_if_allowed "$DOTFILES_DIR/claude/CLAUDE.md" ~/.claude/CLAUDE.md
+    link_if_allowed "$DOTFILES_DIR/claude/settings.json" ~/.claude/settings.json
+    link_if_allowed "$DOTFILES_DIR/claude/statusline.sh" ~/.claude/statusline.sh
     for agent in "$DOTFILES_DIR"/claude/agents/*.md; do
         [ -e "$agent" ] || continue
-        link_file "$agent" ~/.claude/agents/"$(basename "$agent")"
+        link_if_allowed "$agent" ~/.claude/agents/"$(basename "$agent")"
     done
     for skill_dir in "$DOTFILES_DIR"/claude/skills/*/; do
         [ -e "$skill_dir" ] || continue
-        link_file "${skill_dir%/}" ~/.claude/skills/"$(basename "$skill_dir")"
+        link_if_allowed "${skill_dir%/}" ~/.claude/skills/"$(basename "$skill_dir")"
     done
     for rule in "$DOTFILES_DIR"/claude/rules/*; do
         [ -e "$rule" ] || continue
-        link_file "$rule" ~/.claude/rules/"$(basename "$rule")"
+        link_if_allowed "$rule" ~/.claude/rules/"$(basename "$rule")"
     done
 }
 
@@ -195,17 +314,22 @@ initialize() {
     fi
 }
 
-if [ "$1" = "--undeploy" ]; then
-    echo ---- dotfiles undeploy start ----
-    undeploy
-    echo ---- dotfiles undeploy end ----
-elif [ "$1" = "--init" ]; then
-    echo ---- initialize start ----
-    deploy
-    initialize
-    echo ---- initialize end ----
-else
-    echo ---- dotfiles setup start ----
-    deploy
-    echo ---- dotfiles setup end ----
-fi
+case "$MODE" in
+    undeploy)
+        # 撤去は展開時のプロファイルを問わない（dotfiles を指す symlink を全て外す）
+        echo ---- dotfiles undeploy start ----
+        undeploy
+        echo ---- dotfiles undeploy end ----
+        ;;
+    init)
+        echo ---- initialize start ----
+        deploy
+        initialize
+        echo ---- initialize end ----
+        ;;
+    *)
+        echo ---- dotfiles setup start ----
+        deploy
+        echo ---- dotfiles setup end ----
+        ;;
+esac
