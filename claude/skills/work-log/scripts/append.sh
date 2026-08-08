@@ -21,6 +21,9 @@
 set -euo pipefail
 
 VAULT_REMOTE_MATCH="canpok1/obsidian-vault"
+# vault は常にこのブランチへ直接反映する。ローカル clone が別ブランチを
+# チェックアウトしていても（他タスクの作業ブランチ等）影響を受けない。
+VAULT_TARGET_BRANCH="main"
 
 usage() {
   echo "usage: $(basename "$0") <project> <content>" >&2
@@ -84,56 +87,58 @@ find_vault_dir() {
   return 1
 }
 
-ensure_project_note_git() {
-  local vault_dir="$1" path="projects/${project}.md"
-  [ -f "$vault_dir/$path" ] && return 0
-  mkdir -p "$vault_dir/projects"
-  printf '%s' "$project_note_body" > "$vault_dir/$path"
-  git -C "$vault_dir" add "$path"
-}
-
-# clone を他の用途（手動編集中など）と共用している可能性があるため、
-# 開始時点で作業ツリーが汚れていなければ触らない。
-# リトライ時は「開始時点はクリーンだった」という前提のもとで、
-# 直前に自分が作った commit だけを reset --hard で取り消す(ユーザーの変更を巻き込まない)。
+# clone のチェックアウト状態やインデックス、作業ツリーには一切触れず、
+# git plumbing コマンドだけで origin/<VAULT_TARGET_BRANCH> の先に
+# コミットを作って push する。他タスクの作業ブランチと clone を共有していても
+# 干渉しない。
 append_via_git() {
   local vault_dir="$1"
 
-  if [ -n "$(git -C "$vault_dir" status --porcelain)" ]; then
-    echo "work-log: ${vault_dir} に未コミットの変更があるため追記を中止しました" >&2
-    return 1
-  fi
-
-  local date_jst path attempt=1 max_attempts=3 branch
+  local date_jst daily_path proj_path attempt=1 max_attempts=3
   date_jst="$(TZ=Asia/Tokyo date '+%F')"
-  path="daily/${date_jst}.md"
-  branch="$(git -C "$vault_dir" symbolic-ref --short HEAD)"
+  daily_path="daily/${date_jst}.md"
+  proj_path="projects/${project}.md"
 
   while :; do
-    if ! git -C "$vault_dir" fetch origin "$branch" --quiet; then
+    if ! git -C "$vault_dir" fetch origin "$VAULT_TARGET_BRANCH" --quiet; then
       echo "work-log: git fetch に失敗しました" >&2
       return 1
     fi
-    if ! git -C "$vault_dir" merge --ff-only "origin/${branch}" --quiet; then
-      echo "work-log: ${vault_dir} がリモートと分岐しています。手動で解決してください" >&2
-      return 1
+
+    local base_sha
+    base_sha="$(git -C "$vault_dir" rev-parse "origin/${VAULT_TARGET_BRANCH}")"
+
+    local daily_content
+    if daily_content="$(git -C "$vault_dir" show "${base_sha}:${daily_path}" 2>/dev/null)"; then
+      daily_content="${daily_content}"$'\n\n'"${entry}"
+    else
+      daily_content="${entry}"
     fi
 
-    ensure_project_note_git "$vault_dir"
-    mkdir -p "$vault_dir/daily"
-    if [ -f "$vault_dir/$path" ]; then
-      printf '\n%s\n' "$entry" >> "$vault_dir/$path"
-    else
-      printf '%s\n' "$entry" > "$vault_dir/$path"
+    local tmp_index
+    tmp_index="$(mktemp)"
+    GIT_INDEX_FILE="$tmp_index" git -C "$vault_dir" read-tree "$base_sha"
+
+    local daily_blob
+    daily_blob="$(printf '%s\n' "$daily_content" | git -C "$vault_dir" hash-object -w --stdin)"
+    GIT_INDEX_FILE="$tmp_index" git -C "$vault_dir" update-index --add --cacheinfo "100644,${daily_blob},${daily_path}"
+
+    if ! git -C "$vault_dir" cat-file -e "${base_sha}:${proj_path}" 2>/dev/null; then
+      local proj_blob
+      proj_blob="$(printf '%s' "$project_note_body" | git -C "$vault_dir" hash-object -w --stdin)"
+      GIT_INDEX_FILE="$tmp_index" git -C "$vault_dir" update-index --add --cacheinfo "100644,${proj_blob},${proj_path}"
     fi
-    git -C "$vault_dir" add "$path"
-    git -C "$vault_dir" commit --quiet -m "work-log: ${date_jst} (${project})"
+
+    local new_tree new_commit
+    new_tree="$(GIT_INDEX_FILE="$tmp_index" git -C "$vault_dir" write-tree)"
+    rm -f "$tmp_index"
+
+    new_commit="$(git -C "$vault_dir" commit-tree "$new_tree" -p "$base_sha" -m "work-log: ${date_jst} (${project})")"
 
     local push_err
-    push_err="$(git -C "$vault_dir" push origin "$branch" --quiet 2>&1)" && return 0
+    push_err="$(git -C "$vault_dir" push origin "${new_commit}:refs/heads/${VAULT_TARGET_BRANCH}" --quiet 2>&1)" && return 0
 
-    if [ "$attempt" -lt "$max_attempts" ] && printf '%s' "$push_err" | grep -qE 'rejected|non-fast-forward|fetch first'; then
-      git -C "$vault_dir" reset --hard --quiet HEAD~1
+    if [ "$attempt" -lt "$max_attempts" ] && printf '%s' "$push_err" | grep -qE 'rejected|non-fast-forward|fetch first|stale info'; then
       attempt=$((attempt + 1))
       continue
     fi
