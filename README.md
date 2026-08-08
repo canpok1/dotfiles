@@ -51,11 +51,64 @@ git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/setup
 
 設定ファイルの展開時には、Claude 個人設定（`CLAUDE.md` / `settings.json` / `statusline.sh` / agents / skills / rules）も `~/.claude` へ展開されます。
 
+## プロファイル（私用 / 仕事）
+
+環境によって使いたい設定が異なるため、展開する設定をプロファイル単位で選べます。
+既定は `private` で、この場合は従来どおり全ての設定が展開されます。
+
+`work`（仕事環境）では、Todoist や Obsidian vault を前提とする設定を配りません。
+実際に展開されるのは以下です。
+
+| 対象 | private | work |
+|---|---|---|
+| `_vimrc` / シェル設定 / `workflow-scripts` の PATH 追加 | ○ | ○ |
+| `claude/CLAUDE.md` / `settings.json` / `statusline.sh` | ○ | ○ |
+| `claude/rules/coding.md` / `claude-config.md` | ○ | ○ |
+| `claude/rules/todoist.md` / `obsidian-task.md` / `work-log.md` | ○ | × |
+| `claude/skills/*` | ○ | × |
+| `claude/agents/*` | ○ | × |
+
+### プロファイルの指定方法
+
+以下の優先順で決まります。指定が無ければ `private` です。
+
+```
+./setup.sh --profile work        # ① 引数
+DOTFILES_PROFILE=work ./setup.sh # ② 環境変数
+echo work > ~/.dotfiles-profile  # ③ ファイル（一度書けば以後の再実行でも効く）
+```
+
+常設のマシンは ③ を一度書けば済みます。devcontainer や Claude Code on the web のように
+起動のたびにコンテナが作り直される環境では、起動スクリプトから ① か ② で渡してください。
+
+プロファイルを変えて再実行すると、除外された設定の symlink は自動で撤去されます
+（プロファイル指定を忘れて全件展開したあとに指定し直しても、余分な設定は残りません）。
+
+### 展開対象の定義（`profiles/<プロファイル名>.conf`）
+
+そのプロファイルで展開する対象を、リポジトリルートからの相対パスで列挙した許可リストです。
+`#` で始まる行と空行は無視されます。
+
+```
+claude/CLAUDE.md
+claude/settings.json
+claude/statusline.sh
+claude/rules/coding.md
+claude/rules/claude-config.md
+```
+
+- **conf の無いプロファイルは全件展開**されます。`private` は conf を持ちません。
+- 許可リストのため、**新しいスキルやルールを追加しても `work.conf` に書かない限り仕事環境には展開されません**。
+- 現在の絞り込み対象は `claude/` 配下のみです。`_vimrc` とシェル設定はプロファイルに関わらず常に展開されます。
+- conf に実在しないパスを書いた場合は警告を出しますが、展開そのものは続行します。
+
 ## Claude 個人設定
 
 `~/.claude` へ展開される主な設定は以下です。
 
-- `CLAUDE.md` … 全プロジェクト共通の個人設定。
+なお、下記のうち `skills/` `agents/` と `rules/` の一部は `private` プロファイル限定です（[プロファイル](#プロファイル私用--仕事)を参照）。
+
+- `CLAUDE.md` … 全プロジェクト共通の個人設定。言語など、環境を問わず適用する内容だけを置きます。
 - `settings.json` … Claude Code の設定。ステータスライン（`~/.claude/statusline.sh`）を有効化するほか、`.env` や SSH 鍵など秘密情報を含みそうなファイルの閲覧・編集を `permissions.deny` で禁止します。
 - `statusline.sh` … 起動ディレクトリ・モデル名・コンテキスト使用率・トークン数・コストを表示するステータスライン用スクリプト（`jq` が必要）。表示例: `/workspaces/dotfiles | Opus 5 | ctx 42% | 421.2k in / 1.5k out | $0.37`
 - `skills/` … スキル群。`todoist-` で始まるものは Todoist でのタスク管理を前提とします（`todoist-solve-task` / `todoist-assign-tasks` / `todoist-triage-task`）。ほかに、相談から仕様・タスクを整理する `discuss`、重要判断を ADR として記録する `create-adr`、作業記録を Obsidian vault のデイリーノートに追記する `work-log` を含みます。
@@ -65,6 +118,7 @@ git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/setup
     - `claude-config.md` … Claude 設定（スキル・ルール・エージェント等）を変更するときのドキュメント反映確認。
     - `todoist.md` … タスク管理に Todoist を使う場合にのみ適用されるルール。Todoist を使わないプロジェクトには適用されません（適用条件はファイル冒頭に記載）。
     - `obsidian-task.md` … タスクの保存に Obsidian vault（`canpok1/obsidian-vault` の `tasks/`）を使う場合にのみ適用されるルール。保存先・ファイル命名・frontmatter・書き方を規定します（適用条件はファイル冒頭に記載）。`tasks/**/*.md` を扱うときに読み込まれます。
+    - `work-log.md` … 作業記録を Obsidian vault のデイリーノートへ残す場合にのみ適用されるルール。`work-log` スキルを起動するタイミングを規定します（適用条件はファイル冒頭に記載）。
 
 既に `~/.claude/settings.json` などの実体ファイルがある場合は、`<対象>.bak` へ退避してから symlink を張ります。
 
