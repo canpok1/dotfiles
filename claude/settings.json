@@ -7,5 +7,43 @@
     "commit-commands@claude-plugins-official": true,
     "skill-creator@claude-plugins-official": true,
     "superpowers@claude-plugins-official": true
+  },
+  "permissions": {
+    "deny": [
+      "Read(./.env)",
+      "Edit(./.env)",
+      "Read(./.env.*)",
+      "Edit(./.env.*)",
+      "Read(./**/.env)",
+      "Edit(./**/.env)",
+      "Read(./**/.env.*)",
+      "Edit(./**/.env.*)",
+      "Read(./secrets/**)",
+      "Edit(./secrets/**)",
+      "Read(./**/secrets/**)",
+      "Edit(./**/secrets/**)",
+      "Read(./**/credentials.json)",
+      "Edit(./**/credentials.json)",
+      "Read(./**/secrets.yml)",
+      "Edit(./**/secrets.yml)",
+      "Read(./**/secrets.yaml)",
+      "Edit(./**/secrets.yaml)",
+      "Read(./**/*.pem)",
+      "Edit(./**/*.pem)",
+      "Read(./**/*.key)",
+      "Edit(./**/*.key)",
+      "Read(./**/id_rsa)",
+      "Edit(./**/id_rsa)",
+      "Read(./**/id_ed25519)",
+      "Edit(./**/id_ed25519)",
+      "Read(~/.ssh/**)",
+      "Edit(~/.ssh/**)",
+      "Read(~/.aws/**)",
+      "Edit(~/.aws/**)",
+      "Read(~/.gnupg/**)",
+      "Edit(~/.gnupg/**)",
+      "Read(~/.netrc)",
+      "Edit(~/.netrc)"
+    ]
   }
 }
