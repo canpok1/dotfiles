@@ -112,7 +112,7 @@ claude/rules/claude-config.md
 - `CLAUDE.md` … 全プロジェクト共通の個人設定。言語など、環境を問わず適用する内容だけを置きます。
 - `settings.json` … Claude Code の設定。ステータスライン（`~/.claude/statusline.sh`）を有効化するほか、`.env` や SSH 鍵など秘密情報を含みそうなファイルの閲覧・編集を `permissions.deny` で禁止します。
 - `statusline.sh` … 起動ディレクトリ・モデル名・コンテキスト使用率・トークン数・コストを表示するステータスライン用スクリプト（`jq` が必要）。表示例: `/workspaces/dotfiles | Opus 5 | ctx 42% | 421.2k in / 1.5k out | $0.37`
-- `skills/` … スキル群。`todoist-` で始まるものは Todoist でのタスク管理を前提とします（`todoist-solve-task` / `todoist-assign-tasks` / `todoist-triage-task`）。ほかに、相談から仕様・タスクを整理する `discuss`、重要判断を ADR として記録する `create-adr`、作業記録を Obsidian vault のデイリーノートに追記する `work-log` を含みます。
+- `skills/` … スキル群。`todoist-` で始まるものは Todoist でのタスク管理を前提とします（`todoist-solve-task` / `todoist-assign-tasks`）。ほかに、相談から仕様・タスクを整理する `discuss`、着手可否が未判断のタスクを1件ずつ詳細化して仕分ける `refine`、重要判断を ADR として記録する `create-adr`、作業記録を Obsidian vault のデイリーノートに追記する `work-log` を含みます。`discuss` と `refine` はタスクの保存先に依存せず、登録先・状態の持ち方をタスク管理ルールに委ねます。
 - `agents/` … エージェント定義。
 - `rules/` … 共通ルール。`~/.claude/rules/` 配下は全プロジェクトに適用されます。`paths` を持つルールは該当ファイルを扱うときだけ、持たないルールはセッション開始時に読み込まれます。
     - `coding.md` … 実装後の品質確認・自己レビュー、コメントの書き方、コミット粒度。コードを扱うときに適用されます。

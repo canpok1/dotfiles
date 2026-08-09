@@ -28,7 +28,7 @@ paths:
 
 ## frontmatter
 
-`title` / `project` / `status` / `created` を持たせる。`status` は `draft` / `ready` / `doing` / `done`。
+`title` / `project` / `status` / `created` を持たせる。`status` は `draft` / `ready` / `doing` / `done` / `dropped`。
 
 ```yaml
 ---
@@ -51,8 +51,11 @@ created: 2026-08-08
 | `ready` | 検討が済み、担当者が判断なしで着手できる |
 | `doing` | 着手した。実装完了・push 済みでも「done の定義」の2条件を満たすまではここ |
 | `done` | 「done の定義」の2条件を満たした |
+| `dropped` | 実施しないと決めた。破棄理由を本文に書いてから `dropped` にする。ファイルは削除しない |
 
-他のルール・スキルから保存先非依存に参照できるよう、抽象語との対応を定める。**`draft` が「着手可否が未判断の状態」、`ready` が「着手可能な状態」にあたる。**
+`dropped` は `done` 以外のどの状態からでも遷移しうる（`docs/adr/0006-dropped-status-for-discarded-tasks.md`）。**`done` は「やり切った」だけを指す。** 「やらないと決めた」を `done` で表さない。
+
+他のルール・スキルから保存先非依存に参照できるよう、抽象語との対応を定める。**`draft` が「着手可否が未判断の状態」、`ready` が「着手可能な状態」、`dropped` が「破棄済みの状態」にあたる。**
 
 **起票は原則 `draft` で行い、`ready` への昇格は人手で着手可否を判断して行う。** Claude は昇格を提案してよいが、自身の判断で `status` を `ready` に書き換えない。`todoist.md` の `ready` ラベル運用と同じ考え方（`docs/adr/0005-task-status-draft-ready-split.md`）。
 
@@ -60,11 +63,20 @@ created: 2026-08-08
 
 **着手時に `doing` へ更新することを必須とする。** 複数環境（devcontainer / Claude Code on the web / Mac ホスト / 仕事マシン）が同じ vault を見るため、二重着手を防ぐ札として機能させる。更新は frontmatter の書き換え＋commit + push で行う。
 
+### リファインメントの手順
+
+`refine` スキルが `draft` のタスクを仕分けるときの、この保存先での具体手順。
+
+- **対象の抽出**: vault のルートで `rg -l '^status: draft' tasks/` を実行し、ファイル名先頭のタイムスタンプが古い順に選ぶ
+- **着手可能にする**: 詳細化した内容を本文へ反映し、frontmatter を `status: ready` にする
+- **破棄する**: 本文の末尾に `## 破棄理由` 節を作って理由を書き、frontmatter を `status: dropped` にする。ファイルは削除しない
+- いずれも commit + push まで行う
+
 ## タスクの探し方
 
 閲覧手段は用途で分ける。どちらもファイルを移動しないので、タスク間の参照は壊れない。
 
-- **人間**: Obsidian で `tasks/view.base` を開く。「未完了」（`status != done`）/「着手可能」（`status == ready`）/「すべて」の3ビューがあり、いずれも `project` でグループ化している。列は タスク（`title`）/ ステータス / プロジェクト / 作成日 / ファイル。ノートを開くときは「ファイル」列のリンクを使う（`title` 列は編集可能なテキストとして描画されリンクにならない）
+- **人間**: Obsidian で `tasks/view.base` を開く。「未完了」（`done` と `dropped` を除く）/「着手可能」（`status == ready`）/「すべて」の3ビューがあり、いずれも `project` でグループ化している。列は タスク（`title`）/ ステータス / プロジェクト / 作成日 / ファイル。ノートを開くときは「ファイル」列のリンクを使う（`title` 列は編集可能なテキストとして描画されリンクにならない）
 - **Claude Code**: vault のルートで `rg` を使う
     - 着手可能なタスクの抽出: `rg -l '^status: ready' tasks/`
     - 検討が残っているタスクの抽出: `rg -l '^status: draft' tasks/`
