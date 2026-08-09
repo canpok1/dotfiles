@@ -52,7 +52,11 @@ created: 2026-08-08
 | `doing` | 着手した。実装完了・push 済みでも「done の定義」の2条件を満たすまではここ |
 | `done` | 「done の定義」の2条件を満たした |
 
-**起票は常に `draft` で行い、`ready` への昇格は人手で着手可否を判断して行う。** Claude は昇格を提案してよいが、自身の判断で `status` を `ready` に書き換えない。`todoist.md` の `ready` ラベル運用と同じ考え方（`docs/adr/0005-task-status-draft-ready-split.md`）。
+他のルール・スキルから保存先非依存に参照できるよう、抽象語との対応を定める。**`draft` が「着手可否が未判断の状態」、`ready` が「着手可能な状態」にあたる。**
+
+**起票は原則 `draft` で行い、`ready` への昇格は人手で着手可否を判断して行う。** Claude は昇格を提案してよいが、自身の判断で `status` を `ready` に書き換えない。`todoist.md` の `ready` ラベル運用と同じ考え方（`docs/adr/0005-task-status-draft-ready-split.md`）。
+
+**例外: ユーザーとの相談を経て作成する場合は `ready` で起票してよい**（`docs/adr/0007-ready-at-creation-via-consultation.md`）。`discuss` のように判断点を1つずつユーザーに確認しながら確定させた場合、起票の時点で人手による着手可否の判断は済んでいるため。相談を経ない自動起票（作業中に気づいた派生・スコープ外指摘など）は従来どおり `draft` で起票する。
 
 **着手時に `doing` へ更新することを必須とする。** 複数環境（devcontainer / Claude Code on the web / Mac ホスト / 仕事マシン）が同じ vault を見るため、二重着手を防ぐ札として機能させる。更新は frontmatter の書き換え＋commit + push で行う。
 
