@@ -28,10 +28,11 @@ paths:
 
 ## frontmatter
 
-`project` / `status` / `created` を持たせる。`status` は `todo` / `doing` / `done`。
+`title` / `project` / `status` / `created` を持たせる。`status` は `todo` / `doing` / `done`。
 
 ```yaml
 ---
+title: 重複したバリデーション処理を共通ヘルパーへ抽出
 project: dotfiles
 status: todo
 created: 2026-08-08
@@ -40,12 +41,13 @@ created: 2026-08-08
 
 - **ステータスが変わってもファイルを移動しない。** frontmatter を書き換える。コンテナから GitHub API 等で更新する際に削除+作成にならないため
 - frontmatter の `project` はディレクトリ名と重複するが、ファイル単体で自己記述的にするため残す
+- `title` は本文の H1 見出しと同じ文字列にする。ファイル名が `YYYYMMDDHHMMSS-<slug>` で内容を読み取れないため、Bases の一覧ではこの `title` を表示する（`title` が無いとその行だけ空欄になる）
 
 ## タスクの探し方
 
 閲覧手段は用途で分ける。どちらもファイルを移動しないので、タスク間の参照は壊れない。
 
-- **人間**: Obsidian で `tasks/tasks.base` を開く。「未完了」（`status != done` を `status` でグループ化）と「すべて」（`project` でグループ化）の2ビューがある
+- **人間**: Obsidian で `tasks/tasks.base` を開く。「未完了」（`status != done` を `status` でグループ化）と「すべて」（`project` でグループ化）の2ビューがある。列は タスク（`title`）/ ステータス / プロジェクト / 作成日 / ファイル。ノートを開くときは「ファイル」列のリンクを使う（`title` 列は編集可能なテキストとして描画されリンクにならない）
 - **Claude Code**: vault のルートで `rg` を使う
     - 未着手の抽出: `rg -l '^status: todo' tasks/`
     - ステータス付き一覧: `rg -n '^status:' tasks/*/*.md`
