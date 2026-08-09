@@ -41,6 +41,17 @@ created: 2026-08-08
 - **ステータスが変わってもファイルを移動しない。** frontmatter を書き換える。コンテナから GitHub API 等で更新する際に削除+作成にならないため
 - frontmatter の `project` はディレクトリ名と重複するが、ファイル単体で自己記述的にするため残す
 
+## タスクの探し方
+
+閲覧手段は用途で分ける。どちらもファイルを移動しないので、タスク間の参照は壊れない。
+
+- **人間**: Obsidian で `tasks/tasks.base` を開く。「未完了」（`status != done` を `status` でグループ化）と「すべて」（`project` でグループ化）の2ビューがある
+- **Claude Code**: vault のルートで `rg` を使う
+    - 未着手の抽出: `rg -l '^status: todo' tasks/`
+    - ステータス付き一覧: `rg -n '^status:' tasks/*/*.md`
+
+**ステータスの正本は frontmatter の `status` であり、ディレクトリでは表現しない。** `tasks/<repo名>/<status>/` のようにディレクトリで持つ案は却下済み（`docs/adr/0004-task-status-in-frontmatter-not-directory.md`）。
+
 ## 本文の書き方
 
 - 冒頭に `[[プロジェクト名]]` を書き、vault 側のプロジェクトノートのバックリンクに集約させる
