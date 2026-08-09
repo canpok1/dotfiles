@@ -37,20 +37,31 @@ detached HEAD の場合は空文字列になる。git 管理下でない場合�
 ### 3. 追記する
 
 ```bash
-"$DOTFILES_DIR/claude/skills/work-log/scripts/append.sh" "<プロジェクト名>" "<本文>" "<ブランチ名>"
+~/.claude/skills/work-log/scripts/append.sh "<プロジェクト名>" "<本文>" "<ブランチ名>"
 ```
 
 - 第1引数: プロジェクト名。`[[プロジェクト名]]` のリンクに使う
 - 第2引数: 本文（見出しの下に入る）。複数行にする場合は `$'...\n...'` などで組み立てて渡す
 - 第3引数: ブランチ名（省略可）。指定すると見出しに `(ブランチ名)` が付く
-- `DOTFILES_DIR` は `setup.sh` がシェル設定に export 済み
+- 呼び出しには配布先の `~/.claude/` 配下のパスを使う。このスキル自身がそこから読み込まれているため必ず存在する。dotfiles の作業ツリー側のパスは使わない（環境変数に依存すると、ログインシェルを経由しない実行で空になる）
 - 見出し（`## YYYY-MM-DD HH:MM JST [[プロジェクト名]] (ブランチ名)`。ブランチ名省略時は末尾の括弧なし）の生成と、リンク先のプロジェクトノート（`projects/<プロジェクト名>.md`）が無い場合の作成は `append.sh` が自動で行う
 - 時刻は実行環境の TZ に関わらず常に JST 固定（`daily/YYYY-MM-DD.md` のファイル名の日付も同様）
 - 標準エラー出力にメッセージが出た場合は内容を確認する。「clone が見つからないためスキップした」旨のメッセージは正常系（記録しない選択がされているだけ）なので対応不要。それ以外（fetch/push 失敗等）は原因を確認する
 
 ### 4. clone の場所
 
-既定では `$HOME/obsidian-vault` または `$HOME/src/obsidian-vault` を探す。別の場所に置いている場合は環境変数 `OBSIDIAN_VAULT_DIR` でパスを指定する。
+`append.sh` は次の4候補を優先順位順に見て、`.git` があり origin が obsidian-vault を指す最初のものを使う。
+
+| 優先 | 候補 |
+|---|---|
+| 1 | `$OBSIDIAN_VAULT_DIR`（設定されている場合） |
+| 2 | 作業中のリポジトリの兄弟ディレクトリ（`$(dirname "$(git rev-parse --show-toplevel)")/obsidian-vault`） |
+| 3 | `$HOME/obsidian-vault` |
+| 4 | `$HOME/src/obsidian-vault` |
+
+候補2があるのは、`$HOME` が実際の作業ディレクトリと一致しないセッションがあるため（例: `$HOME=/root` だがリポジトリは `/home/user/` 配下）。**この場合 `$HOME` 配下に clone が無くても追記できるので、`OBSIDIAN_VAULT_DIR` を明示する必要はない。**
+
+4候補のどれにも該当しない場所へ置いている場合だけ `OBSIDIAN_VAULT_DIR` でパスを指定する。
 
 ### 5. 前提条件
 
