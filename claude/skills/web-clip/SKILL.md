@@ -1,6 +1,6 @@
 ---
 name: web-clip
-description: Google ドライブのフォルダ「webクリップ」に溜まった web 記事を、obsidian-vault の clips/ へ1記事1ノートで取り込む。スマホから共有した記事の回収に使う。毎朝のスケジュール実行から起動するほか、ユーザーが「webクリップ取り込んで」「記事を回収して」と言ったときにも使う。
+description: Google ドライブのフォルダ「webクリップ」に溜まった web 記事を、obsidian-vault の clips/ へ1記事1ノートで取り込む。スマホから共有した記事の回収に使う。ユーザーが「webクリップ取り込んで」「記事を回収して」と言ったときや、定期実行の Routine から起動する。
 allowed-tools: Bash, Read
 user-invocable: true
 ---
@@ -22,6 +22,12 @@ user-invocable: true
 
 - Google ドライブのコネクタが使えること。使えない場合はこのスキルは動かない
 - obsidian-vault のローカル clone があること。無い場合は `add-clip.sh` が何もせず正常終了する（`work-log` と同じ方針）
+
+## 起動のしかた
+
+基本はユーザーの依頼による手動起動（「webクリップ取り込んで」）。
+
+定期実行にする場合、**Routine は claude.ai の Routines UI から作る必要がある。** Claude が MCP 経由で作った Routine にはコネクタが載らず、発火したセッションから Drive を読めない（2026-08-14 に実測して確認済み。トリガー作成時にサーバも `this trigger stores no MCP connectors` と警告する）。UI から作る場合は Google ドライブのコネクタを有効にしたうえで、毎朝 8:00 JST（UTC の cron で `0 23 * * *`）に新しいセッションを起こす形にする。
 
 ## 手順
 
