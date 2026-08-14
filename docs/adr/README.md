@@ -12,3 +12,4 @@
 | [0006](0006-dropped-status-for-discarded-tasks.md) | 破棄したタスクを表す status として dropped を追加する | 採用 | 2026-08-09 |
 | [0007](0007-ready-at-creation-via-consultation.md) | 相談を経て作成するタスクは着手可能な状態で起票する | 採用 | 2026-08-09 |
 | [0008](0008-backend-agnostic-refine-task-skill.md) | タスクのリファインメントを保存先非依存のスキル1つに統合する | 採用 | 2026-08-09 |
+| [0009](0009-web-clip-inbox-via-google-drive.md) | スマホからの web クリップ受け皿に Google ドライブを使う | 採用 | 2026-08-14 |
