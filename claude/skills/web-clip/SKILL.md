@@ -27,7 +27,11 @@ user-invocable: true
 
 基本はユーザーの依頼による手動起動（「webクリップ取り込んで」）。
 
-定期実行にする場合、**Routine は claude.ai の Routines UI から作る必要がある。** Claude が MCP 経由で作った Routine にはコネクタが載らず、発火したセッションから Drive を読めない（2026-08-14 に実測して確認済み。トリガー作成時にサーバも `this trigger stores no MCP connectors` と警告する）。UI から作る場合は Google ドライブのコネクタを有効にしたうえで、毎朝 8:00 JST（UTC の cron で `0 23 * * *`）に新しいセッションを起こす形にする。
+**定期実行はできない。手動起動だけで運用する**（`docs/adr/0010-manual-invocation-without-routine-connectors.md`）。
+
+Routine にドライブのコネクタを載せられないため、発火したセッションから Drive を読めない。MCP 経由の作成（`connectors` パラメータが組織で無効）と claude.ai の Routines UI（Connectors 欄が「利用可能なコネクタがありません」）の両方で確認済みで、**この経路は再調査しなくてよい。**
+
+自動化が必要になった場合は、コネクタを使わず Google Drive API を直接叩く方式（サービスアカウントの鍵を環境変数に置き、受け皿フォルダをそのアドレスへ共有する）を検討する。Routine のクラウド環境から `*.googleapis.com` へ到達できることは確認済み。詳細は ADR 0010 の「検討した代替案」にある。
 
 ## 手順
 
