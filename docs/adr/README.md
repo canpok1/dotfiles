@@ -6,7 +6,7 @@
 
 | 番号 | タイトル | ステータス | 日付 |
 |------|----------|------------|------|
-| [0001](0001-work-log-remote-append-via-git-clone.md) | work-log の devcontainer/web 向け追記経路を gh api から git push へ変更 | 採用 | 2026-08-07 |
+| 0001 | （欠番）work-log の devcontainer/web 向け追記経路を gh api から git push へ変更 | 移設 | 2026-08-07 |
 | [0002](0002-obsidian-task-rule-in-dotfiles.md) | Obsidian タスクファイルの書き方ルールを obsidian-vault から dotfiles へ移動 | 採用 | 2026-08-08 |
 | [0003](0003-profile-based-claude-config-deploy.md) | 設定をプロファイル単位で選択的に展開する | 採用 | 2026-08-08 |
 | [0004](0004-task-status-in-frontmatter-not-directory.md) | タスクのステータスは frontmatter で持ちディレクトリでは表現しない | 採用 | 2026-08-09 |
@@ -17,4 +17,4 @@
 | 0009 | （欠番）スマホからの web クリップ受け皿に Google ドライブを使う | 移設 | 2026-08-14 |
 | 0010 | （欠番）コネクタが必要な処理の定期実行を見送り手動起動で運用する | 移設 | 2026-08-15 |
 
-0009 と 0010 は web クリップ取り込み（obsidian-vault 固有の機能）についての判断だったため、`web-clip` スキルとともに canpok1/obsidian-vault の `projects/obsidian-vault/adr/` へ 0001 / 0002 として移設した。**欠番として残し、この番号は再利用しない**（既存のデイリーノートやコミットメッセージが旧番号で参照しているため）。
+0009 と 0010 は web クリップ取り込み（obsidian-vault 固有の機能）についての判断だったため、`web-clip` スキルとともに canpok1/obsidian-vault の `projects/obsidian-vault/adr/` へ 0001 / 0002 として移設した。0001 も同様に、`work-log` スキルの移設（vault の ADR 0007）にあわせて vault の 0006 へ移設した。**いずれも欠番として残し、この番号は再利用しない**（既存のデイリーノートやコミットメッセージが旧番号で参照しているため）。

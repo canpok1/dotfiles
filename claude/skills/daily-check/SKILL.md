@@ -13,9 +13,9 @@ user-invocable: true
 
 ## 前提
 
-**[[obsidian-vault]] の clone が無ければ何もせず終了する**（エラーにはしない）。確認項目が vault の記録に依存するため。**記録するかどうかは clone を用意しているかでユーザーが制御する**（`work-log` と同じ）。
+**[[obsidian-vault]] の clone が無ければ何もせず終了する**（エラーにはしない）。確認項目が vault の記録に依存するため。
 
-clone の探索順も `work-log` に合わせる。`$OBSIDIAN_VAULT_DIR` → 作業中のリポジトリの兄弟ディレクトリ → `$HOME/obsidian-vault` → `$HOME/src/obsidian-vault`。
+clone はセッションのワークスペースから探す。**このスキルは記録に `work-log` スキルを使うが、`work-log` は vault の中にあるため、`--add-dir` で vault を参照させていないセッションでは使えない。** 定期起動の Routine では vault を参照させておく。
 
 **確認を始める前に、vault と dotfiles の clone を最新化する**（`git pull --rebase origin main`）。定期起動のセッションは**コンテナ作成時の clone を使い続ける**ため、放置すると古いノートを読み、古い手順のまま動く。
 

@@ -96,8 +96,8 @@ created: 2026-08-08
 
 | 対象 | 表記 | 例 |
 |---|---|---|
-| リポジトリ内のファイル | `<リポジトリ名>/<リポジトリルート相対>` | `dotfiles/claude/skills/work-log/SKILL.md` |
-| `$HOME` 基準のファイル | `~/` 表記 | `~/.claude/skills/work-log/scripts/append.sh` |
+| リポジトリ内のファイル | `<リポジトリ名>/<リポジトリルート相対>` | `obsidian-vault/.claude/skills/work-log/SKILL.md` |
+| `$HOME` 基準のファイル | `~/` 表記 | `~/.claude/rules/work-log.md` |
 | タスクファイル同士の参照 | `tasks/<repo名>/<file>.md` | `tasks/dotfiles/20260808004235-work-log.md` |
 | 構造・命名パターンの説明 | そのまま | `tasks/<repo名>/YYYYMMDDHHMMSS-<slug>.md` |
 | コマンド例 | 基準ディレクトリを明示する | 「obsidian-vault のルートで `grep -c '%Z' .claude/CLAUDE.md`」 |
