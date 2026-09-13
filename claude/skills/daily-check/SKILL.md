@@ -13,9 +13,9 @@ user-invocable: true
 
 ## 前提
 
-**[[obsidian-vault]] の clone が無ければ何もせず終了する**（エラーにはしない）。確認項目が vault の記録に依存するため。**記録するかどうかは clone を用意しているかでユーザーが制御する**（`work-log` と同じ）。
+**[[obsidian-vault]] の clone が無ければ何もせず終了する**（エラーにはしない）。確認項目が vault の記録に依存するため。
 
-clone の探索順も `work-log` に合わせる。`$OBSIDIAN_VAULT_DIR` → 作業中のリポジトリの兄弟ディレクトリ → `$HOME/obsidian-vault` → `$HOME/src/obsidian-vault`。
+clone はセッションのワークスペースから探す。**このスキルは記録に `work-log` スキルを使うが、`work-log` は vault の中にあるため、`--add-dir` で vault を参照させていないセッションでは使えない。** 定期起動の Routine では vault を参照させておく。
 
 **確認を始める前に、vault と dotfiles の clone を最新化する**（`git pull --rebase origin main`）。定期起動のセッションは**コンテナ作成時の clone を使い続ける**ため、放置すると古いノートを読み、古い手順のまま動く。
 
@@ -29,7 +29,8 @@ clone の探索順も `work-log` に合わせる。`$OBSIDIAN_VAULT_DIR` → 作
 |---|---|
 | 食事管理のサイクル | `meal-management` スキルの「サイクルの起点に自分で気づく」 |
 | 食事管理のルール化候補 | `meal-management` スキルの「ルール化候補の棚卸し」 |
-| 生活費の取り込み | `life-log-import` スキル |
+| 生活費の取り込み | `life-log-import` スキル（`life-log` リポジトリ内）の「定期実行から呼ばれるとき」 |
+| 作業ログの集約 | `archive` スキル（obsidian-vault リポジトリ内） |
 
 **この表に書くのは「どのドメインの何を確認するか」だけにする。** 何を見てどう判断するかは委譲先のスキルが持つ。ここに具体的な手順を書くと同じ内容が2か所に分かれ、片方が古くなる。
 
@@ -56,7 +57,7 @@ clone の探索順も `work-log` に合わせる。`$OBSIDIAN_VAULT_DIR` → 作
 
 ### 4. 記録する
 
-**毎回** `work-log` スキルでデイリーノートへ追記する。
+**毎回** `work-log` スキルで記録を残す。
 
 - 対応することがあった日は、何を直し何を通知したかを書く
 - **対応が不要だった日も1行だけ残す**（例: 「daily-check 実行、対応なし」）。**痕跡が無いと「動いて何も無かった」と「動かなかった」を区別できない**（2026-09-02 の初回実行でこの区別に困り、`list_triggers` の `last_fired_at` を見に行くことになった）

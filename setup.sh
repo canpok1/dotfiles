@@ -186,6 +186,18 @@ prune_disallowed_claude_links() {
     done
 }
 
+# 参照先が消えた symlink を撤去する。dotfiles からエントリを削除したとき
+# （スキルを別リポジトリへ移した場合など）に、壊れたリンクが残り続けるのを防ぐ。
+# プロファイルの絞り込みとは独立した後始末なので、指定の有無に関わらず行う。
+prune_dangling_claude_links() {
+    [ -d ~/.claude ] || return 0
+
+    find ~/.claude -type l | while read -r link; do
+        [ -e "$link" ] && continue
+        is_dotfiles_link "$link" && unlink_file "$link"
+    done
+}
+
 # 管理ブロックの開始/終了マーカー（追記・撤去の目印に使う）
 DOTFILES_BLOCK_BEGIN="# >>> dotfiles managed block >>>"
 DOTFILES_BLOCK_END="# <<< dotfiles managed block <<<"
@@ -273,6 +285,7 @@ deploy() {
     # Claude 個人設定（CLAUDE.md / settings.json / statusline.sh / agents / skills / rules）を
     # ~/.claude へ展開する。ここはプロファイルの絞り込み対象。
     mkdir -p ~/.claude/skills ~/.claude/agents ~/.claude/rules
+    prune_dangling_claude_links
     prune_disallowed_claude_links
     link_if_allowed "$DOTFILES_DIR/claude/CLAUDE.md" ~/.claude/CLAUDE.md
     link_if_allowed "$DOTFILES_DIR/claude/settings.json" ~/.claude/settings.json
