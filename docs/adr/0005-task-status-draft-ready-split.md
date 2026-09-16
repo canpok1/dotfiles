@@ -8,7 +8,7 @@
 Obsidian vault のタスクは frontmatter の `status`（`todo` / `doing` / `done`）で状態を持つ（`docs/adr/0004-task-status-in-frontmatter-not-directory.md`）。この構成には3つの問題がある。
 
 1. `todo` が「起票済み・未着手」と「着手してよい」を兼ねている。`rg -l '^status: todo' tasks/` で拾えるのは未着手であって着手可否ではない
-2. `claude/rules/obsidian-task.md` は「判断点 A が1つでも残っているタスクは作成しない」と定めており、検討が残る案件は起票すらできない。会話が終わると検討結果が失われる
+2. `claude/rules/brain-task.md` は「判断点 A が1つでも残っているタスクは作成しない」と定めており、検討が残る案件は起票すらできない。会話が終わると検討結果が失われる
 3. `claude/rules/todoist.md` は同じ「着手してよい状態」を `ready` ラベルで表現しており、同一概念に2つの語彙がある
 
 ## 決定
@@ -20,7 +20,7 @@ Obsidian vault のタスクは frontmatter の `status`（`todo` / `doing` / `do
 
 **起票は常に `draft` で行い、`ready` への昇格は人手判断のみとする。** Claude は自身の判断で `ready` を付けない。`claude/rules/todoist.md` の `ready` ラベル運用と揃える。
 
-これに伴い `claude/rules/obsidian-task.md` の「タスクを作成してよい条件」は「`ready` にしてよい条件」へ位置づけを移す。判断点 A が残る案件は起票を諦めるのではなく `draft` で残す。
+これに伴い `claude/rules/brain-task.md` の「タスクを作成してよい条件」は「`ready` にしてよい条件」へ位置づけを移す。判断点 A が残る案件は起票を諦めるのではなく `draft` で残す。
 
 ## 結果
 

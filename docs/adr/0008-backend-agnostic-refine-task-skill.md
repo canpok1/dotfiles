@@ -7,7 +7,7 @@
 
 `claude/skills/todoist-triage-task/SKILL.md` は、着手可否が未判断のタスクを1件取り上げ、実施可否を判断して詳細化するスキルである。Todoist 専用として書かれている。
 
-Obsidian でも同じ状態モデル（`draft` → `ready`）を使うようにしたため、同等の手段が要る。当初は `obsidian-triage-task` を新設する方針だった。ルールが `todoist.md` / `obsidian-task.md` と保存先ごとに分かれ、スキル名も `todoist-` プレフィックスで保存先を示す既存構造に倣う判断である。
+Obsidian でも同じ状態モデル（`draft` → `ready`）を使うようにしたため、同等の手段が要る。当初は `obsidian-triage-task` を新設する方針だった。ルールが `todoist.md` / `brain-task.md` と保存先ごとに分かれ、スキル名も `todoist-` プレフィックスで保存先を示す既存構造に倣う判断である。
 
 ただし `todoist-triage-task` は7ステップ構成のうち、保存先に依存するのはステップ1（対象の抽出）とステップ6（結論の反映）だけで、残る5ステップは共通の手順である。また `discuss` は既に保存先非依存で、登録先と状態の持ち方をタスク管理ルールへ委ねる形で成立している。同じ構造をこちらにも適用できる。
 
