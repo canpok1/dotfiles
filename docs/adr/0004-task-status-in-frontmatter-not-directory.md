@@ -11,10 +11,10 @@ Obsidian vault のタスクは `tasks/<repo名>/<file>.md` に置き、ステー
 
 判断の前提として、vault の実態を確認した。
 
-- タスクは8件（`tasks/dotfiles/` 6件、`tasks/obsidian-vault/` 2件）
+- タスクは8件（`tasks/dotfiles/` 6件、`tasks/brain/` 2件）
 - タスク同士の参照は `tasks/<repo名>/<file>.md` 形式のプレーンパス（コードスパン内）であり、`[[wikilink]]` ではない。この表記自体もタスク `20260809102806-task-done-definition` の決定事項7で規定されたもの
 - 参照先には `status: done` のタスクが含まれる（`tasks/dotfiles/20260808004235-work-log.md` は4箇所から参照されている）
-- `claude/rules/obsidian-task.md` は既に「ステータスが変わってもファイルを移動しない。frontmatter を書き換える」と定めており、理由として「コンテナから GitHub API 等で更新する際に削除+作成にならないため」を挙げている
+- `claude/rules/brain-task.md` は既に「ステータスが変わってもファイルを移動しない。frontmatter を書き換える」と定めており、理由として「コンテナから GitHub API 等で更新する際に削除+作成にならないため」を挙げている
 - vault の `.obsidian/core-plugins.json` で Bases がコアプラグインとして有効になっている
 
 ## 決定
@@ -36,7 +36,7 @@ Obsidian vault のタスクは `tasks/<repo名>/<file>.md` に置き、ステー
 
 ## 検討した代替案
 
-- **`tasks/<repo名>/<status>/<file>.md` に分ける**: GitHub のファイルブラウザで一目で分かるようになるが、(1) プレーンパスのタスク間参照がステータス変更のたびに壊れる、(2) `obsidian-task.md` の「移動しない」という既存の決定と衝突する、(3) frontmatter とディレクトリでステータスが二重管理になる、の3点により却下。二重管理は frontmatter から `status` を落とせば解消するが、ファイル単体の自己記述性を失うため採らない。
+- **`tasks/<repo名>/<status>/<file>.md` に分ける**: GitHub のファイルブラウザで一目で分かるようになるが、(1) プレーンパスのタスク間参照がステータス変更のたびに壊れる、(2) `brain-task.md` の「移動しない」という既存の決定と衝突する、(3) frontmatter とディレクトリでステータスが二重管理になる、の3点により却下。二重管理は frontmatter から `status` を落とせば解消するが、ファイル単体の自己記述性を失うため採らない。
 - **`done` のときだけ `tasks/<repo名>/done/` へ移す**: 移動が1タスクにつき1回で済み傷は浅いが、`done` のタスクが他タスクから参照されている実例があるため参照切れは避けられず、部分的な解決にしかならないため却下。
 - **ファイル名の先頭または末尾にステータスを含める**: ディレクトリ案と同じくリネームが発生し、参照が壊れるため却下。加えて `YYYYMMDDHHMMSS-<slug>.md` という作成順で並べるための命名規則を崩す。
 - **`tasks/<repo名>/README.md` にインデックスを置く**: GitHub 上でも読めるが、タスクの追加・状態変更のたびに手で更新する必要があり、実体とのズレが必ず生じるため却下。

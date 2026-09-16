@@ -3,13 +3,13 @@ paths:
   - "tasks/**/*.md"
 ---
 
-# Obsidian 利用時のタスク管理ルール
+# brain 利用時のタスク管理ルール
 
 ## 適用条件
 
-本ルールは、タスク（フォローアップ・バックログ・別マシン/別環境への作業引き継ぎ等）の保存に **Obsidian vault（`canpok1/obsidian-vault` リポジトリ）の `tasks/` を使う場合にのみ適用する**。
+本ルールは、タスク（フォローアップ・バックログ・別マシン/別環境への作業引き継ぎ等）の保存に **brain リポジトリ（`canpok1/brain`）の `tasks/` を使う場合にのみ適用する**。
 
-- vault への実際の書き込み方法（Obsidian CLI・ローカル clone への git 操作など）は本ルールの対象外。obsidian-vault リポジトリの `.claude/CLAUDE.md` を参照する
+- brain への実際の書き込み方法（Obsidian CLI・ローカル clone への git 操作など）は本ルールの対象外。brain リポジトリの `.claude/CLAUDE.md` を参照する
 - 本ルールはタスクファイルの保存先・命名・構成のみを扱う
 
 ## 保存先
@@ -61,13 +61,13 @@ created: 2026-08-08
 
 **例外: ユーザーとの相談を経て作成する場合は `ready` で起票してよい**（`docs/adr/0007-ready-at-creation-via-consultation.md`）。`discuss` のように判断点を1つずつユーザーに確認しながら確定させた場合、起票の時点で人手による着手可否の判断は済んでいるため。相談を経ない自動起票（作業中に気づいた派生・スコープ外指摘など）は従来どおり `draft` で起票する。
 
-**着手時に `doing` へ更新することを必須とする。** 複数環境（devcontainer / Claude Code on the web / Mac ホスト / 仕事マシン）が同じ vault を見るため、二重着手を防ぐ札として機能させる。更新は frontmatter の書き換え＋commit + push で行う。
+**着手時に `doing` へ更新することを必須とする。** 複数環境（devcontainer / Claude Code on the web / Mac ホスト / 仕事マシン）が同じ brain を見るため、二重着手を防ぐ札として機能させる。更新は frontmatter の書き換え＋commit + push で行う。
 
 ### リファインメントの手順
 
 `refine` スキルが `draft` のタスクを仕分けるときの、この保存先での具体手順。
 
-- **対象の抽出**: vault のルートで `rg -l '^status: draft' tasks/` を実行し、ファイル名先頭のタイムスタンプが古い順に選ぶ
+- **対象の抽出**: brain のルートで `rg -l '^status: draft' tasks/` を実行し、ファイル名先頭のタイムスタンプが古い順に選ぶ
 - **着手可能にする**: 詳細化した内容を本文へ反映し、frontmatter を `status: ready` にする
 - **破棄する**: 本文の末尾に `## 破棄理由` 節を作って理由を書き、frontmatter を `status: dropped` にする。ファイルは削除しない
 - いずれも commit + push まで行う
@@ -77,7 +77,7 @@ created: 2026-08-08
 閲覧手段は用途で分ける。どちらもファイルを移動しないので、タスク間の参照は壊れない。
 
 - **人間**: Obsidian で `tasks/view.base` を開く。「未完了」（`done` と `dropped` を除く）/「着手可能」（`status == ready`）/「すべて」の3ビューがあり、いずれも `project` でグループ化している。列は タスク（`title`）/ ステータス / プロジェクト / 作成日 / ファイル。ノートを開くときは「ファイル」列のリンクを使う（`title` 列は編集可能なテキストとして描画されリンクにならない）
-- **Claude Code**: vault のルートで `rg` を使う
+- **Claude Code**: brain のルートで `rg` を使う
     - 着手可能なタスクの抽出: `rg -l '^status: ready' tasks/`
     - 検討が残っているタスクの抽出: `rg -l '^status: draft' tasks/`
     - ステータス付き一覧: `rg -n '^status:' tasks/*/*.md`
@@ -86,7 +86,7 @@ created: 2026-08-08
 
 ## 本文の書き方
 
-- 冒頭に `[[プロジェクト名]]` を書き、vault 側のプロジェクトノートのバックリンクに集約させる
+- 冒頭に `[[プロジェクト名]]` を書き、brain 側のプロジェクトノートのバックリンクに集約させる
 - **この会話を知らない別環境の Claude Code が単独で実行できる粒度で書く。** 背景・決定事項・未確認点・受け入れ条件を含める
 - これは `ready` に上げる時点で満たしているべき水準。`draft` の間は書きかけでよく、何を決めれば `ready` にできるかが分かる状態にしておく
 
@@ -96,14 +96,14 @@ created: 2026-08-08
 
 | 対象 | 表記 | 例 |
 |---|---|---|
-| リポジトリ内のファイル | `<リポジトリ名>/<リポジトリルート相対>` | `obsidian-vault/.claude/skills/work-log/SKILL.md` |
+| リポジトリ内のファイル | `<リポジトリ名>/<リポジトリルート相対>` | `brain/.claude/skills/work-log/SKILL.md` |
 | `$HOME` 基準のファイル | `~/` 表記 | `~/.claude/rules/work-log.md` |
 | タスクファイル同士の参照 | `tasks/<repo名>/<file>.md` | `tasks/dotfiles/20260808004235-work-log.md` |
 | 構造・命名パターンの説明 | そのまま | `tasks/<repo名>/YYYYMMDDHHMMSS-<slug>.md` |
-| コマンド例 | 基準ディレクトリを明示する | 「obsidian-vault のルートで `grep -c '%Z' .claude/CLAUDE.md`」 |
+| コマンド例 | 基準ディレクトリを明示する | 「brain のルートで `grep -c '%Z' .claude/CLAUDE.md`」 |
 
 - **絶対パス（`/home/user/...`、`/Users/<name>/...` 等）は使わない。** タスクは別マシン・別環境へ渡すためのもので、絶対パスは渡した先で必ず食い違う
-- **タスクファイル同士の参照だけはリポジトリ名を付けない。** タスクは必ず vault 配下にあるため自明で、付けると `obsidian-vault/tasks/obsidian-vault/...` という重複表記になる
+- **タスクファイル同士の参照だけはリポジトリ名を付けない。** タスクは必ず brain 配下にあるため自明で、付けると `brain/tasks/brain/...` という重複表記になる
 - **他ファイルへ書き込む内容（コードブロック）にはこのルールを適用しない。** 書き込み先のファイルが持つ既存の表記慣習に合わせる。適用しない旨をブロックの直後に1行添える
 
 基準を固定して環境非依存にするという考え方は、`docs/adr/0003-profile-based-claude-config-deploy.md` で `profiles/*.conf` の形式をリポジトリルート相対に決めたときと同じ。

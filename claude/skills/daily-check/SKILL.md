@@ -13,11 +13,11 @@ user-invocable: true
 
 ## 前提
 
-**[[obsidian-vault]] の clone が無ければ何もせず終了する**（エラーにはしない）。確認項目が vault の記録に依存するため。
+**[[brain]] の clone が無ければ何もせず終了する**（エラーにはしない）。確認項目が brain の記録に依存するため。
 
-clone はセッションのワークスペースから探す。**このスキルは記録に `work-log` スキルを使うが、`work-log` は vault の中にあるため、`--add-dir` で vault を参照させていないセッションでは使えない。** 定期起動の Routine では vault を参照させておく。
+clone はセッションのワークスペースから探す。**このスキルは記録に `work-log` スキルを使うが、`work-log` は brain の中にあるため、`--add-dir` で brain を参照させていないセッションでは使えない。** 定期起動の Routine では brain を参照させておく。
 
-**確認を始める前に、vault と dotfiles の clone を最新化する**（`git pull --rebase origin main`）。定期起動のセッションは**コンテナ作成時の clone を使い続ける**ため、放置すると古いノートを読み、古い手順のまま動く。
+**確認を始める前に、brain と dotfiles の clone を最新化する**（`git pull --rebase origin main`）。定期起動のセッションは**コンテナ作成時の clone を使い続ける**ため、放置すると古いノートを読み、古い手順のまま動く。
 
 委譲先のスキルが別のリポジトリにある場合は、そのリポジトリも同じように最新化する（`life-log-import` は `canpok1/life-log` にある）。**ただしスキル本体はセッション開始時に読み込まれるため、最新化しても手順が新しくなるのは次回の起動から**。
 
@@ -30,7 +30,7 @@ clone はセッションのワークスペースから探す。**このスキル
 | 食事管理のサイクル | `meal-management` スキルの「サイクルの起点に自分で気づく」 |
 | 食事管理のルール化候補 | `meal-management` スキルの「ルール化候補の棚卸し」 |
 | 生活費の取り込み | `life-log-import` スキル（`life-log` リポジトリ内）の「定期実行から呼ばれるとき」 |
-| 作業ログの集約 | `archive` スキル（obsidian-vault リポジトリ内） |
+| 作業ログの集約 | `archive` スキル（brain リポジトリ内） |
 
 **この表に書くのは「どのドメインの何を確認するか」だけにする。** 何を見てどう判断するかは委譲先のスキルが持つ。ここに具体的な手順を書くと同じ内容が2か所に分かれ、片方が古くなる。
 
@@ -71,5 +71,5 @@ clone はセッションのワークスペースから探す。**このスキル
 
 ## 防げないこと
 
-- **定期起動が止まったこと自体は検知できない。** 起動されなければこのスキルは動かない。停止の検知は持たない（`obsidian-vault` の `projects/obsidian-vault/adr/0005-periodic-execution-via-session-bound-routine.md`）
+- **定期起動が止まったこと自体は検知できない。** 起動されなければこのスキルは動かない。停止の検知は持たない（`brain` の `projects/brain/adr/0005-periodic-execution-via-session-bound-routine.md`）
 - **通知に気づかなかった場合。** 送るところまでが担当で、既読は追わない

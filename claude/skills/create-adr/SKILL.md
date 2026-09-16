@@ -34,7 +34,7 @@ user-invocable: true
 2. **配置先を決める**
    - ADR は **判断の対象となるリポジトリ** に置く。複数リポジトリの ADR を1か所へ寄せ集めない。
    - 既定の配置先は `docs/adr/`。ただしリポジトリ側の指示（`CLAUDE.md` / `.claude/rules/` など）で配置先が定められている場合はそれに従う。
-       - 例: `canpok1/obsidian-vault` は Obsidian の Vault のため、`docs/` ではなく `projects/obsidian-vault/adr/` に置く。
+       - 例: `canpok1/brain` は Obsidian で読む Vault でもあるため、`docs/` ではなく `projects/brain/adr/` に置く。
    - 判断が複数リポジトリにまたがる場合は、**その判断が主に効くリポジトリ**を1つ選んで置き、もう一方からは参照する。両方に同じ ADR を作らない。
    - 以降の手順で `docs/adr/` と書いてある箇所は、ここで決めた配置先に読み替える。
 

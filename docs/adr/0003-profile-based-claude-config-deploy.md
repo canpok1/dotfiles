@@ -5,9 +5,9 @@
 
 ## コンテキスト
 
-`setup.sh` は `claude/skills/*/`・`claude/agents/*`・`claude/rules/*` をグロブで全件 `~/.claude/` へ symlink しており、環境ごとの取捨選択ができない。だが配布物には私用前提のものが多い。skills 全6件・`agents/task-assigner`・`rules/todoist.md`・`rules/obsidian-task.md` は Todoist / Obsidian vault を前提とし、仕事環境では使わない。
+`setup.sh` は `claude/skills/*/`・`claude/agents/*`・`claude/rules/*` をグロブで全件 `~/.claude/` へ symlink しており、環境ごとの取捨選択ができない。だが配布物には私用前提のものが多い。skills 全6件・`agents/task-assigner`・`rules/todoist.md`・`rules/brain-task.md` は Todoist / Obsidian vault を前提とし、仕事環境では使わない。
 
-既存の `todoist.md` / `obsidian-task.md` が採る「冒頭に適用条件を書いて実行時に降りる」方式は適用の制御であり、配布は止まらない。description のトークン消費と誤起動が残る。
+既存の `todoist.md` / `brain-task.md` が採る「冒頭に適用条件を書いて実行時に降りる」方式は適用の制御であり、配布は止まらない。description のトークン消費と誤起動が残る。
 
 Nix home-manager による全体再構成も選択肢に挙がったが現時点では導入しない。当面 `setup.sh` が唯一の展開手段であり、選択機構もここに置く。
 
