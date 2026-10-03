@@ -56,7 +56,7 @@ git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/setup
 環境によって使いたい設定が異なるため、展開する設定をプロファイル単位で選べます。
 既定は `private` で、この場合は従来どおり全ての設定が展開されます。
 
-`work`（仕事環境）では、Todoist や brain リポジトリを前提とする設定を配りません。
+`work`（仕事環境）では、brain リポジトリを前提とする設定を配りません。
 実際に展開されるのは以下です。
 
 | 対象 | private | work |
@@ -64,7 +64,7 @@ git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/setup
 | `_vimrc` / シェル設定 / `workflow-scripts` の PATH 追加 | ○ | ○ |
 | `claude/CLAUDE.md` / `settings.json` / `statusline.sh` | ○ | ○ |
 | `claude/rules/coding.md` / `claude-config.md` / `investigation.md` | ○ | ○ |
-| `claude/rules/todoist.md` / `brain-task.md` / `work-log.md` | ○ | × |
+| `claude/rules/brain-task.md` / `work-log.md` | ○ | × |
 | `claude/skills/retro` / `wrap-up` | ○ | ○ |
 | `claude/skills/*`（`retro` `wrap-up` を除く） | ○ | × |
 | `claude/agents/*` | ○ | × |
@@ -116,43 +116,17 @@ claude/rules/investigation.md
 - `CLAUDE.md` … 全プロジェクト共通の個人設定。言語など、環境を問わず適用する内容だけを置きます。
 - `settings.json` … Claude Code の設定。ステータスライン（`~/.claude/statusline.sh`）を有効化するほか、`.env` や SSH 鍵など秘密情報を含みそうなファイルの閲覧・編集を `permissions.deny` で禁止します。
 - `statusline.sh` … 起動ディレクトリ・モデル名・コンテキスト使用率・トークン数・コストを表示するステータスライン用スクリプト（`jq` が必要）。表示例: `/workspaces/dotfiles | Opus 5 | ctx 42% | 421.2k in / 1.5k out | $0.37`
-- `skills/` … スキル群。`todoist-` で始まるものは Todoist でのタスク管理を前提とします（`todoist-solve-task` / `todoist-assign-tasks`）。ほかに、相談から仕様・タスクを整理する `discuss`、着手可否が未判断のタスクを1件ずつ詳細化して仕分ける `refine`、重要判断を ADR として記録する `create-adr`、起きたことを掘り下げて「次はこうするとよい」の示唆を出す `retro`、毎日の定期作業をまとめて実行する `daily-check`、作業終了前に予定した作業をやり切ったか確認して報告する `wrap-up` を含みます。`discuss` と `refine` はタスクの保存先に依存せず、登録先・状態の持ち方をタスク管理ルールに委ねます。`retro` と `wrap-up` は仕事プロファイルでも展開されます。
+- `skills/` … スキル群。相談から仕様・タスクを整理する `discuss`、着手可否が未判断のタスクを1件ずつ詳細化して仕分ける `refine`、重要判断を ADR として記録する `create-adr`、起きたことを掘り下げて「次はこうするとよい」の示唆を出す `retro`、毎日の定期作業をまとめて実行する `daily-check`、作業終了前に予定した作業をやり切ったか確認して報告する `wrap-up` を含みます。`discuss` と `refine` はタスクの保存先に依存せず、登録先・状態の持ち方をタスク管理ルールに委ねます。`retro` と `wrap-up` は仕事プロファイルでも展開されます。
     - **ここに置くのは開発環境すべてで使いたいものだけです。** 特定のリポジトリでしか使わないスキルは、そのリポジトリの `.claude/skills/` に置きます（例: `web-clip` `meal-management` `work-log` `health-log` は canpok1/brain にあります）。
 - `agents/` … エージェント定義。
 - `rules/` … 共通ルール。`~/.claude/rules/` 配下は全プロジェクトに適用されます。`paths` を持つルールは該当ファイルを扱うときだけ、持たないルールはセッション開始時に読み込まれます。
     - `coding.md` … 作業の進め方（チェックリストを作って工程ごとに進める。自己レビューを含む）、コメントの書き方、コミット粒度。コードを扱うときに適用されます。
     - `claude-config.md` … Claude 設定（スキル・ルール・エージェント等）を変更するときのドキュメント反映確認と分量の測定。
     - `investigation.md` … 事実を調べて報告するときのルール。見つからないときに試す手（名前で引く・二次情報から辿る・親から辿る・相手に聞く）と、決め手になる事実の確かめ方。
-    - `todoist.md` … タスク管理に Todoist を使う場合にのみ適用されるルール。Todoist を使わないプロジェクトには適用されません（適用条件はファイル冒頭に記載）。
     - `brain-task.md` … タスクの保存に brain リポジトリ（`canpok1/brain` の `tasks/`）を使う場合にのみ適用されるルール。保存先・ファイル命名・frontmatter・書き方・探し方に加え、パスの表記・`ready` にしてよい条件・`status`（`draft` / `ready` / `doing` / `done`）の遷移と done の定義を規定します（適用条件はファイル冒頭に記載）。`tasks/**/*.md` を扱うときに読み込まれます。
     - `work-log.md` … 作業記録を brain リポジトリのデイリーノートへ残す場合にのみ適用されるルール。`work-log` スキルを起動するタイミングを規定します（適用条件はファイル冒頭に記載）。スキル本体は canpok1/brain にあるため、brain 以外のリポジトリで記録するには `--add-dir` で brain を参照させます。
 
 既に `~/.claude/settings.json` などの実体ファイルがある場合は、`<対象>.bak` へ退避してから symlink を張ります。
-
-## Todoist 連携（workflow-scripts）の設定
-
-`workflow-scripts` のうち `todoist-` で始まるスクリプト（`todoist-auto-assign.sh` / `todoist-auto-solve.sh` / `todoist-solve-task.sh`）は
-Todoist CLI（`td` = `@doist/todoist-cli`）を使います（共通処理は `todoist-lib.sh`）。
-`td` は `~/dotfiles/setup.sh --init` で導入されます。
-
-### 認証（どちらか一方）
-
-- **コマンドでログイン**: `td auth login`（ブラウザで OAuth 認証。トークンは OS の資格情報ストアに保存される）
-- **環境変数で指定**: `~/.shell_local` に `TODOIST_API_TOKEN` を設定する（環境変数が優先される）
-
-    ```
-    export TODOIST_API_TOKEN=xxxx   # Todoist Settings > Integrations > Developer で取得
-    ```
-
-### タスクの絞り込み対象
-
-`todoist-auto-assign` / `todoist-auto-solve` が巡回する対象タスクは、実行したカレントの git リポジトリから自動的に決まります
-（プロジェクト `dev` / セクション = リポジトリ名）。スクリプト内で `#dev & /<リポジトリ名>` というフィルタを組み立て、
-状態ラベル条件（`@ready` / `@assign-to-claude` / `@in-progress` など）と AND 結合して絞り込みます。
-そのため対象の指定に環境変数は不要です。
-
-`workflow-scripts` は PATH に追加済みのため、対象としたい git リポジトリ内で直接実行できます
-（git リポジトリ外で実行するとエラー終了します）。
 
 ## 設定ファイルの削除方法
 

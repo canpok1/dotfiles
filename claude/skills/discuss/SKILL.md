@@ -2,7 +2,7 @@
 name: discuss
 description: 機能要望や課題を相談し、コードベースを踏まえて論点・判断を整理するスキル。相談の結論に応じて、担当者が判断なしで実装できる新規タスクの作成、既存タスクの修正、中断時に判断点を残したまま起票して終えること、またはタスク作成不要での方針確定を行う。コードベース調査・判断点の確定（ユーザー確認）・受け入れ条件のファイル/関数マッピング・必要に応じた ADR 記録との連携を含む。「〜について相談したい」「〜の仕様を考えてタスクにまとめて」「〜できるようにしたい」等の相談・要望時に手動/LLM判断で起動する。
 argument-hint: "相談したい内容・課題の概要（省略可）"
-allowed-tools: Bash, Read, Grep, Glob, Agent, AskUserQuestion, Skill, mcp__todoist__add-tasks, mcp__todoist__update-tasks, mcp__todoist__find-tasks, mcp__todoist__find-projects, mcp__todoist__find-sections
+allowed-tools: Bash, Read, Grep, Glob, Agent, AskUserQuestion, Skill
 user-invocable: true
 ---
 

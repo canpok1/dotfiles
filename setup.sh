@@ -337,14 +337,6 @@ initialize() {
     if ! command -v vox-actor >/dev/null 2>&1; then
         curl -fsSL https://github.com/canpok1/vox-actor/releases/latest/download/install.sh | bash
     fi
-    # Todoist CLI (td) を導入する（workflow-scripts が利用）
-    if ! command -v td >/dev/null 2>&1; then
-        if command -v npm >/dev/null 2>&1; then
-            npm install -g @doist/todoist-cli
-        else
-            echo "npm not found; skip td install" >&2
-        fi
-    fi
 }
 
 case "$MODE" in
