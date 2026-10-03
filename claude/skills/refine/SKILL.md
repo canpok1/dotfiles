@@ -2,7 +2,7 @@
 name: refine
 description: 着手可否が未判断のタスクを1件選び、実施可否をユーザーと判断するスキル。判断に迷う点は詳細化し、実施するなら着手可能な状態にし、実施しないなら破棄する。
 argument-hint: "[タスクの指定（省略可）]"
-allowed-tools: Bash, Read, Grep, Glob, Agent, AskUserQuestion, Skill, mcp__todoist__find-tasks, mcp__todoist__fetch-object, mcp__todoist__find-comments, mcp__todoist__add-comments, mcp__todoist__update-tasks, mcp__todoist__complete-tasks, mcp__todoist__find-sections, mcp__todoist__find-projects
+allowed-tools: Bash, Read, Grep, Glob, Agent, AskUserQuestion, Skill
 user-invocable: true
 ---
 
