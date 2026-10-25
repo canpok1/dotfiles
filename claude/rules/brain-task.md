@@ -70,6 +70,7 @@ created: 2026-08-08
 - **対象の抽出**: brain のルートで `rg -l '^status: draft' tasks/` を実行し、ファイル名先頭のタイムスタンプが古い順に選ぶ
 - **着手可能にする**: 詳細化した内容を本文へ反映し、frontmatter を `status: ready` にする
 - **破棄する**: 本文の末尾に `## 破棄理由` 節を作って理由を書き、frontmatter を `status: dropped` にする。ファイルは削除しない
+- **作成からの経過日数**（定期実行での14日・1ヶ月の判定）は frontmatter の `created` で数える。本文を書き足しても数え直さない
 - いずれも commit + push まで行う
 
 ## タスクの探し方
