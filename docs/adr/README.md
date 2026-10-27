@@ -8,7 +8,7 @@
 |------|----------|------------|------|
 | 0001 | （欠番）work-log の devcontainer/web 向け追記経路を gh api から git push へ変更 | 移設 | 2026-08-07 |
 | [0002](0002-obsidian-task-rule-in-dotfiles.md) | Obsidian タスクファイルの書き方ルールを brain から dotfiles へ移動 | 採用 | 2026-08-08 |
-| [0003](0003-profile-based-claude-config-deploy.md) | 設定をプロファイル単位で選択的に展開する | 採用 | 2026-08-08 |
+| [0003](0003-profile-based-claude-config-deploy.md) | 設定をプロファイル単位で選択的に展開する | 廃止 | 2026-08-08 |
 | [0004](0004-task-status-in-frontmatter-not-directory.md) | タスクのステータスは frontmatter で持ちディレクトリでは表現しない | 採用 | 2026-08-09 |
 | [0005](0005-task-status-draft-ready-split.md) | タスクのステータス todo を draft と ready に分割する | 採用 | 2026-08-09 |
 | [0006](0006-dropped-status-for-discarded-tasks.md) | 破棄したタスクを表す status として dropped を追加する | 採用 | 2026-08-09 |

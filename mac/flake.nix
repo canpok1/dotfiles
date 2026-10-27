@@ -17,11 +17,13 @@
       # ユーザー名・ホーム・CPU・clone の場所は実行した環境から取る（--impure が必要）。
       # マシンごとに設定を書き分けずに済ませるため。
       dotfilesDir = builtins.getEnv "DOTFILES_DIR";
-      mkHome = profile:
+    in
+    {
+      homeConfigurations.default =
         assert dotfilesDir != "" || throw "DOTFILES_DIR is not set (run mac/setup.sh)";
         home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.${builtins.currentSystem};
-          extraSpecialArgs = { inherit profile dotfilesDir; };
+          extraSpecialArgs = { inherit dotfilesDir; };
           modules = [
             ./home.nix
             {
@@ -30,12 +32,6 @@
             }
           ];
         };
-    in
-    {
-      homeConfigurations = {
-        private = mkHome "private";
-        work = mkHome "work";
-      };
 
       # 初回の switch 用。home-manager コマンドを flake.lock と同じ版で起動する
       packages = nixpkgs.lib.genAttrs darwinSystems (system: {

@@ -8,7 +8,7 @@ dotfiles
 ```
 tools/       ツールごとの設定の実体（claude/ shell/ vim/ workflow-scripts/）
 mac/         mac 向け。home-manager の設定と setup.sh
-container/   devcontainer / Claude Code on the web 向け。setup.sh とプロファイル定義
+container/   devcontainer / Claude Code on the web 向け。setup.sh
 docs/adr/    判断の記録
 ```
 
@@ -57,48 +57,14 @@ git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/conta
 - `DOTFILES_DIR` は dotfiles の配置場所を示す環境変数で、`tools/shell/profile.sh` の PATH 追加（`tools/workflow-scripts`）などで参照します
 - `--undeploy` で撤去します。dotfiles を指す symlink と管理ブロックだけを外し、既存ファイル本体は残します
 
-## プロファイル（私用 / 仕事）
-
-環境によって使いたい設定が異なるため、展開する設定をプロファイル単位で選べます。
-既定は `private` で、全ての設定が展開されます。`work`（仕事環境）では、brain リポジトリを前提とする設定を配りません。
-
-| 対象 | private | work |
-|---|---|---|
-| vimrc / シェル設定 / `workflow-scripts` の PATH 追加 | ○ | ○ |
-| `claude/CLAUDE.md` / `settings.json` / `statusline.sh` | ○ | ○ |
-| `claude/rules/coding.md` / `claude-config.md` / `investigation.md` | ○ | ○ |
-| `claude/rules/brain-task.md` / `work-log.md` | ○ | × |
-| `claude/skills/retro` / `wrap-up` | ○ | ○ |
-| `claude/skills/*`（`retro` `wrap-up` を除く） | ○ | × |
-| `claude/agents/*` | ○ | × |
-
-指定は以下の優先順で決まります（mac / コンテナ共通）。
-
-```
-mac/setup.sh --profile work              # ① 引数
-DOTFILES_PROFILE=work mac/setup.sh       # ② 環境変数
-echo work > ~/.dotfiles-profile          # ③ ファイル（一度書けば以後の再実行でも効く）
-```
-
-`private` と `work` 以外を指定するとエラー終了します（打ち間違いのまま私用設定が仕事環境へ入るのを防ぐため）。
-
-仕事プロファイルで配るものは許可リストで、環境ごとに持ちます。**新しいスキルやルールは、書き足さない限り仕事環境には展開されません。**
-
-- mac: `mac/home.nix` の `claudeFiles.work`
-- コンテナ: `container/profiles/work.conf`（リポジトリルートからの相対パス。実在しないパスは警告します）
-
-プロファイルを変えて再実行すると、除外された設定の symlink は撤去されます。
-
 ## Claude 個人設定
 
 `tools/claude/` から `~/.claude` へ展開される主な設定は以下です。
 
-なお、下記のうち `skills/` `agents/` と `rules/` の一部は `private` プロファイル限定です（[プロファイル](#プロファイル私用--仕事)を参照）。
-
 - `CLAUDE.md` … 全プロジェクト共通の個人設定。言語など、環境を問わず適用する内容だけを置きます。
 - `settings.json` … Claude Code の設定。ステータスライン（`~/.claude/statusline.sh`）を有効化するほか、`.env` や SSH 鍵など秘密情報を含みそうなファイルの閲覧・編集を `permissions.deny` で禁止します。
 - `statusline.sh` … 起動ディレクトリ・モデル名・コンテキスト使用率・トークン数・コストを表示するステータスライン用スクリプト（`jq` が必要）。表示例: `/workspaces/dotfiles | Opus 5 | ctx 42% | 421.2k in / 1.5k out | $0.37`
-- `skills/` … スキル群。相談から仕様・タスクを整理する `discuss`、着手可否が未判断のタスクを1件ずつ詳細化して仕分ける `task-refine`、重要判断を ADR として記録する `create-adr`、起きたことを掘り下げて「次はこうするとよい」の示唆を出す `retro`、毎日の定期作業をまとめて実行する `daily-check`、自作スキルをつまずきのパターンから週1回改善する `skill-refine`、作業終了前に予定した作業をやり切ったか確認して報告する `wrap-up` を含みます。`discuss` と `task-refine` はタスクの保存先に依存せず、登録先・状態の持ち方をタスク管理ルールに委ねます。`retro` と `wrap-up` は仕事プロファイルでも展開されます。
+- `skills/` … スキル群。相談から仕様・タスクを整理する `discuss`、着手可否が未判断のタスクを1件ずつ詳細化して仕分ける `task-refine`、重要判断を ADR として記録する `create-adr`、起きたことを掘り下げて「次はこうするとよい」の示唆を出す `retro`、毎日の定期作業をまとめて実行する `daily-check`、自作スキルをつまずきのパターンから週1回改善する `skill-refine`、作業終了前に予定した作業をやり切ったか確認して報告する `wrap-up` を含みます。`discuss` と `task-refine` はタスクの保存先に依存せず、登録先・状態の持ち方をタスク管理ルールに委ねます。
     - **ここに置くのは開発環境すべてで使いたいものだけです。** 特定のリポジトリでしか使わないスキルは、そのリポジトリの `.claude/skills/` に置きます（例: `web-clip` `meal-management` `work-log` `health-log` は canpok1/brain にあります）。
 - `agents/` … エージェント定義。
 - `rules/` … 共通ルール。`~/.claude/rules/` 配下は全プロジェクトに適用されます。`paths` を持つルールは該当ファイルを扱うときだけ、持たないルールはセッション開始時に読み込まれます。
