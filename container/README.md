@@ -18,4 +18,4 @@ git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/conta
     ```
 
     再実行時はブロックの中身を最新へ書き替えます。手を入れる場合はブロックの外か `~/.shell_local` に書いてください。
-- `--undeploy` で撤去します。dotfiles を指す symlink と管理ブロックだけを外し、既存ファイル本体は残します
+- `container/undeploy.sh` で撤去します。dotfiles を指す symlink と管理ブロックだけを外し、既存ファイル本体は残します
