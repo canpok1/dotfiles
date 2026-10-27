@@ -21,7 +21,7 @@ home-manager は 0003 で見送っている。理由は、コンテナは起動�
 - vox-actor の導入（旧 `setup.sh --init`）は外す。コンテナの `--init` も無くす
 - ルートの `setup.sh` は残さない。呼び出し側（web 環境の設定スクリプトなど）を個別に直す
 - mac では home-manager がシェル設定を丸ごと持つ。コンテナは既存ファイルを活かすため管理ブロック追記のまま
-- mac の Nix（flakes 有効）と home-manager は導入済みを前提にし、`mac/setup.sh` では入れない。シンプルに保つため。ユーザー名・ホーム・CPU・clone の場所は実行環境から取る（`--impure`）。マシンごとに設定を書き分けないため
+- mac の Nix（flakes 有効）は導入済みを前提にし、`mac/setup.sh` では入れない。シンプルに保つため。home-manager は事前に入れず、flake.lock と同じ版を `nix run` で起動する。ユーザー名・ホーム・CPU・clone の場所は実行環境から取る（`--impure`）。マシンごとに設定を書き分けないため
 - nixpkgs は darwin 向けの安定版ブランチに固定し、`flake.lock` をコミットする
 
 ## 結果

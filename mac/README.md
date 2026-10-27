@@ -4,7 +4,7 @@
 git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/mac/setup.sh
 ```
 
-Nix（flakes 有効）と home-manager は先に入れておいてください。`mac/setup.sh` は `home-manager switch` を実行し、設定ファイルの展開とパッケージの導入を行います。何度実行しても構いません。
+Nix（flakes 有効）は先に入れておいてください。home-manager は不要です。`mac/setup.sh` が home-manager を flake 経由で起動し、設定ファイルの展開とパッケージの導入を行います。何度実行しても構いません。
 
 - 展開するものとパッケージ（Ansible など）は `mac/home.nix` に書きます。変えたら `mac/setup.sh` を再実行します
 - **新しいファイル（スキルなど）は `git add` してから実行してください。** flake は git で管理しているファイルしか読み込みません

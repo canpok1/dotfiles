@@ -22,7 +22,7 @@ symlink を張る仕組みは環境ごとに別です（mac は home-manager、�
 ## 初期設定
 
 ```
-# mac（Nix と home-manager は導入済みの前提）
+# mac（Nix は導入済みの前提）
 git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/mac/setup.sh
 
 # コンテナ
