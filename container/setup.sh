@@ -1,7 +1,8 @@
 #!/bin/sh
-# このスクリプトが置かれているディレクトリを dotfiles の実体として扱う
+# コンテナ（devcontainer / Claude Code on the web）向けの展開スクリプト。
+# このスクリプトの1つ上を dotfiles の実体として扱う
 # （~/dotfiles 以外へ clone しても、実行したクローンが正しくリンクされる）
-DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd -P)" || exit 1
+DOTFILES_DIR="$(cd "$(dirname "$0")/.." && pwd -P)" || exit 1
 cd "$DOTFILES_DIR" || exit 1
 
 # 旧デフォルト配置。過去に ~/dotfiles から展開した symlink の撤去に使う
@@ -23,19 +24,15 @@ while [ $# -gt 0 ]; do
             ;;
         *)
             echo "unknown option: $1" >&2
-            echo "usage: setup.sh [--init | --undeploy] [--profile <name>]" >&2
+            echo "usage: container/setup.sh [--init | --undeploy] [--profile <name>]" >&2
             exit 1
             ;;
     esac
     shift
 done
 
-if [ "$(uname)" = 'Darwin' ]; then
-    echo setup for mac
-elif [ "$(expr substr $(uname -s) 1 5)" = 'Linux' ]; then
-    echo setup for linux
-else
-    echo "OS is unknown. exit setup."
+if [ "$(uname)" != 'Linux' ]; then
+    echo "this script is for containers (Linux). use mac/setup.sh on mac." >&2
     exit 1
 fi
 
@@ -87,9 +84,9 @@ dotfiles_relpath() {
 # 絞り込みを行わない既定プロファイル。conf を持たない予約名として扱う
 PROFILE_DEFAULT=private
 
-# profiles/*.conf から選択可能なプロファイル名を列挙する（エラーメッセージ用）
+# container/profiles/*.conf から選択可能なプロファイル名を列挙する（エラーメッセージ用）
 list_profiles() {
-    for _c in "$DOTFILES_DIR"/profiles/*.conf; do
+    for _c in "$DOTFILES_DIR"/container/profiles/*.conf; do
         [ -e "$_c" ] || continue
         _n="$(basename "$_c")"
         printf '%s ' "${_n%.conf}"
@@ -122,11 +119,11 @@ PROFILE_NAME=""
 PROFILE_FILTERED=0
 PROFILE_ALLOW=""
 
-# profiles/<プロファイル名>.conf を読み込む。
+# container/profiles/<プロファイル名>.conf を読み込む。
 # private は「絞り込みなし＝全件展開」を表す予約名で、conf を持たない。
 load_profile() {
     PROFILE_NAME="$(resolve_profile)"
-    _conf="$DOTFILES_DIR/profiles/$PROFILE_NAME.conf"
+    _conf="$DOTFILES_DIR/container/profiles/$PROFILE_NAME.conf"
 
     if [ "$PROFILE_NAME" = "$PROFILE_DEFAULT" ]; then
         echo "profile: $PROFILE_NAME (deploy all)"
@@ -136,7 +133,7 @@ load_profile() {
     # private 以外で conf が無いのは名前の打ち間違いの可能性が高い。
     # 黙って全件展開すると仕事環境へ私用設定が入るため、ここで中断する。
     if [ ! -f "$_conf" ]; then
-        echo "unknown profile: $PROFILE_NAME (profiles/$PROFILE_NAME.conf not found)" >&2
+        echo "unknown profile: $PROFILE_NAME (container/profiles/$PROFILE_NAME.conf not found)" >&2
         echo "available profiles: $PROFILE_DEFAULT $(list_profiles)" >&2
         exit 1
     fi
@@ -148,14 +145,14 @@ load_profile() {
             | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' -e 's#/$##' \
             | grep -v '^$'
     )"
-    echo "profile: $PROFILE_NAME (profiles/$PROFILE_NAME.conf)"
+    echo "profile: $PROFILE_NAME (container/profiles/$PROFILE_NAME.conf)"
 
     # 実体の無いエントリは書き間違い・リネーム漏れの可能性が高いので知らせる。
     # 展開そのものは続行する（他のエントリまで巻き込まない）。
     printf '%s\n' "$PROFILE_ALLOW" | while read -r entry; do
         [ -n "$entry" ] || continue
         [ -e "$DOTFILES_DIR/$entry" ] || \
-            echo "warning: $entry not found (profiles/$PROFILE_NAME.conf)" >&2
+            echo "warning: $entry not found (container/profiles/$PROFILE_NAME.conf)" >&2
     done
 }
 
@@ -225,7 +222,7 @@ strip_trailing_blank_lines() {
 
 # シェル設定（.bashrc 等）へ source 行を冪等に配置する。
 # symlink で置き換えないため、devcontainer などで既に配置済みのファイルの内容を
-# 活かしたまま dotfiles の共通設定（shell/*.sh）を読み込める。
+# 活かしたまま dotfiles の共通設定（tools/shell/*.sh）を読み込める。
 #   - 旧方式で張られた dotfiles への symlink は実体ファイルへ作り直す（移行対応）
 #   - 実体が無ければ管理ブロックだけのファイルを新規作成する
 #   - 既存ファイルに管理ブロックが無ければ末尾へ追記する（既存内容は保持）
@@ -262,23 +259,23 @@ deploy() {
     echo "make link (dotfiles: $DOTFILES_DIR)"
     load_profile
 
-    # _vimrc とシェル設定はプロファイルの絞り込み対象外（常に展開する）
-    link_file "$DOTFILES_DIR/_vimrc" ~/.vimrc
+    # vimrc とシェル設定はプロファイルの絞り込み対象外（常に展開する）
+    link_file "$DOTFILES_DIR/tools/vim/vimrc" ~/.vimrc
 
     # シェル設定は symlink で置き換えず source 行を追記する（既存ファイルを活かす）。
-    # ブロック先頭で DOTFILES_DIR を export し、shell/*.sh からも参照できるようにする
+    # ブロック先頭で DOTFILES_DIR を export し、tools/shell/*.sh からも参照できるようにする
     # （source される側は自分の位置を特定できないため）。
     _export_line="export DOTFILES_DIR=\"$DOTFILES_DIR\""
     ensure_managed_block ~/.bashrc "$_export_line
-. \"\$DOTFILES_DIR/shell/rc.sh\""
+. \"\$DOTFILES_DIR/tools/shell/rc.sh\""
     ensure_managed_block ~/.zshrc "$_export_line
-. \"\$DOTFILES_DIR/shell/rc.sh\""
+. \"\$DOTFILES_DIR/tools/shell/rc.sh\""
     ensure_managed_block ~/.zprofile "$_export_line
-. \"\$DOTFILES_DIR/shell/profile.sh\""
+. \"\$DOTFILES_DIR/tools/shell/profile.sh\""
     # ログインシェル（.bash_profile）でも環境変数・エイリアスを読み込む
     ensure_managed_block ~/.bash_profile "$_export_line
-. \"\$DOTFILES_DIR/shell/profile.sh\"
-. \"\$DOTFILES_DIR/shell/rc.sh\""
+. \"\$DOTFILES_DIR/tools/shell/profile.sh\"
+. \"\$DOTFILES_DIR/tools/shell/rc.sh\""
 
     touch ~/.shell_local
 
@@ -287,18 +284,18 @@ deploy() {
     mkdir -p ~/.claude/skills ~/.claude/agents ~/.claude/rules
     prune_dangling_claude_links
     prune_disallowed_claude_links
-    link_if_allowed "$DOTFILES_DIR/claude/CLAUDE.md" ~/.claude/CLAUDE.md
-    link_if_allowed "$DOTFILES_DIR/claude/settings.json" ~/.claude/settings.json
-    link_if_allowed "$DOTFILES_DIR/claude/statusline.sh" ~/.claude/statusline.sh
-    for agent in "$DOTFILES_DIR"/claude/agents/*.md; do
+    link_if_allowed "$DOTFILES_DIR/tools/claude/CLAUDE.md" ~/.claude/CLAUDE.md
+    link_if_allowed "$DOTFILES_DIR/tools/claude/settings.json" ~/.claude/settings.json
+    link_if_allowed "$DOTFILES_DIR/tools/claude/statusline.sh" ~/.claude/statusline.sh
+    for agent in "$DOTFILES_DIR"/tools/claude/agents/*.md; do
         [ -e "$agent" ] || continue
         link_if_allowed "$agent" ~/.claude/agents/"$(basename "$agent")"
     done
-    for skill_dir in "$DOTFILES_DIR"/claude/skills/*/; do
+    for skill_dir in "$DOTFILES_DIR"/tools/claude/skills/*/; do
         [ -e "$skill_dir" ] || continue
         link_if_allowed "${skill_dir%/}" ~/.claude/skills/"$(basename "$skill_dir")"
     done
-    for rule in "$DOTFILES_DIR"/claude/rules/*; do
+    for rule in "$DOTFILES_DIR"/tools/claude/rules/*; do
         [ -e "$rule" ] || continue
         link_if_allowed "$rule" ~/.claude/rules/"$(basename "$rule")"
     done
@@ -333,27 +330,10 @@ undeploy() {
 }
 
 initialize() {
-    # vox-actor を公式インストーラで導入する（mac / Linux 両対応）
+    # vox-actor を公式インストーラで導入する
     if ! command -v vox-actor >/dev/null 2>&1; then
         curl -fsSL https://github.com/canpok1/vox-actor/releases/latest/download/install.sh | bash
     fi
-    if [ "$(uname)" = 'Darwin' ]; then
-        apply_home_manager
-    fi
-}
-
-# mac のパッケージを home-manager で導入する（docs/adr/0016）。
-# 使い捨てコンテナでは Nix の導入が起動のたびに重くなるため mac 限定。
-apply_home_manager() {
-    if ! command -v nix >/dev/null 2>&1; then
-        curl -sSfL https://artifacts.nixos.org/nix-installer | sh -s -- install --enable-flakes || return 1
-        # 導入直後のこのシェルには PATH が通っていない
-        . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
-    fi
-    # flakes 無効のまま入っている Nix でも動くよう、機能をコマンドごとに有効にする
-    nix --extra-experimental-features 'nix-command flakes' \
-        run "$DOTFILES_DIR/home-manager" -- \
-        switch --flake "$DOTFILES_DIR/home-manager#default" --impure
 }
 
 case "$MODE" in

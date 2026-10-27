@@ -1,0 +1,45 @@
+# mac の設定ファイルの展開とパッケージの導入を home-manager で行う（docs/adr/0016）。
+# mac/setup.sh から使う。
+{
+  description = "dotfiles: mac のユーザー環境";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-26.05-darwin";
+    home-manager = {
+      url = "github:nix-community/home-manager/release-26.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs = { nixpkgs, home-manager, ... }:
+    let
+      darwinSystems = [ "aarch64-darwin" "x86_64-darwin" ];
+      # ユーザー名・ホーム・CPU・clone の場所は実行した環境から取る（--impure が必要）。
+      # マシンごとに設定を書き分けずに済ませるため。
+      dotfilesDir = builtins.getEnv "DOTFILES_DIR";
+      mkHome = profile:
+        assert dotfilesDir != "" || throw "DOTFILES_DIR is not set (run mac/setup.sh)";
+        home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages.${builtins.currentSystem};
+          extraSpecialArgs = { inherit profile dotfilesDir; };
+          modules = [
+            ./home.nix
+            {
+              home.username = builtins.getEnv "USER";
+              home.homeDirectory = builtins.getEnv "HOME";
+            }
+          ];
+        };
+    in
+    {
+      homeConfigurations = {
+        private = mkHome "private";
+        work = mkHome "work";
+      };
+
+      # 初回の switch 用。home-manager コマンドを flake.lock と同じ版で起動する
+      packages = nixpkgs.lib.genAttrs darwinSystems (system: {
+        default = home-manager.packages.${system}.default;
+      });
+    };
+}

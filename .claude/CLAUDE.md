@@ -1,1 +1,1 @@
-../claude/CLAUDE.md
+../tools/claude/CLAUDE.md
