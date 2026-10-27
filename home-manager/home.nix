@@ -1,6 +1,6 @@
 { pkgs, ... }:
 {
-  # 導入時の home-manager の版。上げると既存の状態の扱いが変わるため、版を上げても据え置く
+  # 初回導入時の版。nixpkgs を更新しても据え置く（変えると既存の状態の扱いが変わる）
   home.stateVersion = "26.05";
 
   programs.home-manager.enable = true;

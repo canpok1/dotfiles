@@ -337,6 +337,23 @@ initialize() {
     if ! command -v vox-actor >/dev/null 2>&1; then
         curl -fsSL https://github.com/canpok1/vox-actor/releases/latest/download/install.sh | bash
     fi
+    if [ "$(uname)" = 'Darwin' ]; then
+        apply_home_manager
+    fi
+}
+
+# mac のパッケージを home-manager で導入する（docs/adr/0016）。
+# 使い捨てコンテナでは Nix の導入が起動のたびに重くなるため mac 限定。
+apply_home_manager() {
+    if ! command -v nix >/dev/null 2>&1; then
+        curl -sSfL https://artifacts.nixos.org/nix-installer | sh -s -- install --enable-flakes || return 1
+        # 導入直後のこのシェルには PATH が通っていない
+        . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+    fi
+    # flakes 無効のまま入っている Nix でも動くよう、機能をコマンドごとに有効にする
+    nix --extra-experimental-features 'nix-command flakes' \
+        run "$DOTFILES_DIR/home-manager" -- \
+        switch --flake "$DOTFILES_DIR/home-manager#default" --impure
 }
 
 case "$MODE" in

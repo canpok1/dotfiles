@@ -14,6 +14,14 @@ git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/setup
 `setup.sh` は自身が置かれているディレクトリを dotfiles の実体として扱うため、clone 先は `~/dotfiles` でなくても構いません
 （例: `/workspaces/dotfiles` に clone してそこの `setup.sh` を実行すれば、そのクローンを指すリンクが張られます）。
 
+### mac のパッケージ（home-manager）
+
+mac では `--init` が Nix を導入し、`home-manager/home.nix` の `home.packages` に書いたパッケージ（Ansible など）を入れます（初回は sudo のパスワードを求められます）。
+パッケージを足したら `home.nix` に追記し、`setup.sh --init` を再実行してください。
+Linux（devcontainer や Claude Code on the web）では起動のたびに Nix を入れると重いため、home-manager は使いません（`docs/adr/0016-home-manager-for-mac-packages.md`）。
+
+nixpkgs の版は `home-manager/flake.lock` で固定しています。上げるときは `nix flake update --flake ./home-manager` を実行してコミットします。
+
 ## 設定ファイルの展開方法
 
 設定ファイルのみを再度展開します。
