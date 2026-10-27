@@ -6,7 +6,7 @@ dotfiles
 ## 構成
 
 ```
-tools/       ツールごとの設定の実体（claude/ shell/ vim/ workflow-scripts/）
+tools/       ツールごとの設定の実体（claude/ shell/ vim/）
 mac/         mac 向け。home-manager の設定と setup.sh
 container/   devcontainer / Claude Code on the web 向け。setup.sh
 docs/adr/    判断の記録
@@ -54,7 +54,6 @@ git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/conta
     ```
 
     再実行時はブロックの中身を最新へ書き替えます。手を入れる場合はブロックの外か `~/.shell_local` に書いてください。
-- `DOTFILES_DIR` は dotfiles の配置場所を示す環境変数で、`tools/shell/profile.sh` の PATH 追加（`tools/workflow-scripts`）などで参照します
 - `--undeploy` で撤去します。dotfiles を指す symlink と管理ブロックだけを外し、既存ファイル本体は残します
 
 ## Claude 個人設定
