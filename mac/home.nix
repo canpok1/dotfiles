@@ -21,6 +21,7 @@ in
 
   home.packages = with pkgs; [
     ansible
+    uv
   ];
 
   # ホームに張る symlink。左がホームからのパス、右が dotfiles 内の実体。
