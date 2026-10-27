@@ -12,10 +12,9 @@ MODE=deploy
 while [ $# -gt 0 ]; do
     case "$1" in
         --undeploy) MODE=undeploy ;;
-        --init) MODE=init ;;
         *)
             echo "unknown option: $1" >&2
-            echo "usage: container/setup.sh [--init | --undeploy]" >&2
+            echo "usage: container/setup.sh [--undeploy]" >&2
             exit 1
             ;;
     esac
@@ -205,24 +204,11 @@ undeploy() {
     fi
 }
 
-initialize() {
-    # vox-actor を公式インストーラで導入する
-    if ! command -v vox-actor >/dev/null 2>&1; then
-        curl -fsSL https://github.com/canpok1/vox-actor/releases/latest/download/install.sh | bash
-    fi
-}
-
 case "$MODE" in
     undeploy)
         echo ---- dotfiles undeploy start ----
         undeploy
         echo ---- dotfiles undeploy end ----
-        ;;
-    init)
-        echo ---- initialize start ----
-        deploy
-        initialize
-        echo ---- initialize end ----
         ;;
     *)
         echo ---- dotfiles setup start ----

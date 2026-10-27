@@ -37,10 +37,10 @@ Nix が無ければ導入し（初回は sudo のパスワードを求められ�
 ## コンテナ（devcontainer / Claude Code on the web）
 
 ```
-git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/container/setup.sh --init
+git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/container/setup.sh
 ```
 
-`--init` は設定ファイルの展開に加えて vox-actor を導入します。設定ファイルだけ展開し直すときは引数なしで実行します。
+設定ファイルを消してしまったときなどは `container/setup.sh` を再実行すれば展開し直せます。
 起動のたびに作り直される環境なので、Nix は使いません。
 
 - `tools/vim/vimrc` や Claude 個人設定は symlink で展開します。既に同名の実体ファイル/ディレクトリ（symlink でないもの）があれば、上書きせず `<対象>.bak` に退避してから張ります

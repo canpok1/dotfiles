@@ -21,10 +21,6 @@ if ! command -v nix >/dev/null 2>&1; then
     . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 fi
 
-if ! command -v vox-actor >/dev/null 2>&1; then
-    curl -fsSL https://github.com/canpok1/vox-actor/releases/latest/download/install.sh | bash
-fi
-
 # 旧 setup.sh が張った dotfiles 直指しの symlink を外す。残っていると home-manager が衝突で止まる。
 # home-manager が張ったものは Nix の保管場所を経由するため、ここには掛からない
 for link in ~/.vimrc $(find ~/.claude -type l 2>/dev/null); do
