@@ -26,4 +26,4 @@ done
 
 # home-manager は flake 経由で起動する（事前の導入は不要）。
 # 既存のシェル設定などは .hm-bak へ退避してから置き換える
-nix run "$DOTFILES_DIR/mac" -- switch --flake "$DOTFILES_DIR/mac#default" --impure -b hm-bak
+nix run "$DOTFILES_DIR/mac#home-manager" -- switch --flake "$DOTFILES_DIR/mac#default" --impure -b hm-bak

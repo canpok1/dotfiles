@@ -32,9 +32,10 @@
           ];
         };
 
-      # mac/setup.sh 用。home-manager を事前に入れなくても、flake.lock と同じ版で起動できる
+      # mac/setup.sh が `nix run .#home-manager` で使う。
+      # home-manager を事前に入れなくても、flake.lock と同じ版で起動できる
       packages = nixpkgs.lib.genAttrs [ "aarch64-darwin" "x86_64-darwin" ] (system: {
-        default = home-manager.packages.${system}.default;
+        home-manager = home-manager.packages.${system}.default;
       });
     };
 }
