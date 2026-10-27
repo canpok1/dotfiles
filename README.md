@@ -25,7 +25,7 @@ docs/adr/    判断の記録
 git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/mac/setup.sh
 ```
 
-Nix が無ければ導入し（初回は sudo のパスワードを求められます）、`home-manager switch` で設定ファイルの展開とパッケージの導入を行います。何度実行しても構いません。
+Nix（flakes 有効）と home-manager は先に入れておいてください。`home-manager switch` で設定ファイルの展開とパッケージの導入を行います。何度実行しても構いません。
 
 - 展開するものとパッケージ（Ansible など）は `mac/home.nix` に書きます。変えたら `mac/setup.sh` を再実行します
 - **新しいファイル（スキルなど）は `git add` してから実行してください。** flake は git 管理下のファイルしか見えません

@@ -13,7 +13,6 @@
 
   outputs = { nixpkgs, home-manager, ... }:
     let
-      darwinSystems = [ "aarch64-darwin" "x86_64-darwin" ];
       # ユーザー名・ホーム・CPU・clone の場所は実行した環境から取る（--impure が必要）。
       # マシンごとに設定を書き分けずに済ませるため。
       dotfilesDir = builtins.getEnv "DOTFILES_DIR";
@@ -32,10 +31,5 @@
             }
           ];
         };
-
-      # 初回の switch 用。home-manager コマンドを flake.lock と同じ版で起動する
-      packages = nixpkgs.lib.genAttrs darwinSystems (system: {
-        default = home-manager.packages.${system}.default;
-      });
     };
 }
