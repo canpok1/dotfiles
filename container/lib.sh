@@ -5,9 +5,6 @@ if [ "$(uname)" != 'Linux' ]; then
     exit 1
 fi
 
-# 旧デフォルト配置。過去に ~/dotfiles から展開した symlink の撤去に使う
-LEGACY_DOTFILES_DIR="$HOME/dotfiles"
-
 # 既存の実体（symlink でない通常ファイル/ディレクトリ）があれば .bak に退避する。
 # 既に symlink の場合は退避しない（再実行時はそのまま張り替える）。
 backup_if_real() {
@@ -46,10 +43,10 @@ unlink_file() {
     return 0
 }
 
-# symlink の参照先が dotfiles（実行中のクローン or 旧デフォルト配置）配下かを判定する
+# symlink の参照先が dotfiles 配下かを判定する
 is_dotfiles_link() {
     case "$(readlink "$1")" in
-        "$DOTFILES_DIR"/* | "$LEGACY_DOTFILES_DIR"/*) return 0 ;;
+        "$DOTFILES_DIR"/*) return 0 ;;
     esac
     return 1
 }
@@ -93,7 +90,6 @@ strip_trailing_blank_lines() {
 # シェル設定（.bashrc 等）へ source 行を冪等に配置する。
 # symlink で置き換えないため、devcontainer などで既に配置済みのファイルの内容を
 # 活かしたまま dotfiles の共通設定（tools/shell/*.sh）を読み込める。
-#   - 旧方式で張られた dotfiles への symlink は実体ファイルへ作り直す（移行対応）
 #   - 実体が無ければ管理ブロックだけのファイルを新規作成する
 #   - 既存ファイルに管理ブロックが無ければ末尾へ追記する（既存内容は保持）
 #   - 既に管理ブロックがあれば最新内容へ張り替える
@@ -101,12 +97,6 @@ strip_trailing_blank_lines() {
 ensure_managed_block() {
     target="$1"
     body="$2"
-
-    # 旧方式（dotfiles を指す symlink）なら撤去して実体ファイルへ移行する
-    if [ -L "$target" ] && is_dotfiles_link "$target"; then
-        echo "convert legacy symlink to file: $target"
-        rm -f "$target"
-    fi
 
     if [ ! -e "$target" ]; then
         printf '%s\n%s\n%s\n' "$DOTFILES_BLOCK_BEGIN" "$body" "$DOTFILES_BLOCK_END" > "$target"

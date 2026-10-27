@@ -11,14 +11,9 @@ if [ -L ~/.vimrc ] && is_dotfiles_link ~/.vimrc; then
     unlink_file ~/.vimrc
 fi
 
-# シェル設定は管理ブロックのみ撤去する（既存ファイル本体は残す）。
-# 旧方式で張られた dotfiles への symlink が残っていれば併せて撤去する。
+# シェル設定は管理ブロックのみ撤去する（既存ファイル本体は残す）
 for f in ~/.bashrc ~/.zshrc ~/.zprofile ~/.bash_profile; do
-    if [ -L "$f" ]; then
-        is_dotfiles_link "$f" && unlink_file "$f"
-    else
-        remove_managed_block "$f"
-    fi
+    remove_managed_block "$f"
 done
 
 # Claude 個人設定の symlink を撤去する。
