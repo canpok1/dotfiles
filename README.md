@@ -13,11 +13,11 @@ docs/adr/    判断の記録
 ```
 
 どの環境でも `tools/` 配下を指す symlink を張り、clone 側を編集すれば展開し直さずに反映されます。
-張り方は環境ごとに別に持ちます（mac は home-manager、コンテナは shell スクリプト）。
-環境によって入れたいものが一致するとは限らないため、対応を二重に書くことを許容しています（`docs/adr/0016-environment-dirs-with-home-manager-on-mac.md`）。
+symlink を張る仕組みは環境ごとに別です（mac は home-manager、コンテナは shell スクリプト）。
+環境によって入れたいものが一致するとは限らないため、どこに何を張るかは環境ごとに二重に書いています（`docs/adr/0016-environment-dirs-with-home-manager-on-mac.md`）。
 **`tools/` に設定を足したら、mac は `mac/home.nix`、コンテナは `container/setup.sh` の両方を確認してください。**
 
-各 setup.sh は自身の1つ上を dotfiles の実体として扱うため、clone 先は `~/dotfiles` でなくても構いません。
+各 setup.sh は自分の1つ上のディレクトリを dotfiles の置き場所として扱うため、clone 先は `~/dotfiles` でなくても構いません。
 
 ## mac
 
@@ -28,11 +28,11 @@ git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/mac/s
 Nix（flakes 有効）と home-manager は先に入れておいてください。`home-manager switch` で設定ファイルの展開とパッケージの導入を行います。何度実行しても構いません。
 
 - 展開するものとパッケージ（Ansible など）は `mac/home.nix` に書きます。変えたら `mac/setup.sh` を再実行します
-- **新しいファイル（スキルなど）は `git add` してから実行してください。** flake は git 管理下のファイルしか見えません
-- シェル設定（`.zshrc` / `.zprofile` / `.bashrc` / `.bash_profile`）は home-manager が丸ごと持ち、`tools/shell/*.sh` を読み込みます。手を入れる場合は `~/.shell_local` に書いてください
+- **新しいファイル（スキルなど）は `git add` してから実行してください。** flake は git で管理しているファイルしか読み込みません
+- シェル設定（`.zshrc` / `.zprofile` / `.bashrc` / `.bash_profile`）は home-manager がファイルごと生成し、その中で `tools/shell/*.sh` を読み込みます。手を入れる場合は `~/.shell_local` に書いてください
 - 既存のファイルと衝突した場合は `<対象>.hm-bak` へ退避してから置き換えます。旧 `setup.sh` が張った symlink は自動で外します
 - nixpkgs の版は `mac/flake.lock` で固定しています。上げるときは `nix flake update --flake ./mac` を実行してコミットします
-- 撤去は `home-manager uninstall` です
+- 撤去するときは `home-manager uninstall` を実行します
 
 ## コンテナ（devcontainer / Claude Code on the web）
 
@@ -68,7 +68,7 @@ git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/conta
 - `agents/` … エージェント定義。
 - `rules/` … 共通ルール。`~/.claude/rules/` 配下は全プロジェクトに適用されます。`paths` を持つルールは該当ファイルを扱うときだけ、持たないルールはセッション開始時に読み込まれます。
     - `coding.md` … 作業の進め方（チェックリストを作って工程ごとに進める。自己レビューを含む）、コメントの書き方、コミット粒度。コードを扱うときに適用されます。
-    - `claude-config.md` … Claude 設定（スキル・ルール・エージェント等）を変更するときのドキュメント反映確認と分量の測定。
+    - `claude-config.md` … Claude 設定（スキル・ルール・エージェント等）を変更するときに、ドキュメントへの反映漏れを確かめることと、分量を測ること。
     - `investigation.md` … 事実を調べて報告するときのルール。見つからないときに試す手（名前で引く・二次情報から辿る・親から辿る・相手に聞く）と、決め手になる事実の確かめ方。
     - `brain-task.md` … タスクの保存に brain リポジトリ（`canpok1/brain` の `tasks/`）を使う場合にのみ適用されるルール。保存先・ファイル命名・frontmatter・書き方・探し方に加え、パスの表記・`ready` にしてよい条件・`status`（`draft` / `ready` / `doing` / `done`）の遷移と done の定義を規定します（適用条件はファイル冒頭に記載）。`tasks/**/*.md` を扱うときに読み込まれます。
     - `work-log.md` … 作業記録を brain リポジトリのデイリーノートへ残す場合にのみ適用されるルール。`work-log` スキルを起動するタイミングを規定します（適用条件はファイル冒頭に記載）。スキル本体は canpok1/brain にあるため、brain 以外のリポジトリで記録するには `--add-dir` で brain を参照させます。
