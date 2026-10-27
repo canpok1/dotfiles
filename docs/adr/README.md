@@ -21,6 +21,6 @@
 | [0013](0013-user-confirmation-as-google-tasks.md) | 定期作業の報告は Slack、ユーザーへの確認の依頼は Google ToDo に分ける | 採用 | 2026-10-23 |
 | [0014](0014-wrap-up-verdict-by-next-actor.md) | ラップアップの判定を、次に誰が動くかで分ける | 採用 | 2026-10-23 |
 | [0015](0015-auto-drop-stale-draft-tasks.md) | 作成から1ヶ月たった未判断タスクは確認せずに破棄する | 採用 | 2026-10-26 |
-| [0016](0016-home-manager-for-mac-packages.md) | mac のパッケージを home-manager で管理する | 提案 | 2026-10-27 |
+| [0016](0016-environment-dirs-with-home-manager-on-mac.md) | 環境ごとのディレクトリに分け、mac は home-manager で展開する | 採用 | 2026-10-27 |
 
 0009 と 0010 は web クリップ取り込み（brain 固有の機能）についての判断だったため、`web-clip` スキルとともに canpok1/brain の `projects/brain/adr/` へ 0001 / 0002 として移設した。0001 も同様に、`work-log` スキルの移設（vault の ADR 0007）にあわせて vault の 0006 へ移設した。**いずれも欠番として残し、この番号は再利用しない**（既存のデイリーノートやコミットメッセージが旧番号で参照しているため）。
