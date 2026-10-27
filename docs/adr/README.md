@@ -8,7 +8,7 @@
 |------|----------|------------|------|
 | 0001 | （欠番）work-log の devcontainer/web 向け追記経路を gh api から git push へ変更 | 移設 | 2026-08-07 |
 | [0002](0002-obsidian-task-rule-in-dotfiles.md) | Obsidian タスクファイルの書き方ルールを brain から dotfiles へ移動 | 採用 | 2026-08-08 |
-| [0003](0003-profile-based-claude-config-deploy.md) | 設定をプロファイル単位で選択的に展開する | 採用 | 2026-08-08 |
+| [0003](0003-profile-based-claude-config-deploy.md) | 設定をプロファイル単位で選択的に展開する | 廃止 | 2026-08-08 |
 | [0004](0004-task-status-in-frontmatter-not-directory.md) | タスクのステータスは frontmatter で持ちディレクトリでは表現しない | 採用 | 2026-08-09 |
 | [0005](0005-task-status-draft-ready-split.md) | タスクのステータス todo を draft と ready に分割する | 採用 | 2026-08-09 |
 | [0006](0006-dropped-status-for-discarded-tasks.md) | 破棄したタスクを表す status として dropped を追加する | 採用 | 2026-08-09 |
@@ -21,5 +21,6 @@
 | [0013](0013-user-confirmation-as-google-tasks.md) | 定期作業の報告は Slack、ユーザーへの確認の依頼は Google ToDo に分ける | 採用 | 2026-10-23 |
 | [0014](0014-wrap-up-verdict-by-next-actor.md) | ラップアップの判定を、次に誰が動くかで分ける | 採用 | 2026-10-23 |
 | [0015](0015-auto-drop-stale-draft-tasks.md) | 作成から1ヶ月たった未判断タスクは確認せずに破棄する | 採用 | 2026-10-26 |
+| [0016](0016-environment-dirs-with-home-manager-on-mac.md) | 環境ごとのディレクトリに分け、mac は home-manager で展開する | 採用 | 2026-10-27 |
 
 0009 と 0010 は web クリップ取り込み（brain 固有の機能）についての判断だったため、`web-clip` スキルとともに canpok1/brain の `projects/brain/adr/` へ 0001 / 0002 として移設した。0001 も同様に、`work-log` スキルの移設（vault の ADR 0007）にあわせて vault の 0006 へ移設した。**いずれも欠番として残し、この番号は再利用しない**（既存のデイリーノートやコミットメッセージが旧番号で参照しているため）。
