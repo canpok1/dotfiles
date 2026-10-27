@@ -26,6 +26,32 @@ if [ "$(uname)" != 'Linux' ]; then
     exit 1
 fi
 
+deploy() {
+    echo "make link (dotfiles: $DOTFILES_DIR)"
+
+    prune_dangling_claude_links
+
+    # 左がホームでの配置場所、右が参照先
+    link      ~/.vimrc                "$DOTFILES_DIR/tools/vim/vimrc"
+    link      ~/.claude/CLAUDE.md     "$DOTFILES_DIR/tools/claude/CLAUDE.md"
+    link      ~/.claude/settings.json "$DOTFILES_DIR/tools/claude/settings.json"
+    link      ~/.claude/statusline.sh "$DOTFILES_DIR/tools/claude/statusline.sh"
+    link_each ~/.claude/rules         "$DOTFILES_DIR/tools/claude/rules"
+    link_each ~/.claude/skills        "$DOTFILES_DIR/tools/claude/skills"
+    link_each ~/.claude/agents        "$DOTFILES_DIR/tools/claude/agents"
+
+    # シェル設定は symlink で置き換えず source 行を足す。
+    # devcontainer などが先に置いたファイルの内容を消さないため
+    source_in ~/.bashrc       "$DOTFILES_DIR/tools/shell/rc.sh"
+    source_in ~/.zshrc        "$DOTFILES_DIR/tools/shell/rc.sh"
+    source_in ~/.zprofile     "$DOTFILES_DIR/tools/shell/profile.sh"
+    source_in ~/.bash_profile "$DOTFILES_DIR/tools/shell/profile.sh" "$DOTFILES_DIR/tools/shell/rc.sh"
+
+    touch ~/.shell_local
+}
+
+# ---- 以下は deploy / undeploy の補助 ----
+
 # 既存の実体（symlink でない通常ファイル/ディレクトリ）があれば .bak に退避する。
 # 既に symlink の場合は退避しない（再実行時はそのまま張り替える）。
 backup_if_real() {
@@ -39,10 +65,20 @@ backup_if_real() {
     fi
 }
 
-# 実体があればバックアップしてから symlink を張る
-link_file() {
-    backup_if_real "$2"
-    ln -fnsv "$1" "$2"
+# 実体があればバックアップしてから symlink を張る。ln とは引数の順が逆
+link() {
+    mkdir -p "$(dirname "$1")"
+    backup_if_real "$1"
+    ln -fnsv "$2" "$1"
+}
+
+# ディレクトリの中身を1件ずつ張る
+link_each() {
+    [ -d "$2" ] || return 0
+    for _entry in "$2"/*; do
+        [ -e "$_entry" ] || continue
+        link "$1/$(basename "$_entry")" "$_entry"
+    done
 }
 
 # symlink を撤去し、撤去した内容を表示する。
@@ -133,47 +169,16 @@ ensure_managed_block() {
     echo "$_action managed block in $target"
 }
 
-deploy() {
-    echo "make link (dotfiles: $DOTFILES_DIR)"
-
-    link_file "$DOTFILES_DIR/tools/vim/vimrc" ~/.vimrc
-
-    # シェル設定は symlink で置き換えず source 行を追記する（既存ファイルを活かす）。
-    # ブロック先頭で DOTFILES_DIR を export し、tools/shell/*.sh からも参照できるようにする
-    # （source される側は自分の位置を特定できないため）。
-    _export_line="export DOTFILES_DIR=\"$DOTFILES_DIR\""
-    ensure_managed_block ~/.bashrc "$_export_line
-. \"\$DOTFILES_DIR/tools/shell/rc.sh\""
-    ensure_managed_block ~/.zshrc "$_export_line
-. \"\$DOTFILES_DIR/tools/shell/rc.sh\""
-    ensure_managed_block ~/.zprofile "$_export_line
-. \"\$DOTFILES_DIR/tools/shell/profile.sh\""
-    # ログインシェル（.bash_profile）でも環境変数・エイリアスを読み込む
-    ensure_managed_block ~/.bash_profile "$_export_line
-. \"\$DOTFILES_DIR/tools/shell/profile.sh\"
-. \"\$DOTFILES_DIR/tools/shell/rc.sh\""
-
-    touch ~/.shell_local
-
-    # Claude 個人設定（CLAUDE.md / settings.json / statusline.sh / agents / skills / rules）を
-    # ~/.claude へ展開する。
-    mkdir -p ~/.claude/skills ~/.claude/agents ~/.claude/rules
-    prune_dangling_claude_links
-    link_file "$DOTFILES_DIR/tools/claude/CLAUDE.md" ~/.claude/CLAUDE.md
-    link_file "$DOTFILES_DIR/tools/claude/settings.json" ~/.claude/settings.json
-    link_file "$DOTFILES_DIR/tools/claude/statusline.sh" ~/.claude/statusline.sh
-    for agent in "$DOTFILES_DIR"/tools/claude/agents/*.md; do
-        [ -e "$agent" ] || continue
-        link_file "$agent" ~/.claude/agents/"$(basename "$agent")"
+# 管理ブロックで DOTFILES_DIR を export してから、指定したファイルを順に source する。
+# source される側は自分の位置を特定できないため export が要る
+source_in() {
+    _target="$1"; shift
+    _body="export DOTFILES_DIR=\"$DOTFILES_DIR\""
+    for _file in "$@"; do
+        _body="$_body
+. \"$_file\""
     done
-    for skill_dir in "$DOTFILES_DIR"/tools/claude/skills/*/; do
-        [ -e "$skill_dir" ] || continue
-        link_file "${skill_dir%/}" ~/.claude/skills/"$(basename "$skill_dir")"
-    done
-    for rule in "$DOTFILES_DIR"/tools/claude/rules/*; do
-        [ -e "$rule" ] || continue
-        link_file "$rule" ~/.claude/rules/"$(basename "$rule")"
-    done
+    ensure_managed_block "$_target" "$_body"
 }
 
 undeploy() {
