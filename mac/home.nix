@@ -1,16 +1,16 @@
 { config, pkgs, dotfilesDir, ... }:
 let
-  # dotfiles の tools/<from> の中身を1件ずつ、ホームの <to> へ張る。
+  # dotfiles 内のディレクトリ toDotfiles の中身を1件ずつ、ホームの inHome へ張る。
   # 中身は switch のたびに読み直すので、スキルやルールを足してもこのファイルは直さなくてよい
   # （flake は git 管理下のファイルしか読まないため、足したら git add してから switch する）
-  linkEach = from: to:
-    if builtins.pathExists ../tools/${from} then
+  linkEach = { inHome, toDotfiles }:
+    if builtins.pathExists ../${toDotfiles} then
       builtins.listToAttrs (map
         (name: {
-          name = "${to}/${name}";
-          value.source = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/tools/${from}/${name}";
+          name = "${inHome}/${name}";
+          value.source = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/${toDotfiles}/${name}";
         })
-        (builtins.attrNames (builtins.readDir ../tools/${from})))
+        (builtins.attrNames (builtins.readDir ../${toDotfiles})))
     else { };
 in
 {
@@ -31,9 +31,9 @@ in
     ".claude/settings.json".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/tools/claude/settings.json";
     ".claude/statusline.sh".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/tools/claude/statusline.sh";
   }
-  // linkEach "claude/rules" ".claude/rules"     # tools/claude/rules/*  → ~/.claude/rules/*
-  // linkEach "claude/skills" ".claude/skills"   # tools/claude/skills/* → ~/.claude/skills/*
-  // linkEach "claude/agents" ".claude/agents";  # tools/claude/agents/* → ~/.claude/agents/*
+  // linkEach { inHome = ".claude/rules";  toDotfiles = "tools/claude/rules"; }
+  // linkEach { inHome = ".claude/skills"; toDotfiles = "tools/claude/skills"; }
+  // linkEach { inHome = ".claude/agents"; toDotfiles = "tools/claude/agents"; };
 
   home.sessionVariables.DOTFILES_DIR = dotfilesDir;
 
