@@ -12,7 +12,7 @@ container/   devcontainer / Claude Code on the web 向け。setup.sh
 docs/adr/    判断の記録
 ```
 
-どの環境でも `tools/` 配下を指す symlink を張り、clone 側を編集すれば展開し直さずに反映されます。
+どの環境でも `tools/` 配下を指す symlink を張るので、clone 側を編集すれば展開し直さなくても反映されます。
 symlink を張る仕組みは環境ごとに別です（mac は home-manager、コンテナは shell スクリプト）。
 環境によって入れたいものが一致するとは限らないため、どこに何を張るかは環境ごとに二重に書いています（`docs/adr/0016-environment-dirs-with-home-manager-on-mac.md`）。
 **`tools/` に設定を足したら、mac は `mac/home.nix`、コンテナは `container/setup.sh` の両方を確認してください。**
@@ -25,7 +25,7 @@ symlink を張る仕組みは環境ごとに別です（mac は home-manager、�
 git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/mac/setup.sh
 ```
 
-Nix（flakes 有効）と home-manager は先に入れておいてください。`home-manager switch` で設定ファイルの展開とパッケージの導入を行います。何度実行しても構いません。
+Nix（flakes 有効）と home-manager は先に入れておいてください。`mac/setup.sh` は `home-manager switch` を実行し、設定ファイルの展開とパッケージの導入を行います。何度実行しても構いません。
 
 - 展開するものとパッケージ（Ansible など）は `mac/home.nix` に書きます。変えたら `mac/setup.sh` を再実行します
 - **新しいファイル（スキルなど）は `git add` してから実行してください。** flake は git で管理しているファイルしか読み込みません
@@ -63,7 +63,16 @@ git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/conta
 - `CLAUDE.md` … 全プロジェクト共通の個人設定。言語など、環境を問わず適用する内容だけを置きます。
 - `settings.json` … Claude Code の設定。ステータスライン（`~/.claude/statusline.sh`）を有効化するほか、`.env` や SSH 鍵など秘密情報を含みそうなファイルの閲覧・編集を `permissions.deny` で禁止します。
 - `statusline.sh` … 起動ディレクトリ・モデル名・コンテキスト使用率・トークン数・コストを表示するステータスライン用スクリプト（`jq` が必要）。表示例: `/workspaces/dotfiles | Opus 5 | ctx 42% | 421.2k in / 1.5k out | $0.37`
-- `skills/` … スキル群。相談から仕様・タスクを整理する `discuss`、着手可否が未判断のタスクを1件ずつ詳細化して仕分ける `task-refine`、重要判断を ADR として記録する `create-adr`、起きたことを掘り下げて「次はこうするとよい」の示唆を出す `retro`、毎日の定期作業をまとめて実行する `daily-check`、自作スキルをつまずきのパターンから週1回改善する `skill-refine`、作業終了前に予定した作業をやり切ったか確認して報告する `wrap-up` を含みます。`discuss` と `task-refine` はタスクの保存先に依存せず、登録先・状態の持ち方をタスク管理ルールに委ねます。
+- `skills/` … スキル群。次のスキルを含みます。
+    - `discuss` … 相談から仕様・タスクを整理する
+    - `task-refine` … 着手可否が未判断のタスクを1件ずつ詳細化して仕分ける
+    - `create-adr` … 重要判断を ADR として記録する
+    - `retro` … 起きたことを掘り下げて「次はこうするとよい」の示唆を出す
+    - `daily-check` … 毎日の定期作業をまとめて実行する
+    - `skill-refine` … 自作スキルをつまずきのパターンから週1回改善する
+    - `wrap-up` … 作業終了前に予定した作業をやり切ったか確認して報告する
+
+    `discuss` と `task-refine` はタスクの保存先に依存せず、登録先・状態の持ち方をタスク管理ルールに委ねます。
     - **ここに置くのは開発環境すべてで使いたいものだけです。** 特定のリポジトリでしか使わないスキルは、そのリポジトリの `.claude/skills/` に置きます（例: `web-clip` `meal-management` `work-log` `health-log` は canpok1/brain にあります）。
 - `agents/` … エージェント定義。
 - `rules/` … 共通ルール。`~/.claude/rules/` 配下は全プロジェクトに適用されます。`paths` を持つルールは該当ファイルを扱うときだけ、持たないルールはセッション開始時に読み込まれます。
@@ -72,5 +81,3 @@ git clone https://github.com/canpok1/dotfiles.git ~/dotfiles && ~/dotfiles/conta
     - `investigation.md` … 事実を調べて報告するときのルール。見つからないときに試す手（名前で引く・二次情報から辿る・親から辿る・相手に聞く）と、決め手になる事実の確かめ方。
     - `brain-task.md` … タスクの保存に brain リポジトリ（`canpok1/brain` の `tasks/`）を使う場合にのみ適用されるルール。保存先・ファイル命名・frontmatter・書き方・探し方に加え、パスの表記・`ready` にしてよい条件・`status`（`draft` / `ready` / `doing` / `done`）の遷移と done の定義を規定します（適用条件はファイル冒頭に記載）。`tasks/**/*.md` を扱うときに読み込まれます。
     - `work-log.md` … 作業記録を brain リポジトリのデイリーノートへ残す場合にのみ適用されるルール。`work-log` スキルを起動するタイミングを規定します（適用条件はファイル冒頭に記載）。スキル本体は canpok1/brain にあるため、brain 以外のリポジトリで記録するには `--add-dir` で brain を参照させます。
-
-既に `~/.claude/settings.json` などの実体ファイルがある場合は、退避してから symlink を張ります（mac は `.hm-bak`、コンテナは `.bak`）。
